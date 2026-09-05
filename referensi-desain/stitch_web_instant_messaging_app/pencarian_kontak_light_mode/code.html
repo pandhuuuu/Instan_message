@@ -1,0 +1,621 @@
+<!DOCTYPE html>
+
+<html lang="id"><head><meta charset="utf-8"/><meta content="width=device-width, initial-scale=1.0" name="viewport"/><link href="https://fonts.googleapis.com" rel="preconnect"/><link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/><link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&amp;family=Plus+Jakarta+Sans:wght@600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/><style>@layer base { html, body { margin: 0; padding: 0; } body { overscroll-behavior: none; } main > :first-child { margin-top: 0 !important; } main > :last-child { margin-bottom: 0 !important; } } ::-webkit-scrollbar { display: none; }</style><script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script><script id="tailwind-config">tailwind.config = {
+    darkMode: "class",
+    theme: {
+      extend: {
+        "colors": {
+          "on-secondary-fixed": "#07006c",
+          "surface-container": "#eaedff",
+          "on-tertiary-fixed": "#002113",
+          "on-secondary-container": "#fffbff",
+          "on-tertiary": "#ffffff",
+          "on-surface": "#131b2e",
+          "surface-pure": "#ffffff",
+          "secondary-fixed-dim": "#c0c1ff",
+          "tertiary-container": "#006e4b",
+          "on-tertiary-fixed-variant": "#005236",
+          "on-primary-fixed-variant": "#3323cc",
+          "text-primary": "#0f172a",
+          "background": "#faf8ff",
+          "surface-bright": "#faf8ff",
+          "tertiary": "#005338",
+          "primary-fixed-dim": "#c3c0ff",
+          "on-primary": "#ffffff",
+          "on-tertiary-container": "#67f4b7",
+          "surface-dim": "#d2d9f4",
+          "secondary": "#4648d4",
+          "signal-online": "#10b981",
+          "tertiary-fixed-dim": "#4edea3",
+          "signal-danger": "#ef4444",
+          "chat-bubble-outbound": "#4f46e5",
+          "surface-tint": "#4d44e3",
+          "border-strong": "#cbd5e1",
+          "text-inverse": "#ffffff",
+          "surface-container-high": "#e2e7ff",
+          "on-secondary-fixed-variant": "#2f2ebe",
+          "text-secondary": "#334155",
+          "outline-variant": "#c7c4d8",
+          "text-muted": "#64748b",
+          "outline": "#777587",
+          "secondary-fixed": "#e1e0ff",
+          "error": "#ba1a1a",
+          "surface-container-highest": "#dae2fd",
+          "surface": "#faf8ff",
+          "on-primary-fixed": "#0f0069",
+          "primary-fixed": "#e2dfff",
+          "chat-bubble-inbound": "#f1f5f9",
+          "on-background": "#131b2e",
+          "border-subtle": "#e2e8f0",
+          "primary": "#3525cd",
+          "primary-container": "#4f46e5",
+          "surface-container-lowest": "#ffffff",
+          "error-container": "#ffdad6",
+          "inverse-on-surface": "#eef0ff",
+          "surface-variant": "#dae2fd",
+          "on-error": "#ffffff",
+          "signal-warning": "#f59e0b",
+          "surface-container-low": "#f2f3ff",
+          "inverse-surface": "#283044",
+          "on-surface-variant": "#464555",
+          "tertiary-fixed": "#6ffbbe",
+          "surface-subtle": "#f8fafc",
+          "on-primary-container": "#dad7ff",
+          "inverse-primary": "#c3c0ff",
+          "surface-muted": "#f1f5f9",
+          "on-error-container": "#93000a",
+          "secondary-container": "#6063ee",
+          "on-secondary": "#ffffff",
+          "surface-active": "#e2e8f0"
+        },
+        "borderRadius": {
+          "DEFAULT": "0.25rem",
+          "lg": "0.5rem",
+          "xl": "0.75rem",
+          "full": "9999px"
+        },
+        "spacing": {
+          "gutter-xs": "0.25rem",
+          "details-pane": "20rem",
+          "gutter-sm": "0.5rem",
+          "chat-pane-min": "24rem",
+          "bubble-p-x": "1rem",
+          "gutter-xl": "2rem",
+          "gutter-lg": "1.5rem",
+          "gutter-md": "1rem",
+          "sidebar-compact": "4.5rem",
+          "sidebar-default": "18rem",
+          "bubble-p-y": "0.625rem"
+        },
+        "fontFamily": {
+          "timestamp": [
+            "Inter"
+          ],
+          "headline-lg": [
+            "Plus Jakarta Sans"
+          ],
+          "title-md": [
+            "Plus Jakarta Sans"
+          ],
+          "label-md": [
+            "Inter"
+          ],
+          "headline-md": [
+            "Plus Jakarta Sans"
+          ],
+          "body-lg": [
+            "Inter"
+          ],
+          "headline-lg-mobile": [
+            "Plus Jakarta Sans"
+          ],
+          "headline-sm": [
+            "Plus Jakarta Sans"
+          ],
+          "label-sm": [
+            "Inter"
+          ],
+          "body-md": [
+            "Inter"
+          ],
+          "body-sm": [
+            "Inter"
+          ]
+        },
+        "fontSize": {
+          "timestamp": [
+            "11px",
+            {
+              "lineHeight": "14px",
+              "letterSpacing": "0.01em",
+              "fontWeight": "400"
+            }
+          ],
+          "headline-lg": [
+            "32px",
+            {
+              "lineHeight": "40px",
+              "letterSpacing": "-0.02em",
+              "fontWeight": "700"
+            }
+          ],
+          "title-md": [
+            "15px",
+            {
+              "lineHeight": "22px",
+              "fontWeight": "600"
+            }
+          ],
+          "label-md": [
+            "12px",
+            {
+              "lineHeight": "16px",
+              "fontWeight": "500"
+            }
+          ],
+          "headline-md": [
+            "22px",
+            {
+              "lineHeight": "30px",
+              "letterSpacing": "-0.01em",
+              "fontWeight": "600"
+            }
+          ],
+          "body-lg": [
+            "16px",
+            {
+              "lineHeight": "24px",
+              "fontWeight": "400"
+            }
+          ],
+          "headline-lg-mobile": [
+            "26px",
+            {
+              "lineHeight": "34px",
+              "letterSpacing": "-0.015em",
+              "fontWeight": "700"
+            }
+          ],
+          "headline-sm": [
+            "18px",
+            {
+              "lineHeight": "26px",
+              "letterSpacing": "-0.005em",
+              "fontWeight": "600"
+            }
+          ],
+          "label-sm": [
+            "11px",
+            {
+              "lineHeight": "14px",
+              "letterSpacing": "0.02em",
+              "fontWeight": "600"
+            }
+          ],
+          "body-md": [
+            "14px",
+            {
+              "lineHeight": "21px",
+              "fontWeight": "400"
+            }
+          ],
+          "body-sm": [
+            "13px",
+            {
+              "lineHeight": "18px",
+              "fontWeight": "400"
+            }
+          ]
+        }
+      }
+    }
+  };</script></head><body class="bg-slate-50 font-body-md text-body-md text-slate-800 antialiased selection:bg-indigo-600 selection:text-white"><aside class="fixed left-0 top-0 h-full w-sidebar-compact bg-white border-r border-slate-200 z-50 flex flex-col items-center justify-between py-gutter-md shadow-[0_1px_4px_rgba(0,0,0,0.05)]"><div class="flex flex-col items-center w-full gap-gutter-lg"><a class="flex items-center justify-center p-gutter-xs rounded-xl hover:bg-slate-100 transition-colors group relative" data-path="direct-chat" href="#" title="VibeChat"><img alt="VibeChat Logo" class="h-8 w-auto object-contain" src="https://lh3.googleusercontent.com/aida/AEtjO1XSaz1oz5R2-FZXtVpMoHliVMT8mp1pCcdG_XGrb3ODZBOVTRJBny2NolJG_B33-xht6JZACNenTCYTLhDlokNGRCMWnJu93E3iZtM9YeM673KtSudHtzR7MDkbVPHw4gq7au8CL2i9LkUognpW4tL50Vilqsd0FLn9KAkevd7f9464lIJ4xnjyi8q8ZvRbrQ5VKL3tszZGC5T6hbIqJxkUNcDUGb3XX5qwvJ3XG2HGNV1LA1_LawE8_4E"/><span class="absolute left-full ml-gutter-sm px-gutter-sm py-gutter-xs bg-slate-900 text-white font-label-sm text-label-sm rounded-lg opacity-0 group-hover:opacity-100 pointer-events-none transition-opacity whitespace-nowrap shadow-lg z-50">VibeChat</span></a><nav class="flex flex-col items-center gap-gutter-sm w-full px-gutter-xs" data-active-classes="bg-indigo-600 text-white font-bold rounded-xl shadow-[0_4px_14px_0_rgba(79,70,229,0.35)]"><a class="group relative flex items-center justify-center w-11 h-11 rounded-xl text-slate-500 hover:bg-slate-100 hover:text-slate-900 transition-all" data-path="direct-chat" href="#" title="Obrolan Pribadi"><span class="material-symbols-outlined">chat</span><span class="absolute left-full ml-gutter-sm px-gutter-sm py-gutter-xs bg-slate-900 text-white font-label-sm text-label-sm rounded-lg opacity-0 group-hover:opacity-100 pointer-events-none transition-opacity whitespace-nowrap shadow-lg z-50">Obrolan Pribadi</span></a><a class="group relative flex items-center justify-center w-11 h-11 rounded-xl text-slate-500 hover:bg-slate-100 hover:text-slate-900 transition-all" data-path="group-chat" href="#" title="Obrolan Grup"><span class="material-symbols-outlined">forum</span><span class="absolute left-full ml-gutter-sm px-gutter-sm py-gutter-xs bg-slate-900 text-white font-label-sm text-label-sm rounded-lg opacity-0 group-hover:opacity-100 pointer-events-none transition-opacity whitespace-nowrap shadow-lg z-50">Obrolan Grup</span></a><a aria-current="page" class="group relative flex items-center justify-center w-11 h-11 transition-all bg-indigo-600 text-white font-bold rounded-xl shadow-[0_4px_14px_0_rgba(79,70,229,0.35)]" data-path="search-users" href="#" title="Pencarian &amp; Kontak"><span class="material-symbols-outlined">person_search</span><span class="absolute left-full ml-gutter-sm px-gutter-sm py-gutter-xs bg-slate-900 text-white font-label-sm text-label-sm rounded-lg opacity-0 group-hover:opacity-100 pointer-events-none transition-opacity whitespace-nowrap shadow-lg z-50">Pencarian &amp; Kontak</span></a><a class="group relative flex items-center justify-center w-11 h-11 rounded-xl text-slate-500 hover:bg-slate-100 hover:text-slate-900 transition-all" data-path="profile-settings" href="#" title="Pengaturan &amp; Akun"><span class="material-symbols-outlined">settings</span><span class="absolute left-full ml-gutter-sm px-gutter-sm py-gutter-xs bg-slate-900 text-white font-label-sm text-label-sm rounded-lg opacity-0 group-hover:opacity-100 pointer-events-none transition-opacity whitespace-nowrap shadow-lg z-50">Pengaturan</span></a></nav></div><div class="flex flex-col items-center w-full gap-gutter-md"><a class="group relative flex items-center justify-center w-10 h-10 rounded-xl text-slate-500 hover:bg-rose-50 hover:text-rose-600 transition-all" data-path="login" href="#" title="Keluar"><span class="material-symbols-outlined">logout</span><span class="absolute left-full ml-gutter-sm px-gutter-sm py-gutter-xs bg-slate-900 text-white font-label-sm text-label-sm rounded-lg opacity-0 group-hover:opacity-100 pointer-events-none transition-opacity whitespace-nowrap shadow-lg z-50">Keluar</span></a><div class="relative group cursor-pointer"><div class="relative"><img alt="Profile" class="w-8 h-8 rounded-full object-cover ring-2 ring-slate-100" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBfgRm-OU7vcCq8350QzrCm4S99P6DUjU4xu0hzj_iUWyK3TkFp2cOblaXZSSv40FhiX3u2MTv0cU-THLY7E76lh8d-_DsZEhj9fURblm0KyMfdA4nv_8aFb55YJ5DTnS9EPFdSJFCM-Ed73rhkg3LK7oTGtMawMonMUYB_gwVCNllMjHJi7uGXdBXa2nl4eFmqb8GUotz35hxbRZ8mkOkIolA16FNaiyA91YD0OtrcaPLueGctWoJ4"/><span class="absolute bottom-0 right-0 w-2.5 h-2.5 bg-emerald-500 rounded-full ring-2 ring-white"></span></div><span class="absolute left-full ml-gutter-sm px-gutter-sm py-gutter-xs bg-slate-900 text-white font-label-sm text-label-sm rounded-lg opacity-0 group-hover:opacity-100 pointer-events-none transition-opacity whitespace-nowrap shadow-lg z-50">Online • Profil</span></div></div></aside><div class="pl-sidebar-compact min-h-screen bg-slate-50"><header class="fixed top-0 left-sidebar-compact right-0 h-14 bg-white/90 backdrop-blur-xl border-b border-slate-200 shadow-sm z-40 flex items-center justify-between px-gutter-lg"><div class="flex items-center gap-gutter-sm"><span class="font-title-md text-title-md text-slate-900 font-semibold">VibeChat Workspace</span><span class="px-gutter-xs py-0.5 rounded-full bg-emerald-100 text-emerald-700 font-label-sm text-label-sm font-medium">Aktif</span></div><div class="flex items-center gap-gutter-md"><nav class="hidden sm:flex items-center gap-gutter-lg" data-active-classes="text-slate-900 font-semibold"><a class="font-body-sm text-body-sm text-slate-500 hover:text-slate-900 transition-colors" data-path="direct-chat" href="#">Obrolan</a><a class="font-body-sm text-body-sm text-slate-500 hover:text-slate-900 transition-colors" data-path="group-chat" href="#">Grup</a><a aria-current="page" class="transition-colors text-slate-900 font-semibold" data-path="search-users" href="#">Kontak</a><a class="font-body-sm text-body-sm text-slate-500 hover:text-slate-900 transition-colors" data-path="profile-settings" href="#">Preferensi</a></nav><div class="flex items-center gap-gutter-xs border-l border-slate-200 pl-gutter-md"><img alt="Profile" class="w-8 h-8 rounded-full object-cover ring-1 ring-slate-300" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBfgRm-OU7vcCq8350QzrCm4S99P6DUjU4xu0hzj_iUWyK3TkFp2cOblaXZSSv40FhiX3u2MTv0cU-THLY7E76lh8d-_DsZEhj9fURblm0KyMfdA4nv_8aFb55YJ5DTnS9EPFdSJFCM-Ed73rhkg3LK7oTGtMawMonMUYB_gwVCNllMjHJi7uGXdBXa2nl4eFmqb8GUotz35hxbRZ8mkOkIolA16FNaiyA91YD0OtrcaPLueGctWoJ4"/></div></div></header><main class="w-full pt-14 bg-slate-50 min-h-screen"><div class="flex flex-col w-full">
+<div class="w-full px-gutter-lg py-gutter-xl max-w-7xl mx-auto flex flex-col gap-gutter-xl">
+<!-- Top Header & Discovery Headline -->
+<div class="flex flex-col lg:flex-row lg:items-end justify-between gap-gutter-lg">
+<div class="flex flex-col gap-gutter-xs max-w-2xl">
+<div class="flex items-center gap-gutter-sm text-emerald-600 font-label-sm text-label-sm tracking-wider uppercase font-semibold">
+<span class="inline-block w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
+          Direktori Ekosistem VibeChat
+        </div>
+<h1 class="font-headline-lg text-headline-lg text-slate-900 tracking-tight">
+          Pencarian &amp; Tambah Kontak
+        </h1>
+<p class="font-body-lg text-body-lg text-slate-600">
+          Temukan rekan kerja, tim, atau mulai percakapan baru dengan cepat dalam satu platform terpadu.
+        </p>
+</div>
+<!-- Quick Action Utilities -->
+<div class="flex items-center gap-gutter-sm flex-wrap">
+<button class="group flex items-center gap-gutter-sm px-gutter-md py-gutter-sm rounded-xl bg-white border border-slate-200 hover:bg-slate-100 text-slate-700 font-title-md text-title-md shadow-sm hover:shadow transition-all" type="button">
+<span class="material-symbols-outlined text-indigo-600 group-hover:scale-110 transition-transform">qr_code_scanner</span>
+<span>Pindai Kode QR</span>
+</button>
+<button class="group flex items-center gap-gutter-sm px-gutter-md py-gutter-sm rounded-xl bg-indigo-600 text-white font-title-md text-title-md shadow-md hover:bg-indigo-700 transition-all" type="button">
+<span class="material-symbols-outlined group-hover:rotate-90 transition-transform">group_add</span>
+<span>Buat Grup Baru</span>
+</button>
+</div>
+</div>
+<!-- Live Dynamic Search Zone -->
+<div class="flex flex-col gap-gutter-md bg-white border border-slate-200 p-gutter-lg rounded-xl shadow-sm relative overflow-hidden">
+<div class="absolute -right-16 -top-16 w-64 h-64 bg-indigo-50/80 rounded-full blur-3xl pointer-events-none"></div>
+<!-- Input Wrapper -->
+<div class="relative flex items-center w-full">
+<span class="material-symbols-outlined absolute left-gutter-md text-slate-400 text-2xl pointer-events-none">search</span>
+<input class="w-full pl-12 pr-28 py-3.5 bg-slate-50/80 border border-slate-200 text-slate-900 font-body-lg text-body-lg rounded-xl placeholder:text-slate-400 focus:outline-none focus:bg-white focus:border-indigo-500 focus:ring-2 focus:ring-indigo-100 transition-all shadow-sm" id="user-search-input" placeholder="Ketik nama, username @handle, atau topik obrolan..." type="text" value="Andi"/>
+<button class="absolute right-gutter-md flex items-center gap-gutter-xs text-slate-500 hover:text-slate-800 font-label-sm text-label-sm bg-slate-200/70 hover:bg-slate-200 px-gutter-xs py-1 rounded-lg transition-colors" id="clear-search-btn" type="button">
+<span class="material-symbols-outlined text-sm">backspace</span>
+<span>Reset</span>
+</button>
+</div>
+<!-- Filter Category Pills -->
+<div class="flex items-center gap-gutter-xs overflow-x-auto pb-1 text-label-md font-label-md">
+<button class="filter-chip px-gutter-md py-1.5 rounded-full bg-indigo-600 text-white shadow-sm flex items-center gap-1.5 whitespace-nowrap" type="button">
+<span class="material-symbols-outlined text-base">apps</span>
+<span>Semua Hasil</span>
+<span class="ml-1 px-1.5 py-0.2 rounded-full bg-white/20 text-timestamp font-semibold">4</span>
+</button>
+<button class="filter-chip px-gutter-md py-1.5 rounded-full bg-slate-100 text-slate-700 hover:text-slate-900 hover:bg-slate-200 whitespace-nowrap transition-colors flex items-center gap-1.5" type="button">
+<span class="material-symbols-outlined text-base">person</span>
+<span>Pengguna</span>
+<span class="ml-1 px-1.5 py-0.2 rounded-full bg-slate-200 text-timestamp font-medium">3</span>
+</button>
+<button class="filter-chip px-gutter-md py-1.5 rounded-full bg-slate-100 text-slate-700 hover:text-slate-900 hover:bg-slate-200 whitespace-nowrap transition-colors flex items-center gap-1.5" type="button">
+<span class="material-symbols-outlined text-base">groups</span>
+<span>Grup Publik</span>
+<span class="ml-1 px-1.5 py-0.2 rounded-full bg-slate-200 text-timestamp font-medium">1</span>
+</button>
+<div class="h-4 w-px bg-slate-200 mx-gutter-xs flex-shrink-0"></div>
+<button class="filter-chip px-gutter-md py-1.5 rounded-full bg-slate-100 text-slate-700 hover:text-slate-900 hover:bg-slate-200 whitespace-nowrap transition-colors" type="button">
+          Engineering
+        </button>
+<button class="filter-chip px-gutter-md py-1.5 rounded-full bg-slate-100 text-slate-700 hover:text-slate-900 hover:bg-slate-200 whitespace-nowrap transition-colors" type="button">
+          Product
+        </button>
+<button class="filter-chip px-gutter-md py-1.5 rounded-full bg-slate-100 text-slate-700 hover:text-slate-900 hover:bg-slate-200 whitespace-nowrap transition-colors" type="button">
+          Marketing
+        </button>
+<button class="filter-chip px-gutter-md py-1.5 rounded-full bg-slate-100 text-slate-700 hover:text-slate-900 hover:bg-slate-200 whitespace-nowrap transition-colors" type="button">
+          Design
+        </button>
+</div>
+</div>
+<!-- Main Workspace Split -->
+<div class="grid grid-cols-1 lg:grid-cols-12 gap-gutter-lg">
+<!-- Left / Center Main Results Area (8 cols) -->
+<div class="lg:col-span-8 flex flex-col gap-gutter-lg">
+<!-- People / Pengguna Section -->
+<div class="flex flex-col gap-gutter-md">
+<div class="flex items-center justify-between">
+<div class="flex items-center gap-gutter-sm">
+<span class="material-symbols-outlined text-indigo-600 text-xl">contacts</span>
+<h2 class="font-headline-sm text-headline-sm text-slate-900">Rekan &amp; Pengguna</h2>
+<span class="px-2 py-0.5 rounded-full bg-slate-100 text-slate-600 font-label-sm text-label-sm font-medium">3 Ditemukan</span>
+</div>
+<span class="font-label-sm text-label-sm text-slate-400">Kriteria: Cocok persis "Andi"</span>
+</div>
+<!-- Cards Stack -->
+<div class="flex flex-col gap-gutter-sm">
+<!-- Result 1: Andi Wijaya -->
+<div class="group relative flex flex-col sm:flex-row sm:items-center justify-between p-gutter-md bg-white border border-slate-200 hover:border-indigo-200 hover:shadow-md rounded-xl shadow-sm transition-all gap-gutter-md">
+<div class="flex items-start sm:items-center gap-gutter-md min-w-0">
+<div class="relative flex-shrink-0">
+<img class="w-14 h-14 rounded-xl object-cover ring-1 ring-slate-200 shadow-sm" data-alt="Close up professional portrait of a modern Indonesian male software engineer wearing dark casual hoodie with subtle blue studio backlight looking confident and focused." src="https://lh3.googleusercontent.com/aida-public/AB6AXuBKThrmpUHepGbjTt9ekTd1oUwa718Nq2PDBkbU80HTf4unnjck42MB4M1mtUqBorqtVlhWMxwf-t_aNAyJ-eU9kUmd_ffBMlz0Op2u445icRNrBzUgLLNFlC-UTSWJp6IleFpjUA9PRhzEuZGtxe998fNYTmeIAawZ-AfPIGGIN8dZpXSr0OXVbpEBTZErazWfmTbm4jwy_YY0mJG7TO4u3E7BYGiT0zitcky5xI1GpyoNXrn8dbLH"/>
+<span class="absolute -bottom-1 -right-1 w-3.5 h-3.5 bg-emerald-500 ring-2 ring-white rounded-full shadow-sm"></span>
+</div>
+<div class="flex flex-col min-w-0">
+<div class="flex items-center gap-gutter-xs flex-wrap">
+<h3 class="font-title-md text-title-md text-slate-900 truncate">Andi Wijaya</h3>
+<span class="font-body-sm text-body-sm text-indigo-600 font-medium">@andiwjy</span>
+<span class="px-2 py-0.5 rounded-full bg-indigo-50 text-indigo-700 font-label-sm text-label-sm font-medium">Engineering</span>
+</div>
+<p class="font-body-sm text-body-sm text-slate-500 truncate">Senior Frontend Developer</p>
+<div class="flex items-center gap-1.5 mt-1 text-emerald-600 font-label-sm text-label-sm font-medium">
+<span class="w-1.5 h-1.5 rounded-full bg-emerald-500"></span>
+<span>Online • Sedang coding 💻</span>
+</div>
+</div>
+</div>
+<div class="flex items-center gap-gutter-xs self-end sm:self-center flex-shrink-0">
+<button class="p-2 rounded-xl text-slate-400 hover:text-amber-500 hover:bg-amber-50 transition-all" title="Bintangi Kontak" type="button">
+<span class="material-symbols-outlined text-xl">star</span>
+</button>
+<button class="flex items-center gap-gutter-xs px-gutter-md py-2 rounded-xl bg-indigo-600 hover:bg-indigo-700 text-white font-title-md text-title-md shadow-sm hover:shadow transition-all" type="button">
+<span class="material-symbols-outlined text-lg">chat_bubble</span>
+<span>Kirim Pesan</span>
+</button>
+</div>
+</div>
+<!-- Result 2: Andini Kusuma -->
+<div class="group relative flex flex-col sm:flex-row sm:items-center justify-between p-gutter-md bg-white border border-slate-200 hover:border-indigo-200 hover:shadow-md rounded-xl shadow-sm transition-all gap-gutter-md">
+<div class="flex items-start sm:items-center gap-gutter-md min-w-0">
+<div class="relative flex-shrink-0">
+<img class="w-14 h-14 rounded-xl object-cover ring-1 ring-slate-200 shadow-sm" data-alt="Studio portrait of an Indonesian female tech professional with pleasant smile and sleek dark hair wearing a neutral blazer against a minimalist dark slate background." src="https://lh3.googleusercontent.com/aida-public/AB6AXuAEvl8cWyxzGML3nK6jhgYhXP6UcOV5fO1TKtwq-pEMHC-5Jn-Lg_yhE62KGXeRgIl5_PlB59Tk8Iyx4tcomrY2RycEauXyBPqxtUn3rWy9gEQfv-zHncHZ5FqMjFLy5IGTiALyHkYl0ZUdiomV4qHY_53h3-S6qxZIzx16_cVlzEcp2b9krmjd-6mpYfMMOx_ex0ArnEn6nQ9bpCiONewpl0AAcA5K5IDIBsU3IWQ51C1sfVV_aLC9"/>
+<span class="absolute -bottom-1 -right-1 w-3.5 h-3.5 bg-amber-400 ring-2 ring-white rounded-full shadow-sm"></span>
+</div>
+<div class="flex flex-col min-w-0">
+<div class="flex items-center gap-gutter-xs flex-wrap">
+<h3 class="font-title-md text-title-md text-slate-900 truncate">Andini Kusuma</h3>
+<span class="font-body-sm text-body-sm text-indigo-600 font-medium">@andinik</span>
+<span class="px-2 py-0.5 rounded-full bg-purple-50 text-purple-700 font-label-sm text-label-sm font-medium">Product</span>
+</div>
+<p class="font-body-sm text-body-sm text-slate-500 truncate">Product Manager</p>
+<div class="flex items-center gap-1.5 mt-1 text-amber-600 font-label-sm text-label-sm font-medium">
+<span class="w-1.5 h-1.5 rounded-full bg-amber-400"></span>
+<span>Away • Rapat mingguan</span>
+</div>
+</div>
+</div>
+<div class="flex items-center gap-gutter-xs self-end sm:self-center flex-shrink-0">
+<button class="flex items-center gap-gutter-xs px-gutter-sm py-2 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-700 font-title-md text-title-md transition-all" type="button">
+<span class="material-symbols-outlined text-lg">person_add</span>
+<span class="hidden sm:inline">Tambah</span>
+</button>
+<button class="flex items-center gap-gutter-xs px-gutter-md py-2 rounded-xl bg-indigo-600 hover:bg-indigo-700 text-white font-title-md text-title-md shadow-sm hover:shadow transition-all" type="button">
+<span class="material-symbols-outlined text-lg">send</span>
+<span>Kirim Pesan</span>
+</button>
+</div>
+</div>
+<!-- Result 3: Andi Pratama -->
+<div class="group relative flex flex-col sm:flex-row sm:items-center justify-between p-gutter-md bg-white border border-slate-200 hover:border-indigo-200 hover:shadow-md rounded-xl shadow-sm transition-all gap-gutter-md">
+<div class="flex items-start sm:items-center gap-gutter-md min-w-0">
+<div class="relative flex-shrink-0">
+<img class="w-14 h-14 rounded-xl object-cover ring-1 ring-slate-200 grayscale opacity-80 group-hover:grayscale-0 group-hover:opacity-100 transition-all shadow-sm" data-alt="Editorial portrait of a young Southeast Asian male quality assurance specialist with glasses smiling gently in high resolution with muted indigo ambient tones." src="https://lh3.googleusercontent.com/aida-public/AB6AXuA0x9B0GR6s69pIH8K82RXrKHde57H9uI6xRifBjIKQJCgAJ99wIjmAkpN6TU2IgfWcN7gertJlwWYYCdQCUNIhAB3gEKyTaBomwWBlSdjQzJ6XrfoYviamXJSW3Yq69Hs9UsA7lfTJDsPN2635mfK-42LEPxPOK5ek_vLTuWJXZf36vLYj_T5ljZuhySifYw3k0iB-EnGnDyYPLf3Zv9NBfD-6KHnOUiPJHUOevVjlnY5KjI0ei0tz"/>
+<span class="absolute -bottom-1 -right-1 w-3.5 h-3.5 bg-slate-400 ring-2 ring-white rounded-full shadow-sm"></span>
+</div>
+<div class="flex flex-col min-w-0">
+<div class="flex items-center gap-gutter-xs flex-wrap">
+<h3 class="font-title-md text-title-md text-slate-900 truncate">Andi Pratama</h3>
+<span class="font-body-sm text-body-sm text-indigo-600 font-medium">@andiprtm</span>
+<span class="px-2 py-0.5 rounded-full bg-slate-100 text-slate-600 font-label-sm text-label-sm font-medium">Tech Support</span>
+</div>
+<p class="font-body-sm text-body-sm text-slate-500 truncate">QA Automation</p>
+<div class="flex items-center gap-1.5 mt-1 text-slate-400 font-label-sm text-label-sm font-medium">
+<span class="w-1.5 h-1.5 rounded-full bg-slate-400"></span>
+<span>Offline (terakhir aktif 2 jam lalu)</span>
+</div>
+</div>
+</div>
+<div class="flex items-center gap-gutter-xs self-end sm:self-center flex-shrink-0">
+<button class="flex items-center gap-gutter-xs px-gutter-md py-2 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-700 font-title-md text-title-md shadow-sm transition-all" type="button">
+<span class="material-symbols-outlined text-lg">person_add</span>
+<span>Tambah Kontak</span>
+</button>
+</div>
+</div>
+</div>
+</div>
+<!-- Matched Public Groups Section -->
+<div class="flex flex-col gap-gutter-md mt-gutter-sm">
+<div class="flex items-center justify-between">
+<div class="flex items-center gap-gutter-sm">
+<span class="material-symbols-outlined text-indigo-600 text-xl">hub</span>
+<h2 class="font-headline-sm text-headline-sm text-slate-900">Grup Terbuka yang Cocok</h2>
+</div>
+<a class="font-label-md text-label-md text-indigo-600 hover:text-indigo-800 hover:underline font-medium" href="#">Lihat Direktori Grup</a>
+</div>
+<!-- Group Card -->
+<div class="p-gutter-lg bg-white border border-slate-200 hover:border-indigo-200 hover:shadow-md rounded-xl shadow-sm transition-all flex flex-col md:flex-row md:items-center justify-between gap-gutter-md">
+<div class="flex items-start gap-gutter-md">
+<div class="w-12 h-12 rounded-xl bg-indigo-100 text-indigo-700 flex items-center justify-center flex-shrink-0">
+<span class="font-headline-sm text-headline-sm font-bold">#</span>
+</div>
+<div class="flex flex-col gap-0.5">
+<div class="flex items-center gap-gutter-xs flex-wrap">
+<h3 class="font-title-md text-title-md text-slate-900">Frontend Enthusiasts Indonesia</h3>
+<span class="px-2 py-0.5 rounded-full bg-emerald-50 text-emerald-700 font-label-sm text-label-sm font-medium">Publik</span>
+</div>
+<p class="font-body-sm text-body-sm text-slate-600">
+                  Diskusi seputar React, Vue, arsitektur UI, Tailwind, dan tips performa frontend modern.
+                </p>
+<div class="flex items-center gap-gutter-md mt-2 text-timestamp font-timestamp text-slate-400">
+<span class="flex items-center gap-1">
+<span class="material-symbols-outlined text-sm">group</span>
+                    142 Anggota
+                  </span>
+<span class="flex items-center gap-1">
+<span class="material-symbols-outlined text-sm">forum</span>
+                    ~38 pesan / hari
+                  </span>
+</div>
+</div>
+</div>
+<button class="flex items-center justify-center gap-gutter-xs px-gutter-lg py-2.5 rounded-xl bg-slate-100 hover:bg-indigo-600 hover:text-white text-slate-700 font-title-md text-title-md transition-all self-stretch md:self-auto shadow-sm" type="button">
+<span class="material-symbols-outlined text-base">login</span>
+<span>Gabung Grup</span>
+</button>
+</div>
+</div>
+<!-- Metric Snapshot Bar -->
+<div class="grid grid-cols-1 sm:grid-cols-3 gap-gutter-md p-gutter-md bg-white border border-slate-200 rounded-xl shadow-sm">
+<div class="flex items-center gap-gutter-sm p-gutter-sm">
+<div class="w-10 h-10 rounded-lg bg-indigo-50 flex items-center justify-center text-indigo-600">
+<span class="material-symbols-outlined">speed</span>
+</div>
+<div class="flex flex-col">
+<span class="font-headline-sm text-headline-sm text-slate-900 font-semibold">14ms</span>
+<span class="font-timestamp text-timestamp text-slate-500">Latensi Query Indeks</span>
+</div>
+</div>
+<div class="flex items-center gap-gutter-sm p-gutter-sm">
+<div class="w-10 h-10 rounded-lg bg-emerald-50 flex items-center justify-center text-emerald-600">
+<span class="material-symbols-outlined">verified_user</span>
+</div>
+<div class="flex flex-col">
+<span class="font-headline-sm text-headline-sm text-slate-900 font-semibold">SSO Aktif</span>
+<span class="font-timestamp text-timestamp text-slate-500">Workspace Terverifikasi</span>
+</div>
+</div>
+<div class="flex items-center gap-gutter-sm p-gutter-sm">
+<div class="w-10 h-10 rounded-lg bg-purple-50 flex items-center justify-center text-purple-600">
+<span class="material-symbols-outlined">alternate_email</span>
+</div>
+<div class="flex flex-col">
+<span class="font-headline-sm text-headline-sm text-slate-900 font-semibold">Global DNS</span>
+<span class="font-timestamp text-timestamp text-slate-500">Pencarian Lintas Cabang</span>
+</div>
+</div>
+</div>
+</div>
+<!-- Right Panel: History & Suggestions (4 cols) -->
+<div class="lg:col-span-4 flex flex-col gap-gutter-lg">
+<!-- Search History Card -->
+<div class="flex flex-col gap-gutter-md p-gutter-md bg-white border border-slate-200 rounded-xl shadow-sm">
+<div class="flex items-center justify-between">
+<div class="flex items-center gap-gutter-xs">
+<span class="material-symbols-outlined text-slate-400 text-lg">history</span>
+<h3 class="font-title-md text-title-md text-slate-900 font-semibold">Pencarian Terakhir</h3>
+</div>
+<button class="font-label-sm text-label-sm text-slate-400 hover:text-rose-600 transition-colors" type="button">
+              Hapus Semua
+            </button>
+</div>
+<div class="flex flex-col gap-gutter-xs">
+<div class="flex items-center justify-between p-gutter-xs rounded-lg hover:bg-slate-50 transition-colors group cursor-pointer">
+<div class="flex items-center gap-gutter-sm">
+<span class="material-symbols-outlined text-slate-400 group-hover:text-indigo-600 text-base">person</span>
+<span class="font-body-md text-body-md text-slate-700 group-hover:text-slate-900">Nadia Safitri</span>
+</div>
+<span class="material-symbols-outlined text-sm text-slate-400 group-hover:text-slate-700 opacity-0 group-hover:opacity-100 transition-opacity">north_west</span>
+</div>
+<div class="flex items-center justify-between p-gutter-xs rounded-lg hover:bg-slate-50 transition-colors group cursor-pointer">
+<div class="flex items-center gap-gutter-sm">
+<span class="material-symbols-outlined text-slate-400 group-hover:text-indigo-600 text-base">tag</span>
+<span class="font-body-md text-body-md text-slate-700 group-hover:text-slate-900">Sprint Review 3</span>
+</div>
+<span class="material-symbols-outlined text-sm text-slate-400 group-hover:text-slate-700 opacity-0 group-hover:opacity-100 transition-opacity">north_west</span>
+</div>
+<div class="flex items-center justify-between p-gutter-xs rounded-lg hover:bg-slate-50 transition-colors group cursor-pointer">
+<div class="flex items-center gap-gutter-sm">
+<span class="material-symbols-outlined text-slate-400 group-hover:text-indigo-600 text-base">description</span>
+<span class="font-body-md text-body-md text-slate-700 group-hover:text-slate-900">API Webhook Docs</span>
+</div>
+<span class="material-symbols-outlined text-sm text-slate-400 group-hover:text-slate-700 opacity-0 group-hover:opacity-100 transition-opacity">north_west</span>
+</div>
+</div>
+</div>
+<!-- Suggested Contacts Card -->
+<div class="flex flex-col gap-gutter-md p-gutter-md bg-white border border-slate-200 rounded-xl shadow-sm">
+<div class="flex items-center justify-between">
+<div class="flex items-center gap-gutter-xs">
+<span class="material-symbols-outlined text-emerald-600 text-lg">recommend</span>
+<h3 class="font-title-md text-title-md text-slate-900 font-semibold">Saran Kontak Baru</h3>
+</div>
+<span class="font-label-sm text-label-sm text-slate-400 font-medium">Tim Dekat</span>
+</div>
+<div class="flex flex-col gap-gutter-md">
+<!-- Suggestion 1 -->
+<div class="flex items-center justify-between gap-gutter-sm">
+<div class="flex items-center gap-gutter-sm min-w-0">
+<div class="relative flex-shrink-0">
+<div class="w-10 h-10 rounded-full bg-indigo-100 text-indigo-700 flex items-center justify-center font-title-md text-title-md font-semibold">
+                    RA
+                  </div>
+<span class="absolute bottom-0 right-0 w-2.5 h-2.5 bg-emerald-500 ring-2 ring-white rounded-full"></span>
+</div>
+<div class="flex flex-col min-w-0">
+<span class="font-title-md text-title-md text-slate-900 truncate">Rafi Akbar</span>
+<span class="font-body-sm text-body-sm text-slate-500 truncate">DevOps Specialist</span>
+</div>
+</div>
+<button class="p-2 rounded-xl bg-slate-100 hover:bg-indigo-600 hover:text-white text-slate-600 transition-colors flex-shrink-0" title="Tambah Rafi" type="button">
+<span class="material-symbols-outlined text-base">person_add</span>
+</button>
+</div>
+<!-- Suggestion 2 -->
+<div class="flex items-center justify-between gap-gutter-sm">
+<div class="flex items-center gap-gutter-sm min-w-0">
+<div class="relative flex-shrink-0">
+<div class="w-10 h-10 rounded-full bg-purple-100 text-purple-700 flex items-center justify-center font-title-md text-title-md font-semibold">
+                    SM
+                  </div>
+<span class="absolute bottom-0 right-0 w-2.5 h-2.5 bg-amber-400 ring-2 ring-white rounded-full"></span>
+</div>
+<div class="flex flex-col min-w-0">
+<span class="font-title-md text-title-md text-slate-900 truncate">Siti Maharani</span>
+<span class="font-body-sm text-body-sm text-slate-500 truncate">UI/UX Designer</span>
+</div>
+</div>
+<button class="p-2 rounded-xl bg-slate-100 hover:bg-indigo-600 hover:text-white text-slate-600 transition-colors flex-shrink-0" title="Tambah Siti" type="button">
+<span class="material-symbols-outlined text-base">person_add</span>
+</button>
+</div>
+<!-- Suggestion 3 -->
+<div class="flex items-center justify-between gap-gutter-sm">
+<div class="flex items-center gap-gutter-sm min-w-0">
+<div class="relative flex-shrink-0">
+<div class="w-10 h-10 rounded-full bg-slate-100 text-slate-700 flex items-center justify-center font-title-md text-title-md font-semibold">
+                    DL
+                  </div>
+<span class="absolute bottom-0 right-0 w-2.5 h-2.5 bg-slate-400 ring-2 ring-white rounded-full"></span>
+</div>
+<div class="flex flex-col min-w-0">
+<span class="font-title-md text-title-md text-slate-900 truncate">Dimas Lazuardi</span>
+<span class="font-body-sm text-body-sm text-slate-500 truncate">Technical Writer</span>
+</div>
+</div>
+<button class="p-2 rounded-xl bg-slate-100 hover:bg-indigo-600 hover:text-white text-slate-600 transition-colors flex-shrink-0" title="Tambah Dimas" type="button">
+<span class="material-symbols-outlined text-base">person_add</span>
+</button>
+</div>
+</div>
+</div>
+<!-- Invite External Link Banner -->
+<div class="relative overflow-hidden p-gutter-lg bg-indigo-50/60 border border-indigo-100 rounded-xl flex flex-col gap-gutter-sm shadow-sm">
+<div class="flex items-center gap-gutter-xs text-indigo-600 font-label-md text-label-md font-semibold">
+<span class="material-symbols-outlined text-base">share</span>
+<span>Undang ke Workspace</span>
+</div>
+<h4 class="font-title-md text-title-md text-slate-900 font-semibold">Tidak menemukan yang dicari?</h4>
+<p class="font-body-sm text-body-sm text-slate-600">
+            Bagikan tautan undangan instan atau kirim via email resmi perusahaan.
+          </p>
+<div class="flex items-center gap-gutter-xs mt-gutter-xs">
+<input class="w-full bg-white border border-slate-200 text-timestamp font-timestamp text-slate-600 px-gutter-sm py-2 rounded-lg truncate focus:outline-none" readonly="" type="text" value="https://vibe.chat/join/w-indonesia-77"/>
+<button class="px-gutter-sm py-2 rounded-lg bg-indigo-600 text-white font-label-sm text-label-sm whitespace-nowrap hover:bg-indigo-700 transition-colors font-medium" id="copy-invite-btn" type="button">
+              Salin
+            </button>
+</div>
+</div>
+</div>
+</div>
+</div>
+<script>
+    // Search bar dynamic clear & filter pills interaction
+    const searchInput = document.getElementById('user-search-input');
+    const clearBtn = document.getElementById('clear-search-btn');
+    const filterPills = document.querySelectorAll('.filter-chip');
+    const copyBtn = document.getElementById('copy-invite-btn');
+
+    if (clearBtn && searchInput) {
+      clearBtn.addEventListener('click', () => {
+        searchInput.value = '';
+        searchInput.focus();
+      });
+    }
+
+    filterPills.forEach(pill => {
+      pill.addEventListener('click', () => {
+        filterPills.forEach(p => {
+          p.classList.remove('bg-indigo-600', 'text-white', 'shadow-sm');
+          p.classList.add('bg-slate-100', 'text-slate-700');
+        });
+        pill.classList.remove('bg-slate-100', 'text-slate-700');
+        pill.classList.add('bg-indigo-600', 'text-white', 'shadow-sm');
+      });
+    });
+
+    if (copyBtn) {
+      copyBtn.addEventListener('click', () => {
+        const originalText = copyBtn.innerText;
+        copyBtn.innerText = 'Tersalin!';
+        setTimeout(() => {
+          copyBtn.innerText = originalText;
+        }, 1800);
+      });
+    }
+  </script>
+</div></main></div></body></html>

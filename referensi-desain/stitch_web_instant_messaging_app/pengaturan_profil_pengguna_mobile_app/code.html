@@ -1,0 +1,455 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Pengaturan & Profil Pengguna (Mobile App)</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: {
+            sans: ['Plus Jakarta Sans', 'sans-serif'],
+          },
+          colors: {
+            surface: {
+              DEFAULT: '#0b1326',
+              dim: '#0b1326',
+              bright: '#31394d',
+              container: '#171f34',
+              low: '#131b2e',
+              lowest: '#060e20',
+              high: '#1d273e',
+              highest: '#242f49'
+            },
+            primary: {
+              DEFAULT: '#6366f1',
+              hover: '#4f46e5',
+              dark: '#4338ca'
+            }
+          }
+        }
+      }
+    }
+  </script>
+  <style>
+    body {
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      background-color: #060e20;
+      color: #f1f5f9;
+      -webkit-tap-highlight-color: transparent;
+    }
+    .custom-scrollbar::-webkit-scrollbar {
+      display: none;
+    }
+    .custom-scrollbar {
+      -ms-overflow-style: none;
+      scrollbar-width: none;
+    }
+  </style>
+</head>
+<body class="flex justify-center items-start min-h-screen bg-slate-950 p-0 sm:py-6">
+  <!-- Mobile Container (approx 390px-414px) -->
+  <div class="w-full max-w-[412px] bg-[#0b1326] min-h-screen text-slate-100 flex flex-col relative shadow-2xl overflow-hidden border border-slate-800/80 sm:rounded-[36px]">
+    
+    <!-- Status Bar iOS/Android Style -->
+    <div class="pt-3 px-6 pb-2 flex items-center justify-between text-xs font-semibold text-slate-400 select-none z-20">
+      <span>09:41</span>
+      <div class="flex items-center gap-2">
+        <svg class="w-3.5 h-3.5 fill-current" viewBox="0 0 24 24"><path d="M12 3c-4.97 0-9 4.03-9 9 0 2.12.74 4.07 1.97 5.61L4.35 19.4c-.39.39-.39 1.02 0 1.41.39.39 1.02.39 1.41 0l1.9-1.9C9.22 19.59 10.56 20 12 20c4.97 0 9-4.03 9-9s-4.03-9-9-9zm0 15c-3.31 0-6-2.69-6-6s2.69-6 6-6 6 2.69 6 6-2.69 6-6 6z"/></svg>
+        <span class="text-[10px] bg-emerald-500/20 text-emerald-400 px-1.5 py-0.5 rounded font-mono font-bold">5G</span>
+        <svg class="w-4 h-4 fill-current" viewBox="0 0 24 24"><path d="M17 4h-3V2h-4v2H7c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h10c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 16H7V6h10v14z"/></svg>
+      </div>
+    </div>
+
+    <!-- Top Header -->
+    <header class="px-5 pt-2 pb-4 flex items-center justify-between sticky top-0 bg-[#0b1326]/95 backdrop-blur-md z-30 border-b border-slate-800/60">
+      <div class="flex items-center gap-3">
+        <a href="#" class="w-9 h-9 rounded-xl bg-slate-800/80 hover:bg-slate-700/80 flex items-center justify-center text-slate-300 transition-colors border border-slate-700/50">
+          <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M15 19l-7-7 7-7" />
+          </svg>
+        </a>
+        <div>
+          <div class="flex items-center gap-1.5">
+            <span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
+            <span class="text-[11px] font-semibold text-emerald-400 uppercase tracking-wider">VibeChat Workspace</span>
+          </div>
+          <h1 class="text-lg font-bold text-white leading-tight">Pengaturan & Profil</h1>
+        </div>
+      </div>
+
+      <div class="flex items-center gap-2">
+        <button class="w-9 h-9 rounded-xl bg-indigo-600/20 text-indigo-400 hover:bg-indigo-600/30 flex items-center justify-center border border-indigo-500/30 transition-all" title="Simpan Cepat">
+          <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7" />
+          </svg>
+        </button>
+      </div>
+    </header>
+
+    <!-- Main Scrollable Content -->
+    <main class="flex-1 px-4 py-4 space-y-5 pb-24 overflow-y-auto custom-scrollbar">
+
+      <!-- Sync Status Pill -->
+      <div class="flex items-center justify-between px-3.5 py-2 rounded-xl bg-indigo-950/40 border border-indigo-500/20 text-xs">
+        <div class="flex items-center gap-2 text-indigo-300 font-medium">
+          <svg class="w-3.5 h-3.5 text-indigo-400 animate-spin" fill="none" viewBox="0 0 24 24">
+            <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+            <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+          </svg>
+          <span>Sinkronisasi cloud aktif</span>
+        </div>
+        <span class="text-[11px] text-slate-400">Hari ini, 14:28 WIB</span>
+      </div>
+
+      <!-- User Profile Hero Card -->
+      <section class="p-4 rounded-2xl bg-[#131b2e] border border-slate-800 relative overflow-hidden shadow-lg">
+        <div class="absolute -right-10 -bottom-10 w-36 h-36 bg-indigo-600/10 rounded-full blur-2xl pointer-events-none"></div>
+
+        <div class="flex flex-col sm:flex-row items-center gap-4 text-center sm:text-left">
+          <div class="relative">
+            <img src="https://lh3.googleusercontent.com/aida/AEtjO1U-_yd1TIuXx9wIRWbCsreIcKNS6aQTks-u_j_aE_Ibr1kanQNRXNezHQ6Gn4yWrKV7Vlx0GtHONXb1ftQlLeq0kOUnCAHmfHzSdbBgvaXS0ueJ87q1EgOMGIP6qBdj7dTs8R04MSuvQS_RE39-T2rN788X7nj9oEOZIJD8X2rxXkU7JmLN0ZR5r_K19vjxUwt-ZApzKd5CMmbKlm8VWzPITBCGlScIKEXG_wz7J6t4H52OUFaJNBD0SA" alt="Dimas Wahyudi" class="w-20 h-20 rounded-2xl object-cover ring-2 ring-indigo-500/50 shadow-md">
+            <span class="absolute bottom-1 right-1 w-4 h-4 bg-emerald-500 border-2 border-[#131b2e] rounded-full" title="Online"></span>
+          </div>
+
+          <div class="flex-1 min-w-0">
+            <div class="flex items-center justify-center sm:justify-start gap-1.5 flex-wrap">
+              <h2 class="text-base font-bold text-white tracking-tight truncate">Dimas Wahyudi</h2>
+              <span class="inline-flex items-center gap-1 text-[10px] font-semibold bg-emerald-500/15 text-emerald-400 px-2 py-0.5 rounded-full border border-emerald-500/30">
+                <svg class="w-2.5 h-2.5 fill-current" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"/></svg>
+                Terverifikasi
+              </span>
+            </div>
+            <p class="text-xs text-indigo-400 font-medium">@dimaswahyudi • Fullstack & Tech Lead</p>
+            <p class="text-xs text-slate-400 mt-1 line-clamp-2">Tech Enthusiast & Fullstack Engineer. Always learning something new 🚀</p>
+          </div>
+        </div>
+
+        <!-- Quick Profile Actions -->
+        <div class="grid grid-cols-2 gap-2.5 mt-4 pt-3 border-t border-slate-800/80">
+          <button class="flex items-center justify-center gap-1.5 py-2 px-3 rounded-xl bg-indigo-600 hover:bg-indigo-500 text-white text-xs font-semibold shadow-sm shadow-indigo-500/20 transition-all">
+            <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M3 9a2 2 0 012-2h.93a2 2 0 001.664-.89l.812-1.22A2 2 0 0110.07 4h3.86a2 2 0 011.664.89l.812 1.22A2 2 0 0018.07 7H19a2 2 0 012 2v9a2 2 0 01-2 2H5a2 2 0 01-2-2V9z" />
+              <path stroke-linecap="round" stroke-linejoin="round" d="M15 13a3 3 0 11-6 0 3 3 0 016 0z" />
+            </svg>
+            Ubah Foto
+          </button>
+          <button class="flex items-center justify-center gap-1.5 py-2 px-3 rounded-xl bg-slate-800 hover:bg-slate-700/80 text-slate-300 text-xs font-semibold border border-slate-700/50 transition-all">
+            <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z" />
+            </svg>
+            Edit Bio & Status
+          </button>
+        </div>
+      </section>
+
+      <!-- Status Ketersediaan Selector -->
+      <div class="p-3.5 rounded-2xl bg-[#131b2e] border border-slate-800">
+        <label class="block text-[11px] font-semibold text-slate-400 uppercase tracking-wider mb-2">Status Ketersediaan</label>
+        <div class="grid grid-cols-3 gap-2">
+          <button class="flex flex-col items-center justify-center p-2 rounded-xl bg-indigo-900/30 border border-indigo-500/50 text-indigo-200">
+            <span class="w-2.5 h-2.5 rounded-full bg-emerald-400 mb-1"></span>
+            <span class="text-[11px] font-bold">Online</span>
+            <span class="text-[9px] text-slate-400">Terlihat Aktif</span>
+          </button>
+          <button class="flex flex-col items-center justify-center p-2 rounded-xl bg-slate-800/40 border border-slate-800 text-slate-300 hover:bg-slate-800">
+            <span class="w-2.5 h-2.5 rounded-full bg-amber-400 mb-1"></span>
+            <span class="text-[11px] font-medium">Away</span>
+            <span class="text-[9px] text-slate-500">Rapat / Sibuk</span>
+          </button>
+          <button class="flex flex-col items-center justify-center p-2 rounded-xl bg-slate-800/40 border border-slate-800 text-slate-300 hover:bg-slate-800">
+            <span class="w-2.5 h-2.5 rounded-full bg-rose-400 mb-1"></span>
+            <span class="text-[11px] font-medium">DND</span>
+            <span class="text-[9px] text-slate-500">Hening total</span>
+          </button>
+        </div>
+      </div>
+
+      <!-- Form Detail Profil -->
+      <section class="space-y-3 p-4 rounded-2xl bg-[#131b2e] border border-slate-800">
+        <div class="flex items-center justify-between pb-2 border-b border-slate-800/80">
+          <span class="text-xs font-bold text-indigo-400 uppercase tracking-wider">Bagian 01 • Informasi Akun</span>
+          <span class="text-[10px] text-slate-400">ID: #VC-9942</span>
+        </div>
+
+        <!-- Input Nama Lengkap -->
+        <div>
+          <label class="block text-xs font-medium text-slate-300 mb-1">Nama Lengkap</label>
+          <input type="text" value="Dimas Wahyudi" class="w-full px-3.5 py-2.5 rounded-xl bg-[#0b1326] border border-slate-700/80 text-sm text-white focus:outline-none focus:border-indigo-500 transition-colors">
+        </div>
+
+        <!-- Input Username -->
+        <div>
+          <div class="flex items-center justify-between mb-1">
+            <label class="text-xs font-medium text-slate-300">Nama Pengguna</label>
+            <span class="text-[10px] font-semibold text-emerald-400 flex items-center gap-1">
+              <svg class="w-3 h-3 fill-current" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"/></svg>
+              Tersedia
+            </span>
+          </div>
+          <div class="relative">
+            <span class="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-slate-400 text-sm">@</span>
+            <input type="text" value="dimaswahyudi" class="w-full pl-8 pr-3.5 py-2.5 rounded-xl bg-[#0b1326] border border-slate-700/80 text-sm text-white focus:outline-none focus:border-indigo-500 font-mono">
+          </div>
+        </div>
+
+        <!-- Input Email -->
+        <div>
+          <div class="flex items-center justify-between mb-1">
+            <label class="text-xs font-medium text-slate-300">Alamat Email</label>
+            <span class="text-[10px] font-semibold text-emerald-400">Terverifikasi</span>
+          </div>
+          <input type="email" value="dimas.wahyudi@vibechat.app" class="w-full px-3.5 py-2.5 rounded-xl bg-[#0b1326] border border-slate-700/80 text-sm text-slate-300 focus:outline-none focus:border-indigo-500 font-mono">
+        </div>
+
+        <!-- Input Nomor Telepon -->
+        <div>
+          <label class="block text-xs font-medium text-slate-300 mb-1">Nomor Telepon</label>
+          <input type="tel" value="+62 812-3456-7890" class="w-full px-3.5 py-2.5 rounded-xl bg-[#0b1326] border border-slate-700/80 text-sm text-white focus:outline-none focus:border-indigo-500">
+        </div>
+
+        <!-- Bio -->
+        <div>
+          <div class="flex items-center justify-between mb-1">
+            <label class="text-xs font-medium text-slate-300">Bio / Status Singkat</label>
+            <span class="text-[10px] text-slate-500">74/160</span>
+          </div>
+          <textarea rows="2" class="w-full px-3.5 py-2.5 rounded-xl bg-[#0b1326] border border-slate-700/80 text-xs text-white focus:outline-none focus:border-indigo-500 resize-none">Tech Enthusiast & Fullstack Engineer. Always learning something new 🚀</textarea>
+        </div>
+      </section>
+
+      <!-- Section Notifikasi & Suara -->
+      <section class="space-y-3.5 p-4 rounded-2xl bg-[#131b2e] border border-slate-800">
+        <div class="pb-2 border-b border-slate-800/80">
+          <span class="text-xs font-bold text-indigo-400 uppercase tracking-wider">Bagian 02 • Notifikasi & Suara</span>
+        </div>
+
+        <!-- Toggle Notifikasi Masuk -->
+        <div class="flex items-center justify-between gap-3">
+          <div>
+            <h4 class="text-xs font-semibold text-white">Notifikasi Dorong (Push)</h4>
+            <p class="text-[11px] text-slate-400">Terima pesan instan saat aplikasi ditutup</p>
+          </div>
+          <label class="relative inline-flex items-center cursor-pointer">
+            <input type="checkbox" checked class="sr-only peer">
+            <div class="w-11 h-6 bg-slate-800 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-slate-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-indigo-600"></div>
+          </label>
+        </div>
+
+        <!-- Toggle Pratinjau Pesan -->
+        <div class="flex items-center justify-between gap-3 pt-2 border-t border-slate-800/60">
+          <div>
+            <h4 class="text-xs font-semibold text-white">Pratinjau Pesan</h4>
+            <p class="text-[11px] text-slate-400">Tampilkan isi pesan di layar kunci</p>
+          </div>
+          <label class="relative inline-flex items-center cursor-pointer">
+            <input type="checkbox" checked class="sr-only peer">
+            <div class="w-11 h-6 bg-slate-800 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-slate-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-indigo-600"></div>
+          </label>
+        </div>
+
+        <!-- Suara Notifikasi Selection -->
+        <div class="pt-2 border-t border-slate-800/60">
+          <label class="block text-xs font-medium text-slate-300 mb-1.5">Suara Notifikasi</label>
+          <div class="flex items-center justify-between p-2.5 rounded-xl bg-[#0b1326] border border-slate-700/80">
+            <div class="flex items-center gap-2 text-xs text-white">
+              <svg class="w-4 h-4 text-indigo-400" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M15.536 8.464a5 5 0 010 7.072m2.828-9.9a9 9 0 010 12.728M5.586 15H4a1 1 0 01-1-1v-4a1 1 0 011-1h1.586l4.707-4.707C10.923 3.663 12 4.109 12 5v14c0 .891-1.077 1.337-1.707.707L5.586 15z" />
+              </svg>
+              <span>Chime Modern (Default)</span>
+            </div>
+            <button class="text-xs text-indigo-400 font-semibold hover:underline">Ganti</button>
+          </div>
+        </div>
+
+        <!-- Mode Jangan Ganggu -->
+        <div class="p-3 rounded-xl bg-slate-900/60 border border-slate-800 flex items-center justify-between">
+          <div class="flex items-center gap-2.5">
+            <div class="w-8 h-8 rounded-lg bg-indigo-500/20 text-indigo-400 flex items-center justify-center">
+              <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z" />
+              </svg>
+            </div>
+            <div>
+              <div class="text-xs font-semibold text-white flex items-center gap-1.5">
+                Jangan Ganggu
+                <span class="text-[9px] bg-indigo-500/20 text-indigo-300 px-1.5 py-0.2 rounded">Otomatis</span>
+              </div>
+              <div class="text-[10px] text-slate-400">Jadwal: 22:00 — 07:00 WIB</div>
+            </div>
+          </div>
+          <span class="text-xs font-mono font-medium text-slate-300">Aktif</span>
+        </div>
+      </section>
+
+      <!-- Section Privasi & Visibilitas -->
+      <section class="space-y-3.5 p-4 rounded-2xl bg-[#131b2e] border border-slate-800">
+        <div class="pb-2 border-b border-slate-800/80">
+          <span class="text-xs font-bold text-indigo-400 uppercase tracking-wider">Bagian 03 • Privasi & Visibilitas</span>
+        </div>
+
+        <div>
+          <label class="block text-xs font-medium text-slate-300 mb-2">Siapa yang dapat melihat 'Terakhir Dilihat'</label>
+          <div class="space-y-2">
+            <label class="flex items-center justify-between p-2.5 rounded-xl bg-[#0b1326] border border-indigo-500/50 cursor-pointer">
+              <div class="flex items-center gap-2.5">
+                <input type="radio" name="last_seen" checked class="text-indigo-600 focus:ring-0">
+                <span class="text-xs text-white font-medium">Kontak Saya</span>
+              </div>
+              <span class="text-[10px] text-indigo-400">Hanya rekan tersimpan</span>
+            </label>
+            <label class="flex items-center justify-between p-2.5 rounded-xl bg-[#0b1326] border border-slate-800 cursor-pointer">
+              <div class="flex items-center gap-2.5">
+                <input type="radio" name="last_seen" class="text-indigo-600 focus:ring-0">
+                <span class="text-xs text-slate-300 font-medium">Semua Orang</span>
+              </div>
+              <span class="text-[10px] text-slate-500">Visibilitas publik</span>
+            </label>
+            <label class="flex items-center justify-between p-2.5 rounded-xl bg-[#0b1326] border border-slate-800 cursor-pointer">
+              <div class="flex items-center gap-2.5">
+                <input type="radio" name="last_seen" class="text-indigo-600 focus:ring-0">
+                <span class="text-xs text-slate-300 font-medium">Tidak Ada</span>
+              </div>
+              <span class="text-[10px] text-slate-500">Privat total</span>
+            </label>
+          </div>
+        </div>
+
+        <!-- Centang Ganda / Read Receipts -->
+        <div class="flex items-center justify-between gap-3 pt-2 border-t border-slate-800/60">
+          <div>
+            <h4 class="text-xs font-semibold text-white">Tanda Pesan Telah Dibaca</h4>
+            <p class="text-[11px] text-slate-400">Centang ganda biru saat pesan dilihat</p>
+          </div>
+          <label class="relative inline-flex items-center cursor-pointer">
+            <input type="checkbox" checked class="sr-only peer">
+            <div class="w-11 h-6 bg-slate-800 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-slate-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-indigo-600"></div>
+          </label>
+        </div>
+      </section>
+
+      <!-- Section Sesi Perangkat Aktif -->
+      <section class="space-y-3 p-4 rounded-2xl bg-[#131b2e] border border-slate-800">
+        <div class="flex items-center justify-between pb-2 border-b border-slate-800/80">
+          <span class="text-xs font-bold text-indigo-400 uppercase tracking-wider">Bagian 04 • Perangkat Aktif (2)</span>
+          <button class="text-[11px] font-semibold text-rose-400 hover:text-rose-300">Keluar Semua</button>
+        </div>
+
+        <!-- Current Mobile Device -->
+        <div class="p-3 rounded-xl bg-[#0b1326] border border-emerald-500/30 flex items-start gap-3">
+          <div class="w-8 h-8 rounded-lg bg-emerald-500/10 text-emerald-400 flex items-center justify-center shrink-0 mt-0.5">
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M12 18h.01M8 21h8a2 2 0 002-2V5a2 2 0 00-2-2H8a2 2 0 00-2 2v14a2 2 0 002 2z" />
+            </svg>
+          </div>
+          <div class="flex-1 min-w-0">
+            <div class="flex items-center justify-between">
+              <h4 class="text-xs font-bold text-white truncate">iPhone 15 Pro — Mobile App</h4>
+              <span class="text-[9px] font-bold bg-emerald-500/20 text-emerald-400 px-1.5 py-0.5 rounded">Sesi Ini</span>
+            </div>
+            <p class="text-[11px] text-slate-400 mt-0.5">iOS 17.5 • Tangerang Selatan, Indonesia</p>
+            <p class="text-[10px] text-emerald-400 mt-0.5 flex items-center gap-1">
+              <span class="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-ping"></span>
+              Aktif sekarang
+            </p>
+          </div>
+        </div>
+
+        <!-- Desktop Device -->
+        <div class="p-3 rounded-xl bg-[#0b1326] border border-slate-800 flex items-start gap-3">
+          <div class="w-8 h-8 rounded-lg bg-slate-800 text-slate-300 flex items-center justify-center shrink-0 mt-0.5">
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M9.75 17L9 20l-1 1h8l-1-1-.75-3M3 13h18M5 17h14a2 2 0 002-2V5a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
+            </svg>
+          </div>
+          <div class="flex-1 min-w-0">
+            <div class="flex items-center justify-between">
+              <h4 class="text-xs font-semibold text-slate-200 truncate">MacBook Pro 14" — Jakarta</h4>
+              <button class="text-[10px] text-rose-400 hover:underline">Keluar</button>
+            </div>
+            <p class="text-[11px] text-slate-400 mt-0.5">VibeChat Desktop v2.4.1 • IP 182.253.12.89</p>
+            <p class="text-[10px] text-slate-500 mt-0.5">Aktif 10 menit lalu</p>
+          </div>
+        </div>
+      </section>
+
+      <!-- Cloud Storage Status & Danger Zone -->
+      <div class="p-3.5 rounded-2xl bg-[#131b2e] border border-slate-800 space-y-2.5">
+        <div class="flex items-center justify-between text-xs">
+          <span class="text-slate-400 font-medium">Kapasitas Cloud Terenkripsi</span>
+          <span class="text-indigo-400 font-bold">24% Digunakan</span>
+        </div>
+        <div class="w-full h-1.5 rounded-full bg-slate-800 overflow-hidden">
+          <div class="h-full bg-gradient-to-r from-indigo-500 to-purple-500 rounded-full" style="width: 24%"></div>
+        </div>
+        <div class="text-[10px] text-slate-500 flex justify-between">
+          <span>2.4 GB dari 10 GB</span>
+          <span class="text-emerald-400">Penyimpanan Aman E2EE</span>
+        </div>
+      </div>
+
+      <!-- Action Buttons (Simpan / Batal) -->
+      <div class="pt-2 space-y-2">
+        <button class="w-full py-3 px-4 rounded-xl bg-indigo-600 hover:bg-indigo-500 text-white text-xs font-bold shadow-lg shadow-indigo-600/30 transition-all flex items-center justify-center gap-2">
+          <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7" />
+          </svg>
+          Simpan Seluruh Perubahan
+        </button>
+        <button class="w-full py-2.5 px-4 rounded-xl bg-transparent hover:bg-slate-800/60 text-slate-400 text-xs font-semibold transition-all">
+          Batal & Kembalikan Semula
+        </button>
+      </div>
+
+    </main>
+
+    <!-- Bottom Navigation Bar (Matched with other mobile screens) -->
+    <nav class="fixed bottom-0 inset-x-0 max-w-[412px] mx-auto bg-[#060e20]/95 backdrop-blur-lg border-t border-slate-800/80 px-4 py-2.5 flex items-center justify-around z-40">
+      <!-- Obrolan -->
+      <a href="#" class="flex flex-col items-center gap-1 text-slate-400 hover:text-slate-200 transition-colors group">
+        <div class="relative">
+          <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" />
+          </svg>
+          <span class="absolute -top-1 -right-1.5 w-4 h-4 rounded-full bg-indigo-600 text-white text-[9px] font-bold flex items-center justify-center">3</span>
+        </div>
+        <span class="text-[10px] font-medium">Obrolan</span>
+      </a>
+
+      <!-- Kontak -->
+      <a href="#" class="flex flex-col items-center gap-1 text-slate-400 hover:text-slate-200 transition-colors">
+        <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" />
+        </svg>
+        <span class="text-[10px] font-medium">Kontak</span>
+      </a>
+
+      <!-- Panggilan -->
+      <a href="#" class="flex flex-col items-center gap-1 text-slate-400 hover:text-slate-200 transition-colors">
+        <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z" />
+        </svg>
+        <span class="text-[10px] font-medium">Panggilan</span>
+      </a>
+
+      <!-- Pengaturan (Active Tab) -->
+      <a href="#" class="flex flex-col items-center gap-1 text-indigo-400 font-bold transition-colors">
+        <div class="relative">
+          <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z" />
+            <path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+          </svg>
+          <span class="absolute -top-1 -right-1 w-2 h-2 rounded-full bg-indigo-500"></span>
+        </div>
+        <span class="text-[10px]">Pengaturan</span>
+      </a>
+    </nav>
+
+  </div>
+</body>
+</html>

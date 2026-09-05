@@ -1,0 +1,412 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="id"><head><meta charset="utf-8"/><meta content="width=device-width, initial-scale=1.0" name="viewport"/><link href="https://fonts.googleapis.com" rel="preconnect"/><link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/><link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&amp;family=Plus+Jakarta+Sans:wght@600;700&amp;display=swap" rel="stylesheet"/><link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/><style>@layer base { html, body { margin: 0; padding: 0; } body { overscroll-behavior: none; } main > :first-child { margin-top: 0 !important; } main > :last-child { margin-bottom: 0 !important; } } ::-webkit-scrollbar { display: none; }</style><script src="https://cdn.tailwindcss.com"></script><script id="tailwind-config">tailwind.config = { darkMode: "class", theme: { extend: { "colors": { "secondary-fixed-dim": "#d0bcff", "on-surface": "#dae2fd", "error-container": "#93000a", "surface-bright": "#31394d", "on-primary-container": "#dad7ff", "on-background": "#dae2fd", "surface-variant": "#2d3449", "surface-container-high": "#222a3d", "on-surface-variant": "#c7c4d8", "outline-variant": "#464555", "surface-container-highest": "#2d3449", "inverse-on-surface": "#283044", "on-tertiary-fixed": "#002113", "on-tertiary": "#003824", "surface-dim": "#0b1326", "secondary": "#d0bcff", "on-primary-fixed": "#0f0069", "primary-fixed-dim": "#c3c0ff", "surface-container": "#171f33", "primary": "#c3c0ff", "secondary-container": "#571bc1", "background": "#0b1326", "on-secondary-fixed": "#23005c", "on-secondary-fixed-variant": "#5516be", "on-tertiary-fixed-variant": "#005236", "inverse-surface": "#dae2fd", "inverse-primary": "#4d44e3", "error": "#ffb4ab", "tertiary-fixed-dim": "#4edea3", "surface-tint": "#c3c0ff", "tertiary-container": "#006e4b", "outline": "#918fa1", "surface-container-lowest": "#060e20", "surface": "#0b1326", "on-secondary": "#3c0091", "primary-fixed": "#e2dfff", "on-tertiary-container": "#67f4b7", "on-secondary-container": "#c4abff", "on-error": "#690005", "surface-container-low": "#131b2e", "tertiary-fixed": "#6ffbbe", "on-error-container": "#ffdad6", "tertiary": "#4edea3", "on-primary-fixed-variant": "#3323cc", "on-primary": "#1d00a5", "secondary-fixed": "#e9ddff", "primary-container": "#4f46e5" }, "borderRadius": { "DEFAULT": "0.25rem", "lg": "0.5rem", "xl": "0.75rem", "full": "9999px" }, "spacing": { "gutter-lg": "1.5rem", "chat-pane-min": "24rem", "gutter-xs": "0.25rem", "bubble-p-x": "1rem", "details-pane": "20rem", "sidebar-default": "18rem", "sidebar-compact": "4.5rem", "gutter-md": "1rem", "gutter-xl": "2rem", "bubble-p-y": "0.625rem", "gutter-sm": "0.5rem" }, "fontFamily": { "headline-lg-mobile": ["Plus Jakarta Sans"], "body-lg": ["Inter"], "headline-sm": ["Plus Jakarta Sans"], "headline-lg": ["Plus Jakarta Sans"], "title-md": ["Plus Jakarta Sans"], "timestamp": ["Inter"], "label-sm": ["Inter"], "body-sm": ["Inter"], "headline-md": ["Plus Jakarta Sans"], "label-md": ["Inter"], "body-md": ["Inter"] }, "fontSize": { "headline-lg-mobile": ["26px", { "lineHeight": "34px", "letterSpacing": "-0.015em", "fontWeight": "700" }], "body-lg": ["16px", { "lineHeight": "24px", "fontWeight": "400" }], "headline-sm": ["18px", { "lineHeight": "26px", "fontWeight": "600" }], "headline-lg": ["32px", { "lineHeight": "40px", "letterSpacing": "-0.02em", "fontWeight": "700" }], "title-md": ["15px", { "lineHeight": "22px", "fontWeight": "600" }], "timestamp": ["11px", { "lineHeight": "14px", "letterSpacing": "0.01em", "fontWeight": "400" }], "label-sm": ["11px", { "lineHeight": "14px", "letterSpacing": "0.02em", "fontWeight": "600" }], "body-sm": ["13px", { "lineHeight": "18px", "fontWeight": "400" }], "headline-md": ["22px", { "lineHeight": "30px", "letterSpacing": "-0.01em", "fontWeight": "600" }], "label-md": ["12px", { "lineHeight": "16px", "fontWeight": "500" }], "body-md": ["14px", { "lineHeight": "21px", "fontWeight": "400" }] } } } };</script></head><body class="bg-background font-body-md text-body-md text-on-surface antialiased selection:bg-primary-container selection:text-on-primary-container"><aside class="fixed left-0 top-0 h-full w-sidebar-compact bg-surface-container-lowest z-50 flex flex-col items-center justify-between py-gutter-md shadow-[0_1px_8px_rgba(0,0,0,0.45)]"><div class="flex flex-col items-center w-full gap-gutter-lg"><a class="flex items-center justify-center p-gutter-xs rounded-xl hover:bg-surface-container-high transition-colors group relative" data-path="direct-chat" href="#" title="VibeChat"><img alt="VibeChat Logo" class="h-8 w-auto object-contain" src="https://lh3.googleusercontent.com/aida/AEtjO1XSaz1oz5R2-FZXtVpMoHliVMT8mp1pCcdG_XGrb3ODZBOVTRJBny2NolJG_B33-xht6JZACNenTCYTLhDlokNGRCMWnJu93E3iZtM9YeM673KtSudHtzR7MDkbVPHw4gq7au8CL2i9LkUognpW4tL50Vilqsd0FLn9KAkevd7f9464lIJ4xnjyi8q8ZvRbrQ5VKL3tszZGC5T6hbIqJxkUNcDUGb3XX5qwvJ3XG2HGNV1LA1_LawE8_4E"/><span class="absolute left-full ml-gutter-sm px-gutter-sm py-gutter-xs bg-surface-bright text-on-surface font-label-sm text-label-sm rounded-lg opacity-0 group-hover:opacity-100 pointer-events-none transition-opacity whitespace-nowrap shadow-lg z-50">VibeChat</span></a><nav class="flex flex-col items-center gap-gutter-sm w-full px-gutter-xs" data-active-classes="bg-primary-container text-on-primary-container font-bold rounded-xl shadow-[0_4px_14px_0_rgba(79,70,229,0.35)]"><a class="group relative flex items-center justify-center w-11 h-11 rounded-xl text-on-surface-variant hover:bg-surface-container-high hover:text-on-surface transition-all" data-path="direct-chat" href="#" title="Obrolan Pribadi"><span class="material-symbols-outlined">chat</span><span class="absolute left-full ml-gutter-sm px-gutter-sm py-gutter-xs bg-surface-bright text-on-surface font-label-sm text-label-sm rounded-lg opacity-0 group-hover:opacity-100 pointer-events-none transition-opacity whitespace-nowrap shadow-lg z-50">Obrolan Pribadi</span></a><a class="group relative flex items-center justify-center w-11 h-11 rounded-xl text-on-surface-variant hover:bg-surface-container-high hover:text-on-surface transition-all" data-path="group-chat" href="#" title="Obrolan Grup"><span class="material-symbols-outlined">forum</span><span class="absolute left-full ml-gutter-sm px-gutter-sm py-gutter-xs bg-surface-bright text-on-surface font-label-sm text-label-sm rounded-lg opacity-0 group-hover:opacity-100 pointer-events-none transition-opacity whitespace-nowrap shadow-lg z-50">Obrolan Grup</span></a><a aria-current="page" class="group relative flex items-center justify-center w-11 h-11 transition-all bg-primary-container text-on-primary-container font-bold rounded-xl shadow-[0_4px_14px_0_rgba(79,70,229,0.35)]" data-path="search-users" href="#" title="Pencarian &amp; Kontak"><span class="material-symbols-outlined">person_search</span><span class="absolute left-full ml-gutter-sm px-gutter-sm py-gutter-xs bg-surface-bright text-on-surface font-label-sm text-label-sm rounded-lg opacity-0 group-hover:opacity-100 pointer-events-none transition-opacity whitespace-nowrap shadow-lg z-50">Pencarian &amp; Kontak</span></a><a class="group relative flex items-center justify-center w-11 h-11 rounded-xl text-on-surface-variant hover:bg-surface-container-high hover:text-on-surface transition-all" data-path="profile-settings" href="#" title="Pengaturan &amp; Akun"><span class="material-symbols-outlined">settings</span><span class="absolute left-full ml-gutter-sm px-gutter-sm py-gutter-xs bg-surface-bright text-on-surface font-label-sm text-label-sm rounded-lg opacity-0 group-hover:opacity-100 pointer-events-none transition-opacity whitespace-nowrap shadow-lg z-50">Pengaturan</span></a></nav></div><div class="flex flex-col items-center w-full gap-gutter-md"><a class="group relative flex items-center justify-center w-10 h-10 rounded-xl text-on-surface-variant hover:bg-error-container hover:text-on-error-container transition-all" data-path="login" href="#" title="Keluar"><span class="material-symbols-outlined">logout</span><span class="absolute left-full ml-gutter-sm px-gutter-sm py-gutter-xs bg-surface-bright text-on-surface font-label-sm text-label-sm rounded-lg opacity-0 group-hover:opacity-100 pointer-events-none transition-opacity whitespace-nowrap shadow-lg z-50">Keluar</span></a><div class="relative group cursor-pointer"><div class="relative"><img alt="Profile" class="w-8 h-8 rounded-full object-cover ring-2 ring-surface-container-lowest" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBfgRm-OU7vcCq8350QzrCm4S99P6DUjU4xu0hzj_iUWyK3TkFp2cOblaXZSSv40FhiX3u2MTv0cU-THLY7E76lh8d-_DsZEhj9fURblm0KyMfdA4nv_8aFb55YJ5DTnS9EPFdSJFCM-Ed73rhkg3LK7oTGtMawMonMUYB_gwVCNllMjHJi7uGXdBXa2nl4eFmqb8GUotz35hxbRZ8mkOkIolA16FNaiyA91YD0OtrcaPLueGctWoJ4"/><span class="absolute bottom-0 right-0 w-2.5 h-2.5 bg-tertiary rounded-full ring-2 ring-surface-container-lowest"></span></div><span class="absolute left-full ml-gutter-sm px-gutter-sm py-gutter-xs bg-surface-bright text-on-surface font-label-sm text-label-sm rounded-lg opacity-0 group-hover:opacity-100 pointer-events-none transition-opacity whitespace-nowrap shadow-lg z-50">Online • Profil</span></div></div></aside><div class="pl-sidebar-compact min-h-screen bg-background"><header class="fixed top-0 left-sidebar-compact right-0 h-14 bg-surface-container-low/80 backdrop-blur-xl shadow-[0_1px_8px_rgba(0,0,0,0.25)] z-40 flex items-center justify-between px-gutter-lg"><div class="flex items-center gap-gutter-sm"><span class="font-title-md text-title-md text-on-surface font-semibold">VibeChat Workspace</span><span class="px-gutter-xs py-0.5 rounded-full bg-tertiary-container text-on-tertiary-container font-label-sm text-label-sm">Aktif</span></div><div class="flex items-center gap-gutter-md"><nav class="hidden sm:flex items-center gap-gutter-lg" data-active-classes="text-on-surface font-semibold"><a class="font-body-sm text-body-sm text-on-surface-variant hover:text-on-surface transition-colors" data-path="direct-chat" href="#">Obrolan</a><a class="font-body-sm text-body-sm text-on-surface-variant hover:text-on-surface transition-colors" data-path="group-chat" href="#">Grup</a><a aria-current="page" class="transition-colors text-on-surface font-semibold" data-path="search-users" href="#">Kontak</a><a class="font-body-sm text-body-sm text-on-surface-variant hover:text-on-surface transition-colors" data-path="profile-settings" href="#">Preferensi</a></nav><div class="flex items-center gap-gutter-xs border-l border-outline-variant/30 pl-gutter-md"><img alt="Profile" class="w-8 h-8 rounded-full object-cover ring-1 ring-outline-variant/40" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBfgRm-OU7vcCq8350QzrCm4S99P6DUjU4xu0hzj_iUWyK3TkFp2cOblaXZSSv40FhiX3u2MTv0cU-THLY7E76lh8d-_DsZEhj9fURblm0KyMfdA4nv_8aFb55YJ5DTnS9EPFdSJFCM-Ed73rhkg3LK7oTGtMawMonMUYB_gwVCNllMjHJi7uGXdBXa2nl4eFmqb8GUotz35hxbRZ8mkOkIolA16FNaiyA91YD0OtrcaPLueGctWoJ4"/></div></div></header><main class="w-full pt-14 bg-background min-h-screen"><div class="flex flex-col w-full">
+<div class="w-full px-gutter-lg py-gutter-xl max-w-7xl mx-auto flex flex-col gap-gutter-xl">
+<!-- Top Header & Discovery Headline -->
+<div class="flex flex-col lg:flex-row lg:items-end justify-between gap-gutter-lg">
+<div class="flex flex-col gap-gutter-xs max-w-2xl">
+<div class="flex items-center gap-gutter-sm text-tertiary font-label-sm text-label-sm tracking-wider uppercase">
+<span class="inline-block w-2 h-2 rounded-full bg-tertiary animate-pulse"></span>
+          Direktori Ekosistem VibeChat
+        </div>
+<h1 class="font-headline-lg text-headline-lg text-on-surface tracking-tight">
+          Pencarian &amp; Tambah Kontak
+        </h1>
+<p class="font-body-lg text-body-lg text-on-surface-variant">
+          Temukan rekan kerja, tim, atau mulai percakapan baru dengan cepat dalam satu platform terpadu.
+        </p>
+</div>
+<!-- Quick Action Utilities -->
+<div class="flex items-center gap-gutter-sm flex-wrap">
+<button class="group flex items-center gap-gutter-sm px-gutter-md py-gutter-sm rounded-xl bg-surface-container-high hover:bg-surface-container-highest text-on-surface font-title-md text-title-md shadow-sm hover:shadow-md transition-all" type="button">
+<span class="material-symbols-outlined text-primary group-hover:scale-110 transition-transform">qr_code_scanner</span>
+<span>Pindai Kode QR</span>
+</button>
+<button class="group flex items-center gap-gutter-sm px-gutter-md py-gutter-sm rounded-xl bg-primary-container text-on-primary-container font-title-md text-title-md shadow-md hover:bg-primary hover:text-on-primary transition-all" type="button">
+<span class="material-symbols-outlined group-hover:rotate-90 transition-transform">group_add</span>
+<span>Buat Grup Baru</span>
+</button>
+</div>
+</div>
+<!-- Live Dynamic Search Zone -->
+<div class="flex flex-col gap-gutter-md bg-surface-container-low p-gutter-lg rounded-xl shadow-lg relative overflow-hidden">
+<div class="absolute -right-16 -top-16 w-64 h-64 bg-primary/10 rounded-full blur-3xl pointer-events-none"></div>
+<!-- Input Wrapper -->
+<div class="relative flex items-center w-full">
+<span class="material-symbols-outlined absolute left-gutter-md text-outline text-2xl pointer-events-none">search</span>
+<input class="w-full pl-12 pr-28 py-3.5 bg-surface-container-highest/90 text-on-surface font-body-lg text-body-lg rounded-xl placeholder:text-outline focus:outline-none focus:bg-surface-container-highest transition-all shadow-inner" id="user-search-input" placeholder="Ketik nama, username @handle, atau topik obrolan..." type="text" value="Andi"/>
+<button class="absolute right-gutter-md flex items-center gap-gutter-xs text-on-surface-variant hover:text-on-surface font-label-sm text-label-sm bg-surface-container px-gutter-xs py-1 rounded-lg transition-colors" id="clear-search-btn" type="button">
+<span class="material-symbols-outlined text-sm">backspace</span>
+<span>Reset</span>
+</button>
+</div>
+<!-- Filter Category Pills -->
+<div class="flex items-center gap-gutter-xs overflow-x-auto pb-1 text-label-md font-label-md">
+<button class="filter-chip px-gutter-md py-1.5 rounded-full bg-primary-container text-on-primary-container shadow-sm flex items-center gap-1.5 whitespace-nowrap" type="button">
+<span class="material-symbols-outlined text-base">apps</span>
+<span>Semua Hasil</span>
+<span class="ml-1 px-1.5 py-0.2 rounded-full bg-on-primary-container/20 text-timestamp">4</span>
+</button>
+<button class="filter-chip px-gutter-md py-1.5 rounded-full bg-surface-container-highest text-on-surface-variant hover:text-on-surface hover:bg-surface-bright whitespace-nowrap transition-colors flex items-center gap-1.5" type="button">
+<span class="material-symbols-outlined text-base">person</span>
+<span>Pengguna</span>
+<span class="ml-1 px-1.5 py-0.2 rounded-full bg-surface-container text-timestamp">3</span>
+</button>
+<button class="filter-chip px-gutter-md py-1.5 rounded-full bg-surface-container-highest text-on-surface-variant hover:text-on-surface hover:bg-surface-bright whitespace-nowrap transition-colors flex items-center gap-1.5" type="button">
+<span class="material-symbols-outlined text-base">groups</span>
+<span>Grup Publik</span>
+<span class="ml-1 px-1.5 py-0.2 rounded-full bg-surface-container text-timestamp">1</span>
+</button>
+<div class="h-4 w-px bg-outline-variant/40 mx-gutter-xs flex-shrink-0"></div>
+<button class="filter-chip px-gutter-md py-1.5 rounded-full bg-surface-container-highest text-on-surface-variant hover:text-on-surface hover:bg-surface-bright whitespace-nowrap transition-colors" type="button">
+          Engineering
+        </button>
+<button class="filter-chip px-gutter-md py-1.5 rounded-full bg-surface-container-highest text-on-surface-variant hover:text-on-surface hover:bg-surface-bright whitespace-nowrap transition-colors" type="button">
+          Product
+        </button>
+<button class="filter-chip px-gutter-md py-1.5 rounded-full bg-surface-container-highest text-on-surface-variant hover:text-on-surface hover:bg-surface-bright whitespace-nowrap transition-colors" type="button">
+          Marketing
+        </button>
+<button class="filter-chip px-gutter-md py-1.5 rounded-full bg-surface-container-highest text-on-surface-variant hover:text-on-surface hover:bg-surface-bright whitespace-nowrap transition-colors" type="button">
+          Design
+        </button>
+</div>
+</div>
+<!-- Main Workspace Split -->
+<div class="grid grid-cols-1 lg:grid-cols-12 gap-gutter-lg">
+<!-- Left / Center Main Results Area (8 cols) -->
+<div class="lg:col-span-8 flex flex-col gap-gutter-lg">
+<!-- People / Pengguna Section -->
+<div class="flex flex-col gap-gutter-md">
+<div class="flex items-center justify-between">
+<div class="flex items-center gap-gutter-sm">
+<span class="material-symbols-outlined text-primary text-xl">contacts</span>
+<h2 class="font-headline-sm text-headline-sm text-on-surface">Rekan &amp; Pengguna</h2>
+<span class="px-2 py-0.5 rounded-full bg-surface-container-high text-on-surface-variant font-label-sm text-label-sm">3 Ditemukan</span>
+</div>
+<span class="font-label-sm text-label-sm text-outline">Kriteria: Cocok persis "Andi"</span>
+</div>
+<!-- Cards Stack -->
+<div class="flex flex-col gap-gutter-sm">
+<!-- Result 1: Andi Wijaya -->
+<div class="group relative flex flex-col sm:flex-row sm:items-center justify-between p-gutter-md bg-surface-container-low hover:bg-surface-container rounded-xl shadow-md transition-all gap-gutter-md">
+<div class="flex items-start sm:items-center gap-gutter-md min-w-0">
+<div class="relative flex-shrink-0">
+<img class="w-14 h-14 rounded-xl object-cover shadow-sm" data-alt="Close up professional portrait of a modern Indonesian male software engineer wearing dark casual hoodie with subtle blue studio backlight looking confident and focused." src="https://lh3.googleusercontent.com/aida-public/AB6AXuBKThrmpUHepGbjTt9ekTd1oUwa718Nq2PDBkbU80HTf4unnjck42MB4M1mtUqBorqtVlhWMxwf-t_aNAyJ-eU9kUmd_ffBMlz0Op2u445icRNrBzUgLLNFlC-UTSWJp6IleFpjUA9PRhzEuZGtxe998fNYTmeIAawZ-AfPIGGIN8dZpXSr0OXVbpEBTZErazWfmTbm4jwy_YY0mJG7TO4u3E7BYGiT0zitcky5xI1GpyoNXrn8dbLH"/>
+<span class="absolute -bottom-1 -right-1 w-3.5 h-3.5 bg-tertiary rounded-full shadow-sm"></span>
+</div>
+<div class="flex flex-col min-w-0">
+<div class="flex items-center gap-gutter-xs flex-wrap">
+<h3 class="font-title-md text-title-md text-on-surface truncate">Andi Wijaya</h3>
+<span class="font-body-sm text-body-sm text-primary">@andiwjy</span>
+<span class="px-2 py-0.5 rounded-full bg-primary-container/40 text-on-primary-container font-label-sm text-label-sm">Engineering</span>
+</div>
+<p class="font-body-sm text-body-sm text-on-surface-variant truncate">Senior Frontend Developer</p>
+<div class="flex items-center gap-1.5 mt-1 text-tertiary font-label-sm text-label-sm">
+<span class="w-1.5 h-1.5 rounded-full bg-tertiary"></span>
+<span>Online • Sedang coding 💻</span>
+</div>
+</div>
+</div>
+<div class="flex items-center gap-gutter-xs self-end sm:self-center flex-shrink-0">
+<button class="p-2 rounded-xl text-outline hover:text-secondary-fixed hover:bg-surface-container-high transition-all" title="Bintangi Kontak" type="button">
+<span class="material-symbols-outlined text-xl">star</span>
+</button>
+<button class="flex items-center gap-gutter-xs px-gutter-md py-2 rounded-xl bg-primary-container hover:bg-primary text-on-primary-container hover:text-on-primary font-title-md text-title-md shadow-md transition-all" type="button">
+<span class="material-symbols-outlined text-lg">chat_bubble</span>
+<span>Kirim Pesan</span>
+</button>
+</div>
+</div>
+<!-- Result 2: Andini Kusuma -->
+<div class="group relative flex flex-col sm:flex-row sm:items-center justify-between p-gutter-md bg-surface-container-low hover:bg-surface-container rounded-xl shadow-md transition-all gap-gutter-md">
+<div class="flex items-start sm:items-center gap-gutter-md min-w-0">
+<div class="relative flex-shrink-0">
+<img class="w-14 h-14 rounded-xl object-cover shadow-sm" data-alt="Studio portrait of an Indonesian female tech professional with pleasant smile and sleek dark hair wearing a neutral blazer against a minimalist dark slate background." src="https://lh3.googleusercontent.com/aida-public/AB6AXuAEvl8cWyxzGML3nK6jhgYhXP6UcOV5fO1TKtwq-pEMHC-5Jn-Lg_yhE62KGXeRgIl5_PlB59Tk8Iyx4tcomrY2RycEauXyBPqxtUn3rWy9gEQfv-zHncHZ5FqMjFLy5IGTiALyHkYl0ZUdiomV4qHY_53h3-S6qxZIzx16_cVlzEcp2b9krmjd-6mpYfMMOx_ex0ArnEn6nQ9bpCiONewpl0AAcA5K5IDIBsU3IWQ51C1sfVV_aLC9"/>
+<span class="absolute -bottom-1 -right-1 w-3.5 h-3.5 bg-secondary rounded-full shadow-sm"></span>
+</div>
+<div class="flex flex-col min-w-0">
+<div class="flex items-center gap-gutter-xs flex-wrap">
+<h3 class="font-title-md text-title-md text-on-surface truncate">Andini Kusuma</h3>
+<span class="font-body-sm text-body-sm text-primary">@andinik</span>
+<span class="px-2 py-0.5 rounded-full bg-secondary-container/40 text-on-secondary-container font-label-sm text-label-sm">Product</span>
+</div>
+<p class="font-body-sm text-body-sm text-on-surface-variant truncate">Product Manager</p>
+<div class="flex items-center gap-1.5 mt-1 text-secondary-fixed-dim font-label-sm text-label-sm">
+<span class="w-1.5 h-1.5 rounded-full bg-secondary-fixed-dim"></span>
+<span>Away • Rapat mingguan</span>
+</div>
+</div>
+</div>
+<div class="flex items-center gap-gutter-xs self-end sm:self-center flex-shrink-0">
+<button class="flex items-center gap-gutter-xs px-gutter-sm py-2 rounded-xl bg-surface-container-high hover:bg-surface-bright text-on-surface font-title-md text-title-md transition-all" type="button">
+<span class="material-symbols-outlined text-lg">person_add</span>
+<span class="hidden sm:inline">Tambah</span>
+</button>
+<button class="flex items-center gap-gutter-xs px-gutter-md py-2 rounded-xl bg-primary-container hover:bg-primary text-on-primary-container hover:text-on-primary font-title-md text-title-md shadow-md transition-all" type="button">
+<span class="material-symbols-outlined text-lg">send</span>
+<span>Kirim Pesan</span>
+</button>
+</div>
+</div>
+<!-- Result 3: Andi Pratama -->
+<div class="group relative flex flex-col sm:flex-row sm:items-center justify-between p-gutter-md bg-surface-container-low hover:bg-surface-container rounded-xl shadow-md transition-all gap-gutter-md">
+<div class="flex items-start sm:items-center gap-gutter-md min-w-0">
+<div class="relative flex-shrink-0">
+<img class="w-14 h-14 rounded-xl object-cover grayscale opacity-80 group-hover:grayscale-0 group-hover:opacity-100 transition-all shadow-sm" data-alt="Editorial portrait of a young Southeast Asian male quality assurance specialist with glasses smiling gently in high resolution with muted indigo ambient tones." src="https://lh3.googleusercontent.com/aida-public/AB6AXuA0x9B0GR6s69pIH8K82RXrKHde57H9uI6xRifBjIKQJCgAJ99wIjmAkpN6TU2IgfWcN7gertJlwWYYCdQCUNIhAB3gEKyTaBomwWBlSdjQzJ6XrfoYviamXJSW3Yq69Hs9UsA7lfTJDsPN2635mfK-42LEPxPOK5ek_vLTuWJXZf36vLYj_T5ljZuhySifYw3k0iB-EnGnDyYPLf3Zv9NBfD-6KHnOUiPJHUOevVjlnY5KjI0ei0tz"/>
+<span class="absolute -bottom-1 -right-1 w-3.5 h-3.5 bg-outline rounded-full shadow-sm"></span>
+</div>
+<div class="flex flex-col min-w-0">
+<div class="flex items-center gap-gutter-xs flex-wrap">
+<h3 class="font-title-md text-title-md text-on-surface truncate">Andi Pratama</h3>
+<span class="font-body-sm text-body-sm text-primary">@andiprtm</span>
+<span class="px-2 py-0.5 rounded-full bg-surface-variant text-on-surface-variant font-label-sm text-label-sm">Tech Support</span>
+</div>
+<p class="font-body-sm text-body-sm text-on-surface-variant truncate">QA Automation</p>
+<div class="flex items-center gap-1.5 mt-1 text-outline font-label-sm text-label-sm">
+<span class="w-1.5 h-1.5 rounded-full bg-outline"></span>
+<span>Offline (terakhir aktif 2 jam lalu)</span>
+</div>
+</div>
+</div>
+<div class="flex items-center gap-gutter-xs self-end sm:self-center flex-shrink-0">
+<button class="flex items-center gap-gutter-xs px-gutter-md py-2 rounded-xl bg-surface-container-high hover:bg-surface-bright text-on-surface font-title-md text-title-md shadow-sm transition-all" type="button">
+<span class="material-symbols-outlined text-lg">person_add</span>
+<span>Tambah Kontak</span>
+</button>
+</div>
+</div>
+</div>
+</div>
+<!-- Matched Public Groups Section -->
+<div class="flex flex-col gap-gutter-md mt-gutter-sm">
+<div class="flex items-center justify-between">
+<div class="flex items-center gap-gutter-sm">
+<span class="material-symbols-outlined text-secondary text-xl">hub</span>
+<h2 class="font-headline-sm text-headline-sm text-on-surface">Grup Terbuka yang Cocok</h2>
+</div>
+<a class="font-label-md text-label-md text-primary hover:underline" href="#">Lihat Direktori Grup</a>
+</div>
+<!-- Group Card -->
+<div class="p-gutter-lg bg-surface-container-low hover:bg-surface-container rounded-xl shadow-md transition-all flex flex-col md:flex-row md:items-center justify-between gap-gutter-md">
+<div class="flex items-start gap-gutter-md">
+<div class="w-12 h-12 rounded-xl bg-secondary-container flex items-center justify-center text-on-secondary-container flex-shrink-0 shadow-inner">
+<span class="font-headline-sm text-headline-sm">#</span>
+</div>
+<div class="flex flex-col gap-0.5">
+<div class="flex items-center gap-gutter-xs flex-wrap">
+<h3 class="font-title-md text-title-md text-on-surface">Frontend Enthusiasts Indonesia</h3>
+<span class="px-2 py-0.5 rounded-full bg-tertiary-container text-on-tertiary-container font-label-sm text-label-sm">Publik</span>
+</div>
+<p class="font-body-sm text-body-sm text-on-surface-variant">
+                  Diskusi seputar React, Vue, arsitektur UI, Tailwind, dan tips performa frontend modern.
+                </p>
+<div class="flex items-center gap-gutter-md mt-2 text-timestamp font-timestamp text-outline">
+<span class="flex items-center gap-1">
+<span class="material-symbols-outlined text-sm">group</span>
+                    142 Anggota
+                  </span>
+<span class="flex items-center gap-1">
+<span class="material-symbols-outlined text-sm">forum</span>
+                    ~38 pesan / hari
+                  </span>
+</div>
+</div>
+</div>
+<button class="flex items-center justify-center gap-gutter-xs px-gutter-lg py-2.5 rounded-xl bg-surface-container-high hover:bg-secondary-container hover:text-on-secondary-container text-on-surface font-title-md text-title-md transition-all self-stretch md:self-auto shadow-sm" type="button">
+<span class="material-symbols-outlined text-base">login</span>
+<span>Gabung Grup</span>
+</button>
+</div>
+</div>
+<!-- Metric Snapshot Bar -->
+<div class="grid grid-cols-1 sm:grid-cols-3 gap-gutter-md p-gutter-md bg-surface-container-lowest rounded-xl">
+<div class="flex items-center gap-gutter-sm p-gutter-sm">
+<div class="w-10 h-10 rounded-lg bg-surface-container flex items-center justify-center text-primary">
+<span class="material-symbols-outlined">speed</span>
+</div>
+<div class="flex flex-col">
+<span class="font-headline-sm text-headline-sm text-on-surface">14ms</span>
+<span class="font-timestamp text-timestamp text-outline">Latensi Query Indeks</span>
+</div>
+</div>
+<div class="flex items-center gap-gutter-sm p-gutter-sm">
+<div class="w-10 h-10 rounded-lg bg-surface-container flex items-center justify-center text-tertiary">
+<span class="material-symbols-outlined">verified_user</span>
+</div>
+<div class="flex flex-col">
+<span class="font-headline-sm text-headline-sm text-on-surface">SSO Aktif</span>
+<span class="font-timestamp text-timestamp text-outline">Workspace Terverifikasi</span>
+</div>
+</div>
+<div class="flex items-center gap-gutter-sm p-gutter-sm">
+<div class="w-10 h-10 rounded-lg bg-surface-container flex items-center justify-center text-secondary">
+<span class="material-symbols-outlined">alternate_email</span>
+</div>
+<div class="flex flex-col">
+<span class="font-headline-sm text-headline-sm text-on-surface">Global DNS</span>
+<span class="font-timestamp text-timestamp text-outline">Pencarian Lintas Cabang</span>
+</div>
+</div>
+</div>
+</div>
+<!-- Right Panel: History & Suggestions (4 cols) -->
+<div class="lg:col-span-4 flex flex-col gap-gutter-lg">
+<!-- Search History Card -->
+<div class="flex flex-col gap-gutter-md p-gutter-md bg-surface-container-low rounded-xl shadow-md">
+<div class="flex items-center justify-between">
+<div class="flex items-center gap-gutter-xs">
+<span class="material-symbols-outlined text-outline text-lg">history</span>
+<h3 class="font-title-md text-title-md text-on-surface">Pencarian Terakhir</h3>
+</div>
+<button class="font-label-sm text-label-sm text-outline hover:text-error transition-colors" type="button">
+              Hapus Semua
+            </button>
+</div>
+<div class="flex flex-col gap-gutter-xs">
+<div class="flex items-center justify-between p-gutter-xs rounded-lg hover:bg-surface-container transition-colors group cursor-pointer">
+<div class="flex items-center gap-gutter-sm">
+<span class="material-symbols-outlined text-outline group-hover:text-primary text-base">person</span>
+<span class="font-body-md text-body-md text-on-surface">Nadia Safitri</span>
+</div>
+<span class="material-symbols-outlined text-sm text-outline group-hover:text-on-surface opacity-0 group-hover:opacity-100 transition-opacity">north_west</span>
+</div>
+<div class="flex items-center justify-between p-gutter-xs rounded-lg hover:bg-surface-container transition-colors group cursor-pointer">
+<div class="flex items-center gap-gutter-sm">
+<span class="material-symbols-outlined text-outline group-hover:text-primary text-base">tag</span>
+<span class="font-body-md text-body-md text-on-surface">Sprint Review 3</span>
+</div>
+<span class="material-symbols-outlined text-sm text-outline group-hover:text-on-surface opacity-0 group-hover:opacity-100 transition-opacity">north_west</span>
+</div>
+<div class="flex items-center justify-between p-gutter-xs rounded-lg hover:bg-surface-container transition-colors group cursor-pointer">
+<div class="flex items-center gap-gutter-sm">
+<span class="material-symbols-outlined text-outline group-hover:text-primary text-base">description</span>
+<span class="font-body-md text-body-md text-on-surface">API Webhook Docs</span>
+</div>
+<span class="material-symbols-outlined text-sm text-outline group-hover:text-on-surface opacity-0 group-hover:opacity-100 transition-opacity">north_west</span>
+</div>
+</div>
+</div>
+<!-- Suggested Contacts Card -->
+<div class="flex flex-col gap-gutter-md p-gutter-md bg-surface-container-low rounded-xl shadow-md">
+<div class="flex items-center justify-between">
+<div class="flex items-center gap-gutter-xs">
+<span class="material-symbols-outlined text-tertiary text-lg">recommend</span>
+<h3 class="font-title-md text-title-md text-on-surface">Saran Kontak Baru</h3>
+</div>
+<span class="font-label-sm text-label-sm text-outline">Tim Dekat</span>
+</div>
+<div class="flex flex-col gap-gutter-md">
+<!-- Suggestion 1 -->
+<div class="flex items-center justify-between gap-gutter-sm">
+<div class="flex items-center gap-gutter-sm min-w-0">
+<div class="relative flex-shrink-0">
+<div class="w-10 h-10 rounded-full bg-primary-container text-on-primary-container flex items-center justify-center font-title-md text-title-md">
+                    RA
+                  </div>
+<span class="absolute bottom-0 right-0 w-2.5 h-2.5 bg-tertiary rounded-full"></span>
+</div>
+<div class="flex flex-col min-w-0">
+<span class="font-title-md text-title-md text-on-surface truncate">Rafi Akbar</span>
+<span class="font-body-sm text-body-sm text-outline truncate">DevOps Specialist</span>
+</div>
+</div>
+<button class="p-2 rounded-xl bg-surface-container hover:bg-primary-container hover:text-on-primary-container text-on-surface transition-colors flex-shrink-0" title="Tambah Rafi" type="button">
+<span class="material-symbols-outlined text-base">person_add</span>
+</button>
+</div>
+<!-- Suggestion 2 -->
+<div class="flex items-center justify-between gap-gutter-sm">
+<div class="flex items-center gap-gutter-sm min-w-0">
+<div class="relative flex-shrink-0">
+<div class="w-10 h-10 rounded-full bg-secondary-container text-on-secondary-container flex items-center justify-center font-title-md text-title-md">
+                    SM
+                  </div>
+<span class="absolute bottom-0 right-0 w-2.5 h-2.5 bg-secondary rounded-full"></span>
+</div>
+<div class="flex flex-col min-w-0">
+<span class="font-title-md text-title-md text-on-surface truncate">Siti Maharani</span>
+<span class="font-body-sm text-body-sm text-outline truncate">UI/UX Designer</span>
+</div>
+</div>
+<button class="p-2 rounded-xl bg-surface-container hover:bg-primary-container hover:text-on-primary-container text-on-surface transition-colors flex-shrink-0" title="Tambah Siti" type="button">
+<span class="material-symbols-outlined text-base">person_add</span>
+</button>
+</div>
+<!-- Suggestion 3 -->
+<div class="flex items-center justify-between gap-gutter-sm">
+<div class="flex items-center gap-gutter-sm min-w-0">
+<div class="relative flex-shrink-0">
+<div class="w-10 h-10 rounded-full bg-surface-bright text-on-surface flex items-center justify-center font-title-md text-title-md">
+                    DL
+                  </div>
+<span class="absolute bottom-0 right-0 w-2.5 h-2.5 bg-outline rounded-full"></span>
+</div>
+<div class="flex flex-col min-w-0">
+<span class="font-title-md text-title-md text-on-surface truncate">Dimas Lazuardi</span>
+<span class="font-body-sm text-body-sm text-outline truncate">Technical Writer</span>
+</div>
+</div>
+<button class="p-2 rounded-xl bg-surface-container hover:bg-primary-container hover:text-on-primary-container text-on-surface transition-colors flex-shrink-0" title="Tambah Dimas" type="button">
+<span class="material-symbols-outlined text-base">person_add</span>
+</button>
+</div>
+</div>
+</div>
+<!-- Invite External Link Banner -->
+<div class="relative overflow-hidden p-gutter-lg bg-surface-container-high rounded-xl flex flex-col gap-gutter-sm shadow-md">
+<div class="flex items-center gap-gutter-xs text-primary font-label-md text-label-md">
+<span class="material-symbols-outlined text-base">share</span>
+<span>Undang ke Workspace</span>
+</div>
+<h4 class="font-title-md text-title-md text-on-surface">Tidak menemukan yang dicari?</h4>
+<p class="font-body-sm text-body-sm text-on-surface-variant">
+            Bagikan tautan undangan instan atau kirim via email resmi perusahaan.
+          </p>
+<div class="flex items-center gap-gutter-xs mt-gutter-xs">
+<input class="w-full bg-surface-container-lowest text-timestamp font-timestamp text-on-surface-variant px-gutter-sm py-2 rounded-lg truncate focus:outline-none" readonly="" type="text" value="https://vibe.chat/join/w-indonesia-77"/>
+<button class="px-gutter-sm py-2 rounded-lg bg-primary text-on-primary font-label-sm text-label-sm whitespace-nowrap hover:bg-primary-fixed transition-colors" id="copy-invite-btn" type="button">
+              Salin
+            </button>
+</div>
+</div>
+</div>
+</div>
+</div>
+<script>
+    // Search bar dynamic clear & filter pills interaction
+    const searchInput = document.getElementById('user-search-input');
+    const clearBtn = document.getElementById('clear-search-btn');
+    const filterPills = document.querySelectorAll('.filter-chip');
+    const copyBtn = document.getElementById('copy-invite-btn');
+
+    if (clearBtn && searchInput) {
+      clearBtn.addEventListener('click', () => {
+        searchInput.value = '';
+        searchInput.focus();
+      });
+    }
+
+    filterPills.forEach(pill => {
+      pill.addEventListener('click', () => {
+        filterPills.forEach(p => {
+          p.classList.remove('bg-primary-container', 'text-on-primary-container');
+          p.classList.add('bg-surface-container-highest', 'text-on-surface-variant');
+        });
+        pill.classList.remove('bg-surface-container-highest', 'text-on-surface-variant');
+        pill.classList.add('bg-primary-container', 'text-on-primary-container');
+      });
+    });
+
+    if (copyBtn) {
+      copyBtn.addEventListener('click', () => {
+        const originalText = copyBtn.innerText;
+        copyBtn.innerText = 'Tersalin!';
+        setTimeout(() => {
+          copyBtn.innerText = originalText;
+        }, 1800);
+      });
+    }
+  </script>
+</div></main></div></body></html>

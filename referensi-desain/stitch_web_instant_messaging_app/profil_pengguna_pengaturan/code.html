@@ -1,0 +1,446 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="id"><head><meta charset="utf-8"/><meta content="width=device-width, initial-scale=1.0" name="viewport"/><link href="https://fonts.googleapis.com" rel="preconnect"/><link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/><link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&amp;family=Plus+Jakarta+Sans:wght@600;700&amp;display=swap" rel="stylesheet"/><link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/><style>@layer base { html, body { margin: 0; padding: 0; } body { overscroll-behavior: none; } main > :first-child { margin-top: 0 !important; } main > :last-child { margin-bottom: 0 !important; } } ::-webkit-scrollbar { display: none; }</style><script src="https://cdn.tailwindcss.com"></script><script id="tailwind-config">tailwind.config = { darkMode: "class", theme: { extend: { "colors": { "secondary-fixed-dim": "#d0bcff", "on-surface": "#dae2fd", "error-container": "#93000a", "surface-bright": "#31394d", "on-primary-container": "#dad7ff", "on-background": "#dae2fd", "surface-variant": "#2d3449", "surface-container-high": "#222a3d", "on-surface-variant": "#c7c4d8", "outline-variant": "#464555", "surface-container-highest": "#2d3449", "inverse-on-surface": "#283044", "on-tertiary-fixed": "#002113", "on-tertiary": "#003824", "surface-dim": "#0b1326", "secondary": "#d0bcff", "on-primary-fixed": "#0f0069", "primary-fixed-dim": "#c3c0ff", "surface-container": "#171f33", "primary": "#c3c0ff", "secondary-container": "#571bc1", "background": "#0b1326", "on-secondary-fixed": "#23005c", "on-secondary-fixed-variant": "#5516be", "on-tertiary-fixed-variant": "#005236", "inverse-surface": "#dae2fd", "inverse-primary": "#4d44e3", "error": "#ffb4ab", "tertiary-fixed-dim": "#4edea3", "surface-tint": "#c3c0ff", "tertiary-container": "#006e4b", "outline": "#918fa1", "surface-container-lowest": "#060e20", "surface": "#0b1326", "on-secondary": "#3c0091", "primary-fixed": "#e2dfff", "on-tertiary-container": "#67f4b7", "on-secondary-container": "#c4abff", "on-error": "#690005", "surface-container-low": "#131b2e", "tertiary-fixed": "#6ffbbe", "on-error-container": "#ffdad6", "tertiary": "#4edea3", "on-primary-fixed-variant": "#3323cc", "on-primary": "#1d00a5", "secondary-fixed": "#e9ddff", "primary-container": "#4f46e5" }, "borderRadius": { "DEFAULT": "0.25rem", "lg": "0.5rem", "xl": "0.75rem", "full": "9999px" }, "spacing": { "gutter-lg": "1.5rem", "chat-pane-min": "24rem", "gutter-xs": "0.25rem", "bubble-p-x": "1rem", "details-pane": "20rem", "sidebar-default": "18rem", "sidebar-compact": "4.5rem", "gutter-md": "1rem", "gutter-xl": "2rem", "bubble-p-y": "0.625rem", "gutter-sm": "0.5rem" }, "fontFamily": { "headline-lg-mobile": ["Plus Jakarta Sans"], "body-lg": ["Inter"], "headline-sm": ["Plus Jakarta Sans"], "headline-lg": ["Plus Jakarta Sans"], "title-md": ["Plus Jakarta Sans"], "timestamp": ["Inter"], "label-sm": ["Inter"], "body-sm": ["Inter"], "headline-md": ["Plus Jakarta Sans"], "label-md": ["Inter"], "body-md": ["Inter"] }, "fontSize": { "headline-lg-mobile": ["26px", { "lineHeight": "34px", "letterSpacing": "-0.015em", "fontWeight": "700" }], "body-lg": ["16px", { "lineHeight": "24px", "fontWeight": "400" }], "headline-sm": ["18px", { "lineHeight": "26px", "fontWeight": "600" }], "headline-lg": ["32px", { "lineHeight": "40px", "letterSpacing": "-0.02em", "fontWeight": "700" }], "title-md": ["15px", { "lineHeight": "22px", "fontWeight": "600" }], "timestamp": ["11px", { "lineHeight": "14px", "letterSpacing": "0.01em", "fontWeight": "400" }], "label-sm": ["11px", { "lineHeight": "14px", "letterSpacing": "0.02em", "fontWeight": "600" }], "body-sm": ["13px", { "lineHeight": "18px", "fontWeight": "400" }], "headline-md": ["22px", { "lineHeight": "30px", "letterSpacing": "-0.01em", "fontWeight": "600" }], "label-md": ["12px", { "lineHeight": "16px", "fontWeight": "500" }], "body-md": ["14px", { "lineHeight": "21px", "fontWeight": "400" }] } } } };</script></head><body class="bg-background font-body-md text-body-md text-on-surface antialiased selection:bg-primary-container selection:text-on-primary-container"><aside class="fixed left-0 top-0 h-full w-sidebar-compact bg-surface-container-lowest z-50 flex flex-col items-center justify-between py-gutter-md shadow-[0_1px_8px_rgba(0,0,0,0.45)]"><div class="flex flex-col items-center w-full gap-gutter-lg"><a class="flex items-center justify-center p-gutter-xs rounded-xl hover:bg-surface-container-high transition-colors group relative" data-path="direct-chat" href="#" title="VibeChat"><img alt="VibeChat Logo" class="h-8 w-auto object-contain" src="https://lh3.googleusercontent.com/aida/AEtjO1XSaz1oz5R2-FZXtVpMoHliVMT8mp1pCcdG_XGrb3ODZBOVTRJBny2NolJG_B33-xht6JZACNenTCYTLhDlokNGRCMWnJu93E3iZtM9YeM673KtSudHtzR7MDkbVPHw4gq7au8CL2i9LkUognpW4tL50Vilqsd0FLn9KAkevd7f9464lIJ4xnjyi8q8ZvRbrQ5VKL3tszZGC5T6hbIqJxkUNcDUGb3XX5qwvJ3XG2HGNV1LA1_LawE8_4E"/><span class="absolute left-full ml-gutter-sm px-gutter-sm py-gutter-xs bg-surface-bright text-on-surface font-label-sm text-label-sm rounded-lg opacity-0 group-hover:opacity-100 pointer-events-none transition-opacity whitespace-nowrap shadow-lg z-50">VibeChat</span></a><nav class="flex flex-col items-center gap-gutter-sm w-full px-gutter-xs" data-active-classes="bg-primary-container text-on-primary-container font-bold rounded-xl shadow-[0_4px_14px_0_rgba(79,70,229,0.35)]"><a class="group relative flex items-center justify-center w-11 h-11 rounded-xl text-on-surface-variant hover:bg-surface-container-high hover:text-on-surface transition-all" data-path="direct-chat" href="#" title="Obrolan Pribadi"><span class="material-symbols-outlined">chat</span><span class="absolute left-full ml-gutter-sm px-gutter-sm py-gutter-xs bg-surface-bright text-on-surface font-label-sm text-label-sm rounded-lg opacity-0 group-hover:opacity-100 pointer-events-none transition-opacity whitespace-nowrap shadow-lg z-50">Obrolan Pribadi</span></a><a class="group relative flex items-center justify-center w-11 h-11 rounded-xl text-on-surface-variant hover:bg-surface-container-high hover:text-on-surface transition-all" data-path="group-chat" href="#" title="Obrolan Grup"><span class="material-symbols-outlined">forum</span><span class="absolute left-full ml-gutter-sm px-gutter-sm py-gutter-xs bg-surface-bright text-on-surface font-label-sm text-label-sm rounded-lg opacity-0 group-hover:opacity-100 pointer-events-none transition-opacity whitespace-nowrap shadow-lg z-50">Obrolan Grup</span></a><a class="group relative flex items-center justify-center w-11 h-11 rounded-xl text-on-surface-variant hover:bg-surface-container-high hover:text-on-surface transition-all" data-path="search-users" href="#" title="Pencarian &amp; Kontak"><span class="material-symbols-outlined">person_search</span><span class="absolute left-full ml-gutter-sm px-gutter-sm py-gutter-xs bg-surface-bright text-on-surface font-label-sm text-label-sm rounded-lg opacity-0 group-hover:opacity-100 pointer-events-none transition-opacity whitespace-nowrap shadow-lg z-50">Pencarian &amp; Kontak</span></a><a aria-current="page" class="group relative flex items-center justify-center w-11 h-11 transition-all bg-primary-container text-on-primary-container font-bold rounded-xl shadow-[0_4px_14px_0_rgba(79,70,229,0.35)]" data-path="profile-settings" href="#" title="Pengaturan &amp; Akun"><span class="material-symbols-outlined">settings</span><span class="absolute left-full ml-gutter-sm px-gutter-sm py-gutter-xs bg-surface-bright text-on-surface font-label-sm text-label-sm rounded-lg opacity-0 group-hover:opacity-100 pointer-events-none transition-opacity whitespace-nowrap shadow-lg z-50">Pengaturan</span></a></nav></div><div class="flex flex-col items-center w-full gap-gutter-md"><a class="group relative flex items-center justify-center w-10 h-10 rounded-xl text-on-surface-variant hover:bg-error-container hover:text-on-error-container transition-all" data-path="login" href="#" title="Keluar"><span class="material-symbols-outlined">logout</span><span class="absolute left-full ml-gutter-sm px-gutter-sm py-gutter-xs bg-surface-bright text-on-surface font-label-sm text-label-sm rounded-lg opacity-0 group-hover:opacity-100 pointer-events-none transition-opacity whitespace-nowrap shadow-lg z-50">Keluar</span></a><div class="relative group cursor-pointer"><div class="relative"><img alt="Profile" class="w-8 h-8 rounded-full object-cover ring-2 ring-surface-container-lowest" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBfgRm-OU7vcCq8350QzrCm4S99P6DUjU4xu0hzj_iUWyK3TkFp2cOblaXZSSv40FhiX3u2MTv0cU-THLY7E76lh8d-_DsZEhj9fURblm0KyMfdA4nv_8aFb55YJ5DTnS9EPFdSJFCM-Ed73rhkg3LK7oTGtMawMonMUYB_gwVCNllMjHJi7uGXdBXa2nl4eFmqb8GUotz35hxbRZ8mkOkIolA16FNaiyA91YD0OtrcaPLueGctWoJ4"/><span class="absolute bottom-0 right-0 w-2.5 h-2.5 bg-tertiary rounded-full ring-2 ring-surface-container-lowest"></span></div><span class="absolute left-full ml-gutter-sm px-gutter-sm py-gutter-xs bg-surface-bright text-on-surface font-label-sm text-label-sm rounded-lg opacity-0 group-hover:opacity-100 pointer-events-none transition-opacity whitespace-nowrap shadow-lg z-50">Online • Profil</span></div></div></aside><div class="pl-sidebar-compact min-h-screen bg-background"><header class="fixed top-0 left-sidebar-compact right-0 h-14 bg-surface-container-low/80 backdrop-blur-xl shadow-[0_1px_8px_rgba(0,0,0,0.25)] z-40 flex items-center justify-between px-gutter-lg"><div class="flex items-center gap-gutter-sm"><span class="font-title-md text-title-md text-on-surface font-semibold">VibeChat Workspace</span><span class="px-gutter-xs py-0.5 rounded-full bg-tertiary-container text-on-tertiary-container font-label-sm text-label-sm">Aktif</span></div><div class="flex items-center gap-gutter-md"><nav class="hidden sm:flex items-center gap-gutter-lg" data-active-classes="text-on-surface font-semibold"><a class="font-body-sm text-body-sm text-on-surface-variant hover:text-on-surface transition-colors" data-path="direct-chat" href="#">Obrolan</a><a class="font-body-sm text-body-sm text-on-surface-variant hover:text-on-surface transition-colors" data-path="group-chat" href="#">Grup</a><a class="font-body-sm text-body-sm text-on-surface-variant hover:text-on-surface transition-colors" data-path="search-users" href="#">Kontak</a><a aria-current="page" class="transition-colors text-on-surface font-semibold" data-path="profile-settings" href="#">Preferensi</a></nav><div class="flex items-center gap-gutter-xs border-l border-outline-variant/30 pl-gutter-md"><img alt="Profile" class="w-8 h-8 rounded-full object-cover ring-1 ring-outline-variant/40" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBfgRm-OU7vcCq8350QzrCm4S99P6DUjU4xu0hzj_iUWyK3TkFp2cOblaXZSSv40FhiX3u2MTv0cU-THLY7E76lh8d-_DsZEhj9fURblm0KyMfdA4nv_8aFb55YJ5DTnS9EPFdSJFCM-Ed73rhkg3LK7oTGtMawMonMUYB_gwVCNllMjHJi7uGXdBXa2nl4eFmqb8GUotz35hxbRZ8mkOkIolA16FNaiyA91YD0OtrcaPLueGctWoJ4"/></div></div></header><main class="w-full pt-14 bg-background min-h-screen"><div class="flex flex-col w-full">
+<!-- Subtle Ambient Glow -->
+<div class="relative w-full overflow-hidden">
+<div class="absolute -top-24 left-1/3 w-96 h-96 bg-primary-container/20 rounded-full blur-3xl pointer-events-none"></div>
+<div class="absolute top-80 -right-24 w-80 h-80 bg-secondary-container/15 rounded-full blur-3xl pointer-events-none"></div>
+<div class="max-w-7xl mx-auto px-gutter-md sm:px-gutter-lg py-gutter-lg">
+<!-- Top Title Context Bar -->
+<div class="flex flex-col md:flex-row md:items-end justify-between pb-gutter-lg gap-gutter-sm">
+<div class="space-y-1">
+<div class="flex items-center gap-gutter-xs text-primary font-label-sm text-label-sm uppercase tracking-wider">
+<span>Preferensi Akun</span>
+<span>•</span>
+<span class="text-tertiary">Sinkronisasi Cloud Aktif</span>
+</div>
+<h1 class="font-headline-lg text-headline-lg text-on-surface">Pengaturan Akun &amp; Profil</h1>
+<p class="font-body-md text-body-md text-on-surface-variant">Kelola identitas publik, preferensi notifikasi instan, serta kendali privasi perangkat Anda.</p>
+</div>
+<div class="flex items-center gap-gutter-xs bg-surface-container-high px-gutter-sm py-gutter-xs rounded-xl shadow-sm self-start md:self-auto">
+<span class="w-2.5 h-2.5 rounded-full bg-tertiary animate-pulse"></span>
+<span class="font-label-md text-label-md text-on-surface-variant">Terakhir diperbarui: Hari ini, 14:28 WIB</span>
+</div>
+</div>
+<!-- Main Layout: Sidebar & Content -->
+<div class="grid grid-cols-1 lg:grid-cols-12 gap-gutter-lg items-start">
+<!-- Left Panel / Navigation Tab Pengaturan -->
+<aside class="lg:col-span-4 xl:col-span-3 bg-surface-container-low rounded-xl p-gutter-md space-y-gutter-md shadow-md sticky top-20">
+<div class="px-gutter-xs pt-gutter-xs">
+<h2 class="font-title-md text-title-md text-on-surface font-semibold flex items-center justify-between">
+<span>Kategori</span>
+<span class="material-symbols-outlined text-outline text-lg">tune</span>
+</h2>
+</div>
+<nav class="flex flex-col gap-1.5" id="settings-nav">
+<!-- 1. Profil Saya (Active) -->
+<button class="w-full flex items-center justify-between px-gutter-sm py-2.5 rounded-lg bg-primary-container text-on-primary-container font-label-md text-label-md shadow-sm transition-all text-left group" type="button">
+<span class="flex items-center gap-3">
+<span class="material-symbols-outlined text-xl">person</span>
+<span>Profil Saya</span>
+</span>
+<span class="w-2 h-2 rounded-full bg-tertiary"></span>
+</button>
+<!-- 2. Notifikasi & Suara -->
+<button class="w-full flex items-center justify-between px-gutter-sm py-2.5 rounded-lg text-on-surface-variant hover:bg-surface-container-high hover:text-on-surface font-label-md text-label-md transition-all text-left group" type="button">
+<span class="flex items-center gap-3">
+<span class="material-symbols-outlined text-xl text-outline group-hover:text-primary">notifications</span>
+<span>Notifikasi &amp; Suara</span>
+</span>
+<span class="text-timestamp font-timestamp bg-surface-container-highest px-1.5 py-0.5 rounded text-on-surface-variant">Aktif</span>
+</button>
+<!-- 3. Privasi & Keamanan -->
+<button class="w-full flex items-center justify-between px-gutter-sm py-2.5 rounded-lg text-on-surface-variant hover:bg-surface-container-high hover:text-on-surface font-label-md text-label-md transition-all text-left group" type="button">
+<span class="flex items-center gap-3">
+<span class="material-symbols-outlined text-xl text-outline group-hover:text-primary">shield</span>
+<span>Privasi &amp; Keamanan</span>
+</span>
+</button>
+<!-- 4. Tampilan & Tema -->
+<button class="w-full flex items-center justify-between px-gutter-sm py-2.5 rounded-lg text-on-surface-variant hover:bg-surface-container-high hover:text-on-surface font-label-md text-label-md transition-all text-left group" type="button">
+<span class="flex items-center gap-3">
+<span class="material-symbols-outlined text-xl text-outline group-hover:text-primary">palette</span>
+<span>Tampilan &amp; Tema</span>
+</span>
+<span class="font-timestamp text-timestamp text-primary">Dark Pro</span>
+</button>
+<!-- 5. Penyimpanan & Data -->
+<button class="w-full flex items-center justify-between px-gutter-sm py-2.5 rounded-lg text-on-surface-variant hover:bg-surface-container-high hover:text-on-surface font-label-md text-label-md transition-all text-left group" type="button">
+<span class="flex items-center gap-3">
+<span class="material-symbols-outlined text-xl text-outline group-hover:text-primary">database</span>
+<span>Penyimpanan &amp; Data</span>
+</span>
+<span class="font-timestamp text-timestamp text-on-surface-variant">2.4 GB</span>
+</button>
+<!-- 6. Perangkat Aktif -->
+<button class="w-full flex items-center justify-between px-gutter-sm py-2.5 rounded-lg text-on-surface-variant hover:bg-surface-container-high hover:text-on-surface font-label-md text-label-md transition-all text-left group" type="button">
+<span class="flex items-center gap-3">
+<span class="material-symbols-outlined text-xl text-outline group-hover:text-primary">devices</span>
+<span>Perangkat Aktif (Sesi)</span>
+</span>
+<span class="w-5 h-5 rounded-full bg-secondary-container text-on-secondary-container font-label-sm text-label-sm flex items-center justify-center">2</span>
+</button>
+</nav>
+<!-- Storage Health Quick Metric Widget -->
+<div class="bg-surface-container p-gutter-sm rounded-xl space-y-2 mt-gutter-md">
+<div class="flex items-center justify-between font-label-sm text-label-sm text-on-surface-variant">
+<span>Kapasitas Cloud Pribadi</span>
+<span class="text-on-surface font-semibold">24% Terpakai</span>
+</div>
+<div class="w-full h-1.5 bg-surface-container-highest rounded-full overflow-hidden">
+<div class="h-full bg-primary-container rounded-full" style="width: 24%"></div>
+</div>
+<p class="font-timestamp text-timestamp text-outline">Penyimpanan pesan terenkripsi end-to-end tanpa batas waktu.</p>
+</div>
+</aside>
+<!-- Right Main Settings Workspace -->
+<main class="lg:col-span-8 xl:col-span-9 space-y-gutter-lg">
+<!-- SEKSI 1: PROFIL PUBLIK -->
+<section class="bg-surface-container-low rounded-xl p-gutter-lg shadow-md space-y-gutter-lg relative">
+<div class="flex flex-col sm:flex-row sm:items-center justify-between gap-gutter-sm">
+<div>
+<span class="font-label-sm text-label-sm text-primary uppercase tracking-wider">Bagian 01</span>
+<h3 class="font-headline-md text-headline-md text-on-surface">Profil Publik</h3>
+<p class="font-body-sm text-body-sm text-on-surface-variant">Informasi ini dapat dilihat oleh kontak dan rekan di ruang obrolan kerja Anda.</p>
+</div>
+<span class="px-gutter-sm py-1 rounded-full bg-tertiary-container text-on-tertiary-container font-label-sm text-label-sm self-start sm:self-auto flex items-center gap-1.5">
+<span class="material-symbols-outlined text-base">verified_user</span>
+                ID Terverifikasi
+              </span>
+</div>
+<!-- Avatar & Quick Actions -->
+<div class="flex flex-col sm:flex-row items-center sm:items-start gap-gutter-lg bg-surface-container p-gutter-md rounded-xl">
+<div class="relative shrink-0">
+<img alt="Foto Profil Dimas Wahyudi" class="w-28 h-28 sm:w-32 sm:h-32 rounded-full object-cover shadow-lg ring-4 ring-surface-container-highest" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBfgRm-OU7vcCq8350QzrCm4S99P6DUjU4xu0hzj_iUWyK3TkFp2cOblaXZSSv40FhiX3u2MTv0cU-THLY7E76lh8d-_DsZEhj9fURblm0KyMfdA4nv_8aFb55YJ5DTnS9EPFdSJFCM-Ed73rhkg3LK7oTGtMawMonMUYB_gwVCNllMjHJi7uGXdBXa2nl4eFmqb8GUotz35hxbRZ8mkOkIolA16FNaiyA91YD0OtrcaPLueGctWoJ4"/>
+<span class="absolute bottom-1 right-1 w-6 h-6 bg-tertiary rounded-full ring-4 ring-surface-container flex items-center justify-center" title="Online Aktif">
+<span class="w-2 h-2 rounded-full bg-surface-container-lowest"></span>
+</span>
+</div>
+<div class="flex flex-col justify-center gap-2 text-center sm:text-left flex-1 min-w-0">
+<div class="space-y-0.5">
+<h4 class="font-title-md text-title-md text-on-surface font-semibold">Dimas Wahyudi</h4>
+<p class="font-body-sm text-body-sm text-primary">Fullstack Engineer &amp; Tech Lead</p>
+</div>
+<p class="font-timestamp text-timestamp text-on-surface-variant">Format yang didukung: JPG, PNG, atau GIF beresolusi maksimal 5MB.</p>
+<div class="flex flex-wrap items-center justify-center sm:justify-start gap-gutter-sm pt-2">
+<button class="px-gutter-md py-2 rounded-lg bg-primary-container hover:bg-inverse-primary text-on-primary-container font-label-md text-label-md flex items-center gap-2 shadow-sm transition-all" type="button">
+<span class="material-symbols-outlined text-base">photo_camera</span>
+<span>Ubah Foto</span>
+</button>
+<button class="px-gutter-md py-2 rounded-lg bg-surface-container-highest hover:bg-error-container hover:text-on-error-container text-on-surface-variant font-label-md text-label-md transition-all" type="button">
+                    Hapus
+                  </button>
+</div>
+</div>
+</div>
+<!-- Profile Form Fields -->
+<div class="grid grid-cols-1 md:grid-cols-2 gap-gutter-md">
+<!-- Nama Lengkap -->
+<div class="space-y-1.5">
+<label class="block font-label-md text-label-md text-on-surface" for="fullname">Nama Lengkap</label>
+<div class="relative">
+<input class="w-full bg-surface-container px-3.5 py-2.5 rounded-lg text-on-surface font-body-md text-body-md focus:outline-none focus:bg-surface-container-high transition-colors" id="fullname" type="text" value="Dimas Wahyudi"/>
+</div>
+</div>
+<!-- Nama Pengguna (Username with Green Check) -->
+<div class="space-y-1.5">
+<div class="flex items-center justify-between">
+<label class="block font-label-md text-label-md text-on-surface" for="username">Nama Pengguna</label>
+<span class="flex items-center gap-1 text-tertiary font-label-sm text-label-sm">
+<span class="material-symbols-outlined text-sm">check_circle</span>
+                    Tersedia
+                  </span>
+</div>
+<div class="relative flex items-center">
+<span class="absolute left-3.5 text-outline font-body-md">@</span>
+<input class="w-full bg-surface-container pl-8 pr-10 py-2.5 rounded-lg text-on-surface font-body-md text-body-md focus:outline-none focus:bg-surface-container-high transition-colors" id="username" type="text" value="dimaswahyudi"/>
+<span class="absolute right-3.5 material-symbols-outlined text-tertiary text-lg">check</span>
+</div>
+</div>
+<!-- Status Ketersediaan (Dropdown) -->
+<div class="space-y-1.5">
+<label class="block font-label-md text-label-md text-on-surface" for="presence-status">Status Ketersediaan</label>
+<div class="relative">
+<select class="w-full appearance-none bg-surface-container px-3.5 py-2.5 rounded-lg text-on-surface font-body-md text-body-md focus:outline-none focus:bg-surface-container-high transition-colors pr-10" id="presence-status">
+<option selected="" value="online">🟢 Online (Terlihat Aktif)</option>
+<option value="dnd">⛔ Sibuk / Jangan Ganggu</option>
+<option value="away">🟡 Tidak di Tempat</option>
+<option value="invisible">⚪ Tak Terlihat (Offline Semu)</option>
+</select>
+<span class="absolute right-3.5 top-3 material-symbols-outlined text-outline pointer-events-none text-lg">expand_more</span>
+</div>
+</div>
+<!-- Email (Verified) -->
+<div class="space-y-1.5">
+<div class="flex items-center justify-between">
+<label class="block font-label-md text-label-md text-on-surface" for="email-address">Alamat Email</label>
+<span class="text-tertiary font-label-sm text-label-sm flex items-center gap-1">
+<span class="material-symbols-outlined text-sm">verified</span>
+                    Terverifikasi
+                  </span>
+</div>
+<div class="relative">
+<input class="w-full bg-surface-container px-3.5 py-2.5 rounded-lg text-on-surface font-body-md text-body-md focus:outline-none focus:bg-surface-container-high transition-colors" id="email-address" type="email" value="dimas.wahyudi@vibechat.app"/>
+</div>
+</div>
+<!-- Nomor Telepon -->
+<div class="space-y-1.5">
+<label class="block font-label-md text-label-md text-on-surface" for="phone-number">Nomor Telepon</label>
+<div class="relative">
+<input class="w-full bg-surface-container px-3.5 py-2.5 rounded-lg text-on-surface font-body-md text-body-md focus:outline-none focus:bg-surface-container-high transition-colors" id="phone-number" type="tel" value="+62 812-3456-7890"/>
+</div>
+</div>
+<!-- Bio / Status (Full Width) -->
+<div class="md:col-span-2 space-y-1.5">
+<div class="flex items-center justify-between">
+<label class="block font-label-md text-label-md text-on-surface" for="user-bio">Bio / Status Personal</label>
+<span class="font-timestamp text-timestamp text-outline">74/160 Karakter</span>
+</div>
+<textarea class="w-full bg-surface-container px-3.5 py-2.5 rounded-lg text-on-surface font-body-md text-body-md focus:outline-none focus:bg-surface-container-high transition-colors resize-none" id="user-bio" rows="2">Tech Enthusiast &amp; Fullstack Engineer. Always learning something new 🚀</textarea>
+</div>
+</div>
+</section>
+<!-- SEKSI 2: PREFERENSI NOTIFIKASI PESAN -->
+<section class="bg-surface-container-low rounded-xl p-gutter-lg shadow-md space-y-gutter-md">
+<div>
+<span class="font-label-sm text-label-sm text-primary uppercase tracking-wider">Bagian 02</span>
+<h3 class="font-headline-md text-headline-md text-on-surface">Preferensi Notifikasi &amp; Suara</h3>
+<p class="font-body-sm text-body-sm text-on-surface-variant">Atur bagaimana sistem memperingatkan pesan baru dan panggilan instan.</p>
+</div>
+<div class="space-y-3">
+<!-- Toggle 1: Notifikasi Desktop & Pesan Masuk -->
+<div class="flex items-center justify-between p-gutter-md bg-surface-container rounded-xl">
+<div class="space-y-0.5 max-w-xl">
+<div class="font-title-md text-title-md text-on-surface font-semibold">Notifikasi Desktop &amp; Pesan Masuk</div>
+<p class="font-body-sm text-body-sm text-on-surface-variant">Tampilkan banner notifikasi melayang di pojok desktop ketika aplikasi berada di latar belakang.</p>
+</div>
+<label class="relative inline-flex items-center cursor-pointer shrink-0">
+<input checked="" class="sr-only peer" id="toggle-desktop-notif" type="checkbox"/>
+<div class="w-12 h-6 bg-surface-container-highest peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-primary-container shadow-inner"></div>
+</label>
+</div>
+<!-- Toggle 2: Pratinjau Pesan di Notifikasi -->
+<div class="flex items-center justify-between p-gutter-md bg-surface-container rounded-xl">
+<div class="space-y-0.5 max-w-xl">
+<div class="font-title-md text-title-md text-on-surface font-semibold">Pratinjau Pesan di Notifikasi</div>
+<p class="font-body-sm text-body-sm text-on-surface-variant">Sertakan nama pengirim dan cuplikan teks di pemberitahuan desktop Anda.</p>
+</div>
+<label class="relative inline-flex items-center cursor-pointer shrink-0">
+<input checked="" class="sr-only peer" id="toggle-preview-notif" type="checkbox"/>
+<div class="w-12 h-6 bg-surface-container-highest peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-primary-container shadow-inner"></div>
+</label>
+</div>
+<!-- Suara Notifikasi & Tes Suara -->
+<div class="grid grid-cols-1 sm:grid-cols-12 gap-gutter-md p-gutter-md bg-surface-container rounded-xl items-center">
+<div class="sm:col-span-7 space-y-0.5">
+<div class="font-title-md text-title-md text-on-surface font-semibold">Suara Peringatan Notifikasi</div>
+<p class="font-body-sm text-body-sm text-on-surface-variant">Pilih nada peringatan saat obrolan atau mention tim diterima.</p>
+</div>
+<div class="sm:col-span-5 flex items-center gap-2">
+<div class="relative flex-1">
+<select class="w-full appearance-none bg-surface-container-high px-3 py-2 rounded-lg text-on-surface font-body-sm text-body-sm focus:outline-none pr-8" id="sound-select">
+<option selected="" value="chime-modern">Chime Modern (Default)</option>
+<option value="subtle-pop">Subtle Pop</option>
+<option value="ambient-bell">Ambient Bell</option>
+<option value="minimal-tap">Minimalist Tap</option>
+</select>
+<span class="absolute right-2.5 top-2.5 material-symbols-outlined text-outline pointer-events-none text-base">expand_more</span>
+</div>
+<button class="p-2 bg-surface-container-highest hover:bg-primary-container hover:text-on-primary-container text-on-surface-variant rounded-lg transition-all" id="btn-sound-test" title="Tes Suara Notifikasi" type="button">
+<span class="material-symbols-outlined text-xl">volume_up</span>
+</button>
+</div>
+</div>
+<!-- Mode 'Jangan Ganggu' (Jadwal Otomatis) -->
+<div class="p-gutter-md bg-surface-container rounded-xl flex flex-col sm:flex-row sm:items-center justify-between gap-gutter-sm">
+<div class="space-y-0.5">
+<div class="flex items-center gap-2">
+<span class="font-title-md text-title-md text-on-surface font-semibold">Mode 'Jangan Ganggu' Terjadwal</span>
+<span class="px-2 py-0.5 rounded-full bg-secondary-container text-on-secondary-container font-label-sm text-label-sm">Aktif Otomatis</span>
+</div>
+<p class="font-body-sm text-body-sm text-on-surface-variant">Secara hening menyenyapkan semua getaran &amp; suara notifikasi pada jam istirahat malam.</p>
+</div>
+<div class="flex items-center gap-2 bg-surface-container-high px-3 py-1.5 rounded-lg text-on-surface font-label-md text-label-md self-start sm:self-auto">
+<span class="material-symbols-outlined text-secondary text-lg">bedtime</span>
+<span>22:00 — 07:00 WIB</span>
+</div>
+</div>
+</div>
+</section>
+<!-- SEKSI 3: PRIVASI & VISIBILITAS -->
+<section class="bg-surface-container-low rounded-xl p-gutter-lg shadow-md space-y-gutter-md">
+<div>
+<span class="font-label-sm text-label-sm text-primary uppercase tracking-wider">Bagian 03</span>
+<h3 class="font-headline-md text-headline-md text-on-surface">Privasi &amp; Visibilitas Akun</h3>
+<p class="font-body-sm text-body-sm text-on-surface-variant">Kontrol data kehadiran, riwayat status, dan bukti baca pesan Anda.</p>
+</div>
+<div class="space-y-gutter-md">
+<!-- Radio: Siapa yang dapat melihat 'Terakhir Dilihat' -->
+<div class="p-gutter-md bg-surface-container rounded-xl space-y-3">
+<div class="space-y-0.5">
+<div class="font-title-md text-title-md text-on-surface font-semibold">Siapa yang dapat melihat 'Terakhir Dilihat' (Last Seen)</div>
+<p class="font-body-sm text-body-sm text-on-surface-variant">Jika dimatikan, Anda juga tidak akan melihat waktu terakhir dilihat oleh orang lain.</p>
+</div>
+<div class="grid grid-cols-1 sm:grid-cols-3 gap-3 pt-1">
+<!-- Radio 1: Semua Orang -->
+<label class="flex items-center gap-3 p-3 rounded-lg bg-surface-container-high/60 hover:bg-surface-container-high cursor-pointer transition-colors">
+<input class="w-4 h-4 accent-primary-container text-primary-container focus:ring-0" name="last_seen" type="radio" value="everyone"/>
+<div>
+<div class="font-label-md text-label-md text-on-surface font-medium">Semua Orang</div>
+<div class="font-timestamp text-timestamp text-outline">Visibilitas terbuka publik</div>
+</div>
+</label>
+<!-- Radio 2: Kontak Saya (Checked) -->
+<label class="flex items-center gap-3 p-3 rounded-lg bg-primary-container/20 border-primary-container hover:bg-primary-container/30 cursor-pointer transition-colors">
+<input checked="" class="w-4 h-4 accent-primary-container text-primary-container focus:ring-0" name="last_seen" type="radio" value="my_contacts"/>
+<div>
+<div class="font-label-md text-label-md text-on-surface font-medium">Kontak Saya</div>
+<div class="font-timestamp text-timestamp text-primary">Hanya rekan tersimpan</div>
+</div>
+</label>
+<!-- Radio 3: Tidak Ada -->
+<label class="flex items-center gap-3 p-3 rounded-lg bg-surface-container-high/60 hover:bg-surface-container-high cursor-pointer transition-colors">
+<input class="w-4 h-4 accent-primary-container text-primary-container focus:ring-0" name="last_seen" type="radio" value="nobody"/>
+<div>
+<div class="font-label-md text-label-md text-on-surface font-medium">Tidak Ada</div>
+<div class="font-timestamp text-timestamp text-outline">Privat maksimal</div>
+</div>
+</label>
+</div>
+</div>
+<!-- Toggle: Tanda Pesan Telah Dibaca (Centang Biru) -->
+<div class="flex items-center justify-between p-gutter-md bg-surface-container rounded-xl">
+<div class="space-y-0.5 max-w-xl">
+<div class="flex items-center gap-2">
+<span class="font-title-md text-title-md text-on-surface font-semibold">Tanda Pesan Telah Dibaca (Centang Ganda)</span>
+<span class="material-symbols-outlined text-primary text-base">done_all</span>
+</div>
+<p class="font-body-sm text-body-sm text-on-surface-variant">Memberitahukan pengirim saat Anda telah membuka obrolan mereka. Dalam obrolan grup indikator selalu aktif.</p>
+</div>
+<label class="relative inline-flex items-center cursor-pointer shrink-0">
+<input checked="" class="sr-only peer" id="toggle-read-receipts" type="checkbox"/>
+<div class="w-12 h-6 bg-surface-container-highest peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-primary-container shadow-inner"></div>
+</label>
+</div>
+</div>
+</section>
+<!-- SEKSI 4: SESI PERANGKAT AKTIF -->
+<section class="bg-surface-container-low rounded-xl p-gutter-lg shadow-md space-y-gutter-md">
+<div class="flex flex-col sm:flex-row sm:items-center justify-between gap-gutter-sm">
+<div>
+<span class="font-label-sm text-label-sm text-primary uppercase tracking-wider">Bagian 04</span>
+<h3 class="font-headline-md text-headline-md text-on-surface">Sesi Perangkat Aktif</h3>
+<p class="font-body-sm text-body-sm text-on-surface-variant">Daftar perangkat yang saat ini tersambung ke akun VibeChat Anda.</p>
+</div>
+<button class="px-gutter-md py-2 rounded-lg bg-error-container hover:bg-error text-on-error-container hover:text-on-error font-label-md text-label-md flex items-center gap-1.5 self-start sm:self-auto transition-all shadow-sm" type="button">
+<span class="material-symbols-outlined text-base">power_settings_new</span>
+<span>Keluar dari Semua Perangkat Lain</span>
+</button>
+</div>
+<!-- Device List Cards -->
+<div class="space-y-3">
+<!-- Device 1: MacBook Pro 14" (Current Session) -->
+<div class="p-gutter-md bg-surface-container rounded-xl flex items-center justify-between gap-gutter-md">
+<div class="flex items-center gap-gutter-md min-w-0">
+<div class="w-12 h-12 rounded-xl bg-primary-container/20 text-primary flex items-center justify-center shrink-0">
+<span class="material-symbols-outlined text-2xl">laptop_mac</span>
+</div>
+<div class="space-y-0.5 min-w-0">
+<div class="flex items-center gap-2 flex-wrap">
+<span class="font-title-md text-title-md text-on-surface font-semibold truncate">MacBook Pro 14" — Jakarta, Indonesia</span>
+<span class="px-2 py-0.5 rounded-full bg-tertiary-container text-on-tertiary-container font-label-sm text-label-sm">Sesi ini • Aktif sekarang</span>
+</div>
+<p class="font-body-sm text-body-sm text-on-surface-variant truncate">VibeChat Desktop App v2.4.1 • IP: 182.253.12.89</p>
+</div>
+</div>
+<div class="shrink-0">
+<span class="font-label-sm text-label-sm text-tertiary font-semibold flex items-center gap-1">
+<span class="w-2 h-2 rounded-full bg-tertiary"></span>
+                    Online
+                  </span>
+</div>
+</div>
+<!-- Device 2: iPhone 15 Pro -->
+<div class="p-gutter-md bg-surface-container rounded-xl flex items-center justify-between gap-gutter-md">
+<div class="flex items-center gap-gutter-md min-w-0">
+<div class="w-12 h-12 rounded-xl bg-surface-container-highest text-outline flex items-center justify-center shrink-0">
+<span class="material-symbols-outlined text-2xl">smartphone</span>
+</div>
+<div class="space-y-0.5 min-w-0">
+<div class="flex items-center gap-2 flex-wrap">
+<span class="font-title-md text-title-md text-on-surface font-semibold truncate">iPhone 15 Pro — Safari Mobile</span>
+<span class="font-timestamp text-timestamp text-on-surface-variant">Aktif 10 menit yang lalu</span>
+</div>
+<p class="font-body-sm text-body-sm text-on-surface-variant truncate">iOS 17.5 • Lokasi: Tangerang Selatan, Indonesia</p>
+</div>
+</div>
+<button class="p-2 rounded-lg text-on-surface-variant hover:text-error hover:bg-error-container/20 transition-colors shrink-0" title="Cabut Akses Perangkat" type="button">
+<span class="material-symbols-outlined text-xl">logout</span>
+</button>
+</div>
+</div>
+</section>
+<!-- BOTTOM FLOATING ACTION BAR -->
+<div class="sticky bottom-4 z-30 bg-surface-container/95 backdrop-blur-xl p-gutter-md rounded-xl shadow-xl flex flex-col sm:flex-row items-center justify-between gap-gutter-md">
+<div class="flex items-center gap-2 text-on-surface-variant font-label-md text-label-md">
+<span class="material-symbols-outlined text-tertiary text-lg">sync_saved_locally</span>
+<span>Perubahan belum disimpan akan diterapkan di semua perangkat tersambung.</span>
+</div>
+<div class="flex items-center gap-gutter-sm w-full sm:w-auto justify-end">
+<button class="px-gutter-md py-2.5 rounded-lg bg-surface-container-high hover:bg-surface-container-highest text-on-surface font-label-md text-label-md transition-all" type="button">
+                Batal
+              </button>
+<button class="px-gutter-lg py-2.5 rounded-lg bg-primary-container hover:bg-inverse-primary text-on-primary-container font-label-md text-label-md font-semibold shadow-md transition-all flex items-center gap-2" id="btn-save-settings" type="button">
+<span class="material-symbols-outlined text-base">check</span>
+<span>Simpan Perubahan</span>
+</button>
+</div>
+</div>
+</main>
+</div>
+</div>
+</div>
+</div>
+<script>
+  (function() {
+    // Sound Test Button Micro-interaction
+    const soundBtn = document.getElementById('btn-sound-test');
+    if (soundBtn) {
+      soundBtn.addEventListener('click', function() {
+        const icon = this.querySelector('.material-symbols-outlined');
+        if (icon) {
+          icon.textContent = 'music_note';
+          this.classList.add('bg-primary-container', 'text-on-primary-container');
+          setTimeout(() => {
+            icon.textContent = 'volume_up';
+            this.classList.remove('bg-primary-container', 'text-on-primary-container');
+          }, 800);
+        }
+      });
+    }
+
+    // Save Button Feedback
+    const saveBtn = document.getElementById('btn-save-settings');
+    if (saveBtn) {
+      saveBtn.addEventListener('click', function() {
+        const originalHtml = this.innerHTML;
+        this.innerHTML = `<span class="material-symbols-outlined text-base animate-spin">refresh</span><span>Menyimpan...</span>`;
+        this.disabled = true;
+        
+        setTimeout(() => {
+          this.innerHTML = `<span class="material-symbols-outlined text-base">check_circle</span><span>Tersimpan!</span>`;
+          this.classList.remove('bg-primary-container');
+          this.classList.add('bg-tertiary-container', 'text-on-tertiary-container');
+          
+          setTimeout(() => {
+            this.innerHTML = originalHtml;
+            this.disabled = false;
+            this.classList.remove('bg-tertiary-container', 'text-on-tertiary-container');
+            this.classList.add('bg-primary-container');
+          }, 1800);
+        }, 900);
+      });
+    }
+  })();
+</script></main></div></body></html>

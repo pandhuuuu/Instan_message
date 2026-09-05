@@ -1,0 +1,556 @@
+<!DOCTYPE html>
+
+<html class="light" lang="id"><head><meta charset="utf-8"/><meta content="width=device-width, initial-scale=1.0" name="viewport"/><link href="https://fonts.googleapis.com" rel="preconnect"/><link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/><link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&amp;family=Plus+Jakarta+Sans:wght@600;700&amp;display=swap" rel="stylesheet"/><link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/><style>@layer base { html, body { margin: 0; padding: 0; } body { overscroll-behavior: none; } main > :first-child { margin-top: 0 !important; } main > :last-child { margin-bottom: 0 !important; } } ::-webkit-scrollbar { display: none; }</style><script src="https://cdn.tailwindcss.com"></script><script id="tailwind-config">tailwind.config = {
+  darkMode: "class",
+  theme: {
+    extend: {
+      "colors": {
+        "on-secondary-fixed": "#07006c",
+        "surface-container": "#f1f5f9",
+        "on-tertiary-fixed": "#002113",
+        "on-secondary-container": "#1e1b4b",
+        "on-tertiary": "#ffffff",
+        "on-surface": "#0f172a",
+        "surface-pure": "#ffffff",
+        "secondary-fixed-dim": "#c0c1ff",
+        "tertiary-container": "#dcfce7",
+        "on-tertiary-fixed-variant": "#005236",
+        "on-primary-fixed-variant": "#3323cc",
+        "text-primary": "#0f172a",
+        "background": "#f8fafc",
+        "surface-bright": "#ffffff",
+        "tertiary": "#10b981",
+        "primary-fixed-dim": "#c3c0ff",
+        "on-primary": "#ffffff",
+        "on-tertiary-container": "#065f46",
+        "surface-dim": "#e2e8f0",
+        "secondary": "#4f46e5",
+        "signal-online": "#10b981",
+        "tertiary-fixed-dim": "#4edea3",
+        "signal-danger": "#ef4444",
+        "chat-bubble-outbound": "#4f46e5",
+        "surface-tint": "#4f46e5",
+        "border-strong": "#cbd5e1",
+        "text-inverse": "#ffffff",
+        "surface-container-high": "#e2e8f0",
+        "on-secondary-fixed-variant": "#2f2ebe",
+        "text-secondary": "#334155",
+        "outline-variant": "#e2e8f0",
+        "text-muted": "#64748b",
+        "outline": "#94a3b8",
+        "secondary-fixed": "#e1e0ff",
+        "error": "#ef4444",
+        "surface-container-highest": "#cbd5e1",
+        "surface": "#ffffff",
+        "on-primary-fixed": "#0f0069",
+        "primary-fixed": "#e2dfff",
+        "chat-bubble-inbound": "#ffffff",
+        "on-background": "#0f172a",
+        "border-subtle": "#e2e8f0",
+        "primary": "#4f46e5",
+        "primary-container": "#4f46e5",
+        "surface-container-lowest": "#ffffff",
+        "error-container": "#fee2e2",
+        "inverse-on-surface": "#ffffff",
+        "surface-variant": "#f1f5f9",
+        "on-error": "#ffffff",
+        "signal-warning": "#f59e0b",
+        "surface-container-low": "#ffffff",
+        "inverse-surface": "#0f172a",
+        "on-surface-variant": "#475569",
+        "tertiary-fixed": "#6ffbbe",
+        "surface-subtle": "#f8fafc",
+        "on-primary-container": "#ffffff",
+        "inverse-primary": "#c3c0ff",
+        "surface-muted": "#f1f5f9",
+        "on-error-container": "#991b1b",
+        "secondary-container": "#e0e7ff",
+        "on-secondary": "#ffffff",
+        "surface-active": "#e2e8f0"
+      },
+      "borderRadius": {
+        "DEFAULT": "0.25rem",
+        "lg": "0.5rem",
+        "xl": "0.75rem",
+        "full": "9999px"
+      },
+      "spacing": {
+        "gutter-xs": "0.25rem",
+        "details-pane": "20rem",
+        "gutter-sm": "0.5rem",
+        "chat-pane-min": "24rem",
+        "bubble-p-x": "1rem",
+        "gutter-xl": "2rem",
+        "gutter-lg": "1.5rem",
+        "gutter-md": "1rem",
+        "sidebar-compact": "4.5rem",
+        "sidebar-default": "18rem",
+        "bubble-p-y": "0.625rem"
+      },
+      "fontFamily": {
+        "timestamp": ["Inter"],
+        "headline-lg": ["Plus Jakarta Sans"],
+        "title-md": ["Plus Jakarta Sans"],
+        "label-md": ["Inter"],
+        "headline-md": ["Plus Jakarta Sans"],
+        "body-lg": ["Inter"],
+        "headline-lg-mobile": ["Plus Jakarta Sans"],
+        "headline-sm": ["Plus Jakarta Sans"],
+        "label-sm": ["Inter"],
+        "body-md": ["Inter"],
+        "body-sm": ["Inter"]
+      },
+      "fontSize": {
+        "timestamp": ["11px", { "lineHeight": "14px", "letterSpacing": "0.01em", "fontWeight": "400" }],
+        "headline-lg": ["32px", { "lineHeight": "40px", "letterSpacing": "-0.02em", "fontWeight": "700" }],
+        "title-md": ["15px", { "lineHeight": "22px", "fontWeight": "600" }],
+        "label-md": ["12px", { "lineHeight": "16px", "fontWeight": "500" }],
+        "headline-md": ["22px", { "lineHeight": "30px", "letterSpacing": "-0.01em", "fontWeight": "600" }],
+        "body-lg": ["16px", { "lineHeight": "24px", "fontWeight": "400" }],
+        "headline-lg-mobile": ["26px", { "lineHeight": "34px", "letterSpacing": "-0.015em", "fontWeight": "700" }],
+        "headline-sm": ["18px", { "lineHeight": "26px", "letterSpacing": "-0.005em", "fontWeight": "600" }],
+        "label-sm": ["11px", { "lineHeight": "14px", "letterSpacing": "0.02em", "fontWeight": "600" }],
+        "body-md": ["14px", { "lineHeight": "21px", "fontWeight": "400" }],
+        "body-sm": ["13px", { "lineHeight": "18px", "fontWeight": "400" }]
+      }
+    }
+  }
+};</script></head><body class="bg-background font-body-md text-body-md text-on-surface antialiased selection:bg-primary selection:text-white"><aside class="fixed left-0 top-0 h-full w-sidebar-compact bg-surface z-50 flex flex-col items-center justify-between py-gutter-md border-r border-border-subtle shadow-[0_1px_4px_rgba(0,0,0,0.05)]"><div class="flex flex-col items-center w-full gap-gutter-lg"><a class="flex items-center justify-center p-gutter-xs rounded-xl hover:bg-surface-container transition-colors group relative" data-path="direct-chat" href="#" title="VibeChat"><div class="h-8 w-8 object-contain flex items-center justify-center">https://lh3.googleusercontent.com/aida/AEtjO1XSaz1oz5R2-FZXtVpMoHliVMT8mp1pCcdG_XGrb3ODZBOVTRJBny2NolJG_B33-xht6JZACNenTCYTLhDlokNGRCMWnJu93E3iZtM9YeM673KtSudHtzR7MDkbVPHw4gq7au8CL2i9LkUognpW4tL50Vilqsd0FLn9KAkevd7f9464lIJ4xnjyi8q8ZvRbrQ5VKL3tszZGC5T6hbIqJxkUNcDUGb3XX5qwvJ3XG2HGNV1LA1_LawE8_4E</div><span class="absolute left-full ml-gutter-sm px-gutter-sm py-gutter-xs bg-inverse-surface text-inverse-on-surface font-label-sm text-label-sm rounded-lg opacity-0 group-hover:opacity-100 pointer-events-none transition-opacity whitespace-nowrap shadow-lg z-50">VibeChat</span></a><nav class="flex flex-col items-center gap-gutter-sm w-full px-gutter-xs" data-active-classes="bg-primary-container text-on-primary-container font-bold rounded-xl shadow-[0_4px_14px_0_rgba(79,70,229,0.35)]"><a aria-current="page" class="group relative flex items-center justify-center w-11 h-11 transition-all bg-primary text-white font-bold rounded-xl shadow-[0_4px_14px_0_rgba(79,70,229,0.35)]" data-path="direct-chat" href="#" title="Obrolan Pribadi"><span class="material-symbols-outlined">chat</span><span class="absolute left-full ml-gutter-sm px-gutter-sm py-gutter-xs bg-inverse-surface text-inverse-on-surface font-label-sm text-label-sm rounded-lg opacity-0 group-hover:opacity-100 pointer-events-none transition-opacity whitespace-nowrap shadow-lg z-50">Obrolan Pribadi</span></a><a class="group relative flex items-center justify-center w-11 h-11 rounded-xl text-text-muted hover:bg-surface-container hover:text-on-surface transition-all" data-path="group-chat" href="#" title="Obrolan Grup"><span class="material-symbols-outlined">forum</span><span class="absolute left-full ml-gutter-sm px-gutter-sm py-gutter-xs bg-inverse-surface text-inverse-on-surface font-label-sm text-label-sm rounded-lg opacity-0 group-hover:opacity-100 pointer-events-none transition-opacity whitespace-nowrap shadow-lg z-50">Obrolan Grup</span></a><a class="group relative flex items-center justify-center w-11 h-11 rounded-xl text-text-muted hover:bg-surface-container hover:text-on-surface transition-all" data-path="search-users" href="#" title="Pencarian &amp; Kontak"><span class="material-symbols-outlined">person_search</span><span class="absolute left-full ml-gutter-sm px-gutter-sm py-gutter-xs bg-inverse-surface text-inverse-on-surface font-label-sm text-label-sm rounded-lg opacity-0 group-hover:opacity-100 pointer-events-none transition-opacity whitespace-nowrap shadow-lg z-50">Pencarian &amp; Kontak</span></a><a class="group relative flex items-center justify-center w-11 h-11 rounded-xl text-text-muted hover:bg-surface-container hover:text-on-surface transition-all" data-path="profile-settings" href="#" title="Pengaturan &amp; Akun"><span class="material-symbols-outlined">settings</span><span class="absolute left-full ml-gutter-sm px-gutter-sm py-gutter-xs bg-inverse-surface text-inverse-on-surface font-label-sm text-label-sm rounded-lg opacity-0 group-hover:opacity-100 pointer-events-none transition-opacity whitespace-nowrap shadow-lg z-50">Pengaturan</span></a></nav></div><div class="flex flex-col items-center w-full gap-gutter-md"><a class="group relative flex items-center justify-center w-10 h-10 rounded-xl text-text-muted hover:bg-error-container hover:text-error transition-all" data-path="login" href="#" title="Keluar"><span class="material-symbols-outlined">logout</span><span class="absolute left-full ml-gutter-sm px-gutter-sm py-gutter-xs bg-inverse-surface text-inverse-on-surface font-label-sm text-label-sm rounded-lg opacity-0 group-hover:opacity-100 pointer-events-none transition-opacity whitespace-nowrap shadow-lg z-50">Keluar</span></a><div class="relative group cursor-pointer"><div class="relative"><img alt="Profile" class="w-8 h-8 rounded-full object-cover ring-2 ring-border-subtle" src="https://lh3.googleusercontent.com/aida/AEtjO1U-_yd1TIuXx9wIRWbCsreIcKNS6aQTks-u_j_aE_Ibr1kanQNRXNezHQ6Gn4yWrKV7Vlx0GtHONXb1ftQlLeq0kOUnCAHmfHzSdbBgvaXS0ueJ87q1EgOMGIP6qBdj7dTs8R04MSuvQS_RE39-T2rN788X7nj9oEOZIJD8X2rxXkU7JmLN0ZR5r_K19vjxUwt-ZApzKd5CMmbKlm8VWzPITBCGlScIKEXG_wz7J6t4H52OUFaJNBD0SA"/><span class="absolute bottom-0 right-0 w-2.5 h-2.5 bg-signal-online rounded-full ring-2 ring-white"></span></div><span class="absolute left-full ml-gutter-sm px-gutter-sm py-gutter-xs bg-inverse-surface text-inverse-on-surface font-label-sm text-label-sm rounded-lg opacity-0 group-hover:opacity-100 pointer-events-none transition-opacity whitespace-nowrap shadow-lg z-50">Online • Profil</span></div></div></aside><div class="pl-sidebar-compact min-h-screen bg-background"><header class="fixed top-0 left-sidebar-compact right-0 h-14 bg-surface/90 backdrop-blur-xl border-b border-border-subtle shadow-sm z-40 flex items-center justify-between px-gutter-lg"><div class="flex items-center gap-gutter-sm"><span class="font-title-md text-title-md text-on-surface font-semibold">VibeChat Workspace</span><span class="px-gutter-xs py-0.5 rounded-full bg-emerald-50 text-emerald-700 border border-emerald-200 font-label-sm text-label-sm">Aktif</span></div><div class="flex items-center gap-gutter-md"><nav class="hidden sm:flex items-center gap-gutter-lg" data-active-classes="text-on-surface font-semibold"><a aria-current="page" class="transition-colors text-primary font-semibold" data-path="direct-chat" href="#">Obrolan</a><a class="font-body-sm text-body-sm text-text-muted hover:text-on-surface transition-colors" data-path="group-chat" href="#">Grup</a><a class="font-body-sm text-body-sm text-text-muted hover:text-on-surface transition-colors" data-path="search-users" href="#">Kontak</a><a class="font-body-sm text-body-sm text-text-muted hover:text-on-surface transition-colors" data-path="profile-settings" href="#">Preferensi</a></nav><div class="flex items-center gap-gutter-xs border-l border-border-subtle pl-gutter-md"><img alt="Profile" class="w-8 h-8 rounded-full object-cover ring-1 ring-border-subtle" src="https://lh3.googleusercontent.com/aida/AEtjO1U-_yd1TIuXx9wIRWbCsreIcKNS6aQTks-u_j_aE_Ibr1kanQNRXNezHQ6Gn4yWrKV7Vlx0GtHONXb1ftQlLeq0kOUnCAHmfHzSdbBgvaXS0ueJ87q1EgOMGIP6qBdj7dTs8R04MSuvQS_RE39-T2rN788X7nj9oEOZIJD8X2rxXkU7JmLN0ZR5r_K19vjxUwt-ZApzKd5CMmbKlm8VWzPITBCGlScIKEXG_wz7J6t4H52OUFaJNBD0SA"/></div></div></header><main class="w-full pt-14 bg-background min-h-screen"><div class="flex flex-col w-full h-[calc(100vh-3.5rem)] overflow-hidden">
+<!-- Desktop Messaging Multi-Pane Workspace -->
+<div class="flex flex-1 w-full h-full overflow-hidden">
+<!-- PANE 1: Conversation & Inbox Drawer (340px) -->
+<section class="w-full md:w-[340px] shrink-0 h-full bg-white border-r border-border-subtle flex flex-col z-20 transition-all duration-300">
+<!-- Drawer Header -->
+<div class="p-gutter-md flex flex-col gap-gutter-sm bg-white/95 backdrop-blur-md border-b border-border-subtle">
+<div class="flex items-center justify-between">
+<div class="flex items-center gap-2">
+<h1 class="font-headline-sm text-headline-sm text-on-surface tracking-tight">Pesan</h1>
+<span class="px-2 py-0.5 rounded-full bg-indigo-50 text-primary border border-indigo-100 font-label-sm text-label-sm font-semibold tracking-wide">
+              4 Baru
+            </span>
+</div>
+<button class="w-9 h-9 rounded-xl bg-primary text-white flex items-center justify-center hover:scale-105 active:scale-95 transition-all shadow-md shadow-primary/20" title="Tulis Pesan Baru" type="button">
+<span class="material-symbols-outlined text-[20px]">add</span>
+</button>
+</div>
+<!-- Filter Segmented Tabs -->
+<div class="grid grid-cols-3 p-1 rounded-xl bg-slate-100 gap-1 border border-border-subtle">
+<button class="py-1 px-2 rounded-lg text-center font-label-md text-label-md bg-white text-on-surface font-medium shadow-sm transition-colors">
+            Semua
+          </button>
+<button class="py-1 px-2 rounded-lg text-center font-label-md text-label-md text-text-muted hover:text-on-surface transition-colors flex items-center justify-center gap-1">
+<span>Belum Dibaca</span>
+<span class="w-1.5 h-1.5 rounded-full bg-primary inline-block"></span>
+</button>
+<button class="py-1 px-2 rounded-lg text-center font-label-md text-label-md text-text-muted hover:text-on-surface transition-colors">
+            Favorit
+          </button>
+</div>
+<!-- Search Input Bar -->
+<div class="relative w-full">
+<span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-[18px] text-text-muted">search</span>
+<input class="w-full pl-9 pr-8 py-2 rounded-xl bg-slate-50 text-on-surface placeholder:text-text-muted font-body-sm text-body-sm border border-border-subtle focus:outline-none focus:bg-white focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all" placeholder="Cari percakapan atau pesan..." type="text"/>
+<button class="absolute right-2.5 top-1/2 -translate-y-1/2 text-text-muted hover:text-on-surface text-[16px] flex items-center">
+<span class="material-symbols-outlined text-[16px]">tune</span>
+</button>
+</div>
+</div>
+<!-- Conversations Scroll Feed -->
+<div class="flex-1 overflow-y-auto px-gutter-xs space-y-gutter-xs pb-4 bg-slate-50/50">
+<!-- Pinned Section Header -->
+<div class="px-gutter-md pt-2 pb-1 flex items-center justify-between text-text-muted">
+<span class="font-label-sm text-label-sm uppercase tracking-wider font-semibold">Disematkan</span>
+<span class="material-symbols-outlined text-[15px]">push_pin</span>
+</div>
+<!-- Active Chat Item: Nadia Safitri (Pinned) -->
+<div class="group relative flex items-center gap-3 p-3 mx-1.5 rounded-xl bg-indigo-50/70 border border-indigo-100/80 shadow-sm cursor-pointer transition-all">
+<div class="absolute left-0 top-3 bottom-3 w-1 bg-primary rounded-r-full"></div>
+<div class="relative shrink-0 ml-1">
+<img class="w-11 h-11 rounded-full object-cover shadow-sm ring-1 ring-border-subtle" data-alt="Close up studio portrait of Nadia Safitri, a young Southeast Asian woman UI designer with subtle warm lighting, smiling gently, modern dark creative studio background" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDKBZJ7b_2sG5NTSf8HsJIvdHTjtOSrGI4J3jEDHnvEQ5aWqfkATPAAJiB6hkAo7IyBKsN4C15xFNGsfAq-VXnOeDltAuAFWLUQrfTasLu7P3mV9ouPpd0uhTWfWTkUhpGtg2eOiHx21v8c4vKjav_qkGPUkeQfzgKW6039fP_17EzIjboGX_xCXqLB_80hMv6GMk6vjr0m9q_p74ddbJg53oU5oYV7vpkRsadBg8WlvtyxQWBut50h"/>
+<span class="absolute bottom-0 right-0 w-3 h-3 bg-signal-online rounded-full ring-2 ring-white"></span>
+</div>
+<div class="flex-1 min-w-0">
+<div class="flex items-center justify-between mb-0.5">
+<span class="font-title-md text-title-md text-on-surface truncate font-semibold">Nadia Safitri</span>
+<span class="font-timestamp text-timestamp text-primary font-medium">14:22</span>
+</div>
+<p class="font-body-sm text-body-sm text-text-secondary truncate">Desain UI flow sudah selesai ya mas...</p>
+</div>
+<div class="shrink-0 flex flex-col items-end gap-1">
+<span class="w-5 h-5 rounded-full bg-primary text-white font-label-sm text-label-sm flex items-center justify-center font-bold shadow-sm">2</span>
+</div>
+</div>
+<!-- Recent Chats Section Header -->
+<div class="px-gutter-md pt-4 pb-1 text-text-muted">
+<span class="font-label-sm text-label-sm uppercase tracking-wider font-semibold">Terbaru</span>
+</div>
+<!-- Chat Item: Rian Pratama -->
+<div class="flex items-center gap-3 p-3 mx-1.5 rounded-xl hover:bg-white hover:shadow-sm border border-transparent hover:border-border-subtle transition-all cursor-pointer group">
+<div class="relative shrink-0">
+<img class="w-11 h-11 rounded-full object-cover ring-1 ring-border-subtle" data-alt="Headshot of Rian Pratama, young Indonesian software engineer wearing spectacles, subtle neon blue highlights, clean tech studio backdrop" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBV2WvCXxMy2NSgSYzUFyyeW3qWglX4IxtTSh45--BEROCNKYymGQbDi7unFcz4dRx8-wQeYvbZXPuYM9pvw8b0xYM5I-puQb3zt5DLRlPx7sHs-hQGtKrkHUmTsbtCl0N9n_IInpfn0F_Z8sPjsYeM8kfdeEk_1kQIuqdcanZzvfS2xmx-Tai7fxUVrSu4StAPsVAAb78-j8GTpFPgu1CTOrd9MqZV3_2iGvh7rvtmmnTU8tGsVCjQ"/>
+</div>
+<div class="flex-1 min-w-0">
+<div class="flex items-center justify-between mb-0.5">
+<span class="font-title-md text-title-md text-text-secondary group-hover:text-on-surface transition-colors truncate">Rian Pratama</span>
+<span class="font-timestamp text-timestamp text-text-muted">12:05</span>
+</div>
+<div class="flex items-center gap-1.5 text-text-muted group-hover:text-text-secondary transition-colors">
+<span class="material-symbols-outlined text-[16px] text-emerald-600">done_all</span>
+<p class="font-body-sm text-body-sm truncate">Bisa dikirim link repository-nya?</p>
+</div>
+</div>
+</div>
+<!-- Chat Item: Siti Rahma -->
+<div class="flex items-center gap-3 p-3 mx-1.5 rounded-xl hover:bg-white hover:shadow-sm border border-transparent hover:border-border-subtle transition-all cursor-pointer group">
+<div class="relative shrink-0">
+<img class="w-11 h-11 rounded-full object-cover ring-1 ring-border-subtle" data-alt="Portrait of Siti Rahma, modern professional Indonesian woman wearing a neutral hijab with soft warm ambient lighting, smiling warmly" src="https://lh3.googleusercontent.com/aida-public/AB6AXuArEecCiwjx1fDwg-8NbZVtNEuQ64cavi7d_AfDAyxPCVX_oS6KVp1lYa3tNzJDhe77f5xUlFfgNKDJ2kNHeV1DvmQJAFDPqScT_A46hBHZy5-H9reZ-nuSMhn2XGR673ksA-LoyGjikP5TyHDzIpcEe3R07mmRTJm9d0WHSiTnYgwMKj1VnGElJpgnUABoSE6kOWCkILCaP-kw0WsLCO6kumJmOxacsVh86HzHZaSVloBlA3u84Kp2"/>
+<span class="absolute bottom-0 right-0 w-3 h-3 bg-signal-online rounded-full ring-2 ring-white"></span>
+</div>
+<div class="flex-1 min-w-0">
+<div class="flex items-center justify-between mb-0.5">
+<span class="font-title-md text-title-md text-text-secondary group-hover:text-on-surface transition-colors truncate">Siti Rahma</span>
+<span class="font-timestamp text-timestamp text-text-muted">Kemarin</span>
+</div>
+<div class="flex items-center gap-1.5 text-text-muted group-hover:text-text-secondary transition-colors">
+<span class="material-symbols-outlined text-[16px] text-primary">mic</span>
+<span class="font-body-sm text-body-sm italic">Pesan Suara (0:42)</span>
+</div>
+</div>
+</div>
+<!-- Chat Item: Budi Santoso -->
+<div class="flex items-center gap-3 p-3 mx-1.5 rounded-xl hover:bg-white hover:shadow-sm border border-transparent hover:border-border-subtle transition-all cursor-pointer group">
+<div class="relative shrink-0">
+<img class="w-11 h-11 rounded-full object-cover ring-1 ring-border-subtle" data-alt="Casual profile photo of Budi Santoso, mid twenties man outdoors in twilight city lights, cool cinematic mood" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAP-2qHDPxQ3K--31bxyQ5kF50sL0f5boQYY9_QBBVYjPW8HQeMSKksIPZYQ4g6Wi11ZnK2yeGuNv8QOoLy7gs4dVgPQB7a0NzHC6B4O4kFeoYPyIDuGJ_wipm-xRhxumqwbbQh6ZqHNiqtsaOculvZjeJX6odIQHMWi-tySftXWWABlcv8ezOJ07JGFhwD7UwhCOiglMJtVS4rS3jBEifV0015DsjY1Qhc4tdiPww81AAt0hwSEuGV"/>
+</div>
+<div class="flex-1 min-w-0">
+<div class="flex items-center justify-between mb-0.5">
+<span class="font-title-md text-title-md text-text-secondary group-hover:text-on-surface transition-colors truncate">Budi Santoso</span>
+<span class="font-timestamp text-timestamp text-text-muted">Senin</span>
+</div>
+<div class="flex items-center gap-1.5 text-text-muted group-hover:text-text-secondary transition-colors">
+<span class="material-symbols-outlined text-[16px]">image</span>
+<span class="font-body-sm text-body-sm truncate">Mengirimkan gambar lampiran</span>
+</div>
+</div>
+</div>
+<!-- Chat Item: Aris Munandar -->
+<div class="flex items-center gap-3 p-3 mx-1.5 rounded-xl hover:bg-white hover:shadow-sm border border-transparent hover:border-border-subtle transition-all cursor-pointer group opacity-75">
+<div class="relative shrink-0">
+<div class="w-11 h-11 rounded-full bg-slate-200 border border-slate-300 flex items-center justify-center font-title-md text-title-md text-primary font-bold">
+              AM
+            </div>
+</div>
+<div class="flex-1 min-w-0">
+<div class="flex items-center justify-between mb-0.5">
+<span class="font-title-md text-title-md text-text-secondary group-hover:text-on-surface transition-colors truncate">Aris Munandar</span>
+<span class="font-timestamp text-timestamp text-text-muted">03/10</span>
+</div>
+<p class="font-body-sm text-body-sm text-text-muted truncate">Siap mas, nanti malam kita sync ya.</p>
+</div>
+</div>
+</div>
+</section>
+<!-- PANE 2: Active Chat Stage Window (Fluid Flex) -->
+<main class="flex-1 h-full flex flex-col bg-background relative overflow-hidden">
+<!-- Top Action Bar / Chat Header -->
+<header class="h-16 px-gutter-lg bg-white/95 backdrop-blur-md border-b border-border-subtle flex items-center justify-between shrink-0 z-10 shadow-sm">
+<div class="flex items-center gap-3 min-w-0">
+<div class="relative shrink-0">
+<img class="w-10 h-10 rounded-full object-cover shadow-sm ring-1 ring-border-subtle" data-alt="Small avatar icon of Nadia Safitri, young female Indonesian designer smiling, dark mode UI styled profile picture" src="https://lh3.googleusercontent.com/aida-public/AB6AXuC_tW5cbht-HLZK7a9t4WYJkm7aShoyDUKX-CfXdmanlaWVXudyFYTxz_KfLtOFjM0awkemiLwOr7TR_J51UxqVnWzUWc5SPEaMltkBtUT7LgffO7i5lleYwn1Ytqryq22eVFcsHMPcWKcVohxQv17KrZxn3KzbGre_RaGsllL4Q3lXpuqNZPO5s9oRb95CPzm9vNOgbUsbKpXRQmvcstjNzMMJvRZUxPOS_CFI82J6n3SSPTjhf-zK"/>
+<span class="absolute bottom-0 right-0 w-2.5 h-2.5 bg-signal-online rounded-full ring-2 ring-white animate-pulse"></span>
+</div>
+<div class="min-w-0 flex flex-col">
+<div class="flex items-center gap-2">
+<span class="font-headline-sm text-headline-sm text-on-surface truncate">Nadia Safitri</span>
+<span class="material-symbols-outlined text-[16px] text-primary" title="Kontak Terverifikasi">verified</span>
+</div>
+<div class="flex items-center gap-1.5 font-label-sm text-label-sm text-emerald-600 font-medium">
+<span class="w-1.5 h-1.5 rounded-full bg-emerald-500"></span>
+<span>Online • Mengetik...</span>
+</div>
+</div>
+</div>
+<!-- Action Tools -->
+<div class="flex items-center gap-1 text-text-muted">
+<button class="w-9 h-9 rounded-xl hover:bg-slate-100 hover:text-on-surface flex items-center justify-center transition-colors" title="Panggilan Suara">
+<span class="material-symbols-outlined text-[20px]">call</span>
+</button>
+<button class="w-9 h-9 rounded-xl hover:bg-slate-100 hover:text-on-surface flex items-center justify-center transition-colors" title="Panggilan Video">
+<span class="material-symbols-outlined text-[20px]">videocam</span>
+</button>
+<button class="w-9 h-9 rounded-xl hover:bg-slate-100 hover:text-on-surface flex items-center justify-center transition-colors" title="Cari dalam pesan">
+<span class="material-symbols-outlined text-[20px]">search</span>
+</button>
+<div class="w-[1px] h-5 bg-border-subtle mx-1"></div>
+<button class="w-9 h-9 rounded-xl bg-slate-100 hover:bg-slate-200 text-on-surface flex items-center justify-center transition-colors border border-border-subtle" id="toggleDetailsBtn" title="Buka Detail Kontak">
+<span class="material-symbols-outlined text-[20px]">info</span>
+</button>
+</div>
+</header>
+<!-- Pinned Notification Banner -->
+<div class="px-gutter-lg py-2.5 bg-indigo-50/70 border-b border-indigo-100/70 backdrop-blur-sm flex items-center justify-between gap-3 shrink-0">
+<div class="flex items-center gap-2.5 min-w-0">
+<div class="w-7 h-7 rounded-lg bg-primary/10 text-primary flex items-center justify-center shrink-0">
+<span class="material-symbols-outlined text-[18px]">push_pin</span>
+</div>
+<div class="min-w-0">
+<p class="font-label-md text-label-md text-on-surface font-medium truncate">
+              Berkas rancangan sprint 3 disematkan oleh Nadia
+            </p>
+<span class="font-timestamp text-timestamp text-text-muted">Figma File - 18 Komponen Baru disetujui</span>
+</div>
+</div>
+<div class="flex items-center gap-2 shrink-0">
+<a class="font-label-sm text-label-sm px-3 py-1 rounded-lg bg-primary text-white font-semibold hover:bg-primary/90 transition-opacity flex items-center gap-1 shadow-sm" href="#">
+<span class="material-symbols-outlined text-[14px]">download</span>
+            Unduh
+          </a>
+<button class="text-text-muted hover:text-on-surface p-1 rounded transition-colors" title="Tutup pin">
+<span class="material-symbols-outlined text-[16px]">close</span>
+</button>
+</div>
+</div>
+<!-- Chat History Container with Capped Readable Stream -->
+<div class="flex-1 overflow-y-auto px-gutter-md md:px-gutter-xl py-gutter-lg flex flex-col items-center">
+<div class="w-full max-w-[840px] space-y-gutter-md">
+<!-- Date Divider -->
+<div class="flex items-center justify-center my-4">
+<span class="px-3.5 py-1 rounded-full bg-slate-200/70 border border-slate-300/60 text-text-secondary font-label-sm text-label-sm shadow-xs tracking-wide">
+              Hari Ini
+            </span>
+</div>
+<!-- Incoming Message: 1 -->
+<div class="flex items-end gap-2.5 max-w-[78%] group">
+<img class="w-7 h-7 rounded-full object-cover mb-1 shrink-0 shadow-sm ring-1 ring-border-subtle" data-alt="Close up face of Indonesian female coworker Nadia, smiling friendly, professional workspace photo" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBOVYIDig3tZpOGGjoP1vtCWX_mR5obLtn-Jncqsvgo5i5am0SdKWoWbVtaWx9vgfCvUdUzUbJRLxwKPBDcX7EMsYlKnsUXFIxHyAUj9jDDGMpL2m4pB5fHrZMbqjbCUoLyazWTl9boOZ_U-V6EHMB4gswZH5h4JUMGKhtzJHurs6yz1xme8rK7UR9f_F1F9vZWqVkHzVDjuPcZjcGlZu-HPpKpaUisXbpTxx_cL0NE387Hf5QVGBXE"/>
+<div class="flex flex-col gap-1 items-start">
+<div class="p-3 px-4 rounded-[1.25rem] rounded-bl-[0.25rem] bg-white text-on-surface border border-border-subtle shadow-sm leading-relaxed">
+<p class="font-body-md text-body-md text-text-primary">Halo mas Dimas, bagaimana progres sprint review kemarin?</p>
+<div class="flex justify-end mt-1">
+<span class="font-timestamp text-timestamp text-text-muted">10:15</span>
+</div>
+</div>
+</div>
+</div>
+<!-- Outgoing Message: 1 -->
+<div class="flex items-end justify-end gap-2 max-w-[78%] ml-auto group">
+<div class="flex flex-col gap-1 items-end">
+<div class="p-3 px-4 rounded-[1.25rem] rounded-br-[0.25rem] bg-primary text-white shadow-[0_4px_14px_0_rgba(79,70,229,0.3)] leading-relaxed">
+<p class="font-body-md text-body-md">
+                  Halo Nadia! Semua berjalan lancar, sekarang tinggal finalisasi prototype obrolan real-time.
+                </p>
+<div class="flex items-center justify-end gap-1.5 mt-1 text-white/80">
+<span class="font-timestamp text-timestamp">10:18</span>
+<span class="material-symbols-outlined text-[15px] text-emerald-300">done_all</span>
+</div>
+</div>
+</div>
+</div>
+<!-- Incoming Message with Rich Media Figma Card -->
+<div class="flex items-end gap-2.5 max-w-[85%] group">
+<img class="w-7 h-7 rounded-full object-cover mb-1 shrink-0 shadow-sm ring-1 ring-border-subtle" data-alt="Close up avatar photo of Nadia Safitri in creative team mode" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCcnRIc-7wKSKeOpLjsRlJwhF2MnoYaLfXpLbQNaMdnD3tP5BA6IbYJRr8n1ukHbltAz-zATB07j-qSGanYPYuNoDNLgNEWZvC28rdi01uwyxncAEVu9z11HvSWyucqfs87FmCatuCosNdVDDcw0bdTLzCIgmkOWm5u8wgi5sRNx4Vik0RYkCvebytsDAUmRjduFu7Yr0ca81w1QZJLtx25r3U5zBKqoCw8Vzsg4FHkVKXlgu-OKK9a"/>
+<div class="flex flex-col gap-1.5 items-start w-full">
+<!-- Message Bubble Wrapper with Card Content -->
+<div class="w-full max-w-[440px] rounded-[1.25rem] rounded-bl-[0.25rem] bg-white text-on-surface border border-border-subtle overflow-hidden shadow-sm">
+<div class="p-3.5 pb-2.5">
+<p class="font-body-md text-body-md text-text-primary">Ini board Figma terbaru dengan design tokens terintegrasi ya:</p>
+</div>
+<!-- Interactive File/Media Attachment Card -->
+<div class="mx-3 mb-3 rounded-xl bg-slate-50 border border-border-subtle overflow-hidden group/card hover:bg-slate-100 transition-all cursor-pointer">
+<div class="relative h-32 w-full bg-slate-100 flex items-center justify-center overflow-hidden">
+<img class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300" data-alt="Digital mockup board screenshot of a sleek dark mode desktop chat workspace with UI elements and indigo accents" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCkFRiapTmTpBFnuxi1QhNOsWf-bxwfSPh_PaPFB_5bnJGnlg_nS_9eKTwuq5XMWhSGgj_9_RVAcTNo9YMEVYNpNA8jBYNRnKhxYvSNWFTXOYvY1khe276yMXTvIBXrorAgjNJsvCrE-7ww3cZ31IKfTnbGR6aLPFTMkuEzqaok7FLaRQN2QiJRRZPzQnpBLNW3DV70tLTtsK3F4ePcguw8oxiJYqcZbHmq_yOeryTrxMz9lBWvXvDB"/>
+<div class="absolute inset-0 bg-gradient-to-t from-slate-900/40 via-transparent to-transparent"></div>
+<span class="absolute top-2.5 left-2.5 px-2 py-0.5 rounded bg-white/90 backdrop-blur-sm text-primary font-label-sm text-label-sm font-semibold flex items-center gap-1 shadow-sm">
+<span class="w-1.5 h-1.5 rounded-full bg-primary"></span>
+                      Figma
+                    </span>
+</div>
+<div class="p-3 flex items-center justify-between gap-2">
+<div class="min-w-0">
+<h2 class="font-title-md text-title-md text-on-surface truncate">VibeChat Desktop Revamp v2</h2>
+<p class="font-label-sm text-label-sm text-text-muted">Updated 24 mins ago • 4.2 MB</p>
+</div>
+<button class="px-3 py-1.5 rounded-lg bg-indigo-50 text-primary hover:bg-primary hover:text-white border border-indigo-200 font-label-sm text-label-sm font-semibold transition-all shrink-0 flex items-center gap-1">
+<span>Buka</span>
+<span class="material-symbols-outlined text-[14px]">open_in_new</span>
+</button>
+</div>
+</div>
+<div class="px-4 pb-2.5 flex justify-end">
+<span class="font-timestamp text-timestamp text-text-muted">10:22</span>
+</div>
+</div>
+</div>
+</div>
+<!-- Outgoing Message: 2 -->
+<div class="flex items-end justify-end gap-2 max-w-[78%] ml-auto group">
+<div class="flex flex-col gap-1 items-end">
+<div class="p-3 px-4 rounded-[1.25rem] rounded-br-[0.25rem] bg-primary text-white shadow-[0_4px_14px_0_rgba(79,70,229,0.3)] leading-relaxed">
+<p class="font-body-md text-body-md">Keren banget, layoutnya rapi dan kontras warnanya pas.</p>
+<div class="flex items-center justify-end gap-1.5 mt-1 text-white/80">
+<span class="font-timestamp text-timestamp">10:24</span>
+<span class="material-symbols-outlined text-[15px] text-emerald-300">done_all</span>
+</div>
+</div>
+</div>
+</div>
+<!-- Live Typing Indicator Stream Element -->
+<div class="flex items-center gap-2.5 max-w-[70%]">
+<img class="w-6 h-6 rounded-full object-cover shrink-0 opacity-80 ring-1 ring-border-subtle" data-alt="Micro profile portrait of Nadia Safitri" src="https://lh3.googleusercontent.com/aida-public/AB6AXuA6xtk50aKofs5U6iZKP6kAnHH06iQ051XlbSOm7wJBZyzI5jDLIoD2YHM_WeNIXdyBAINM3P-1EdauT7ggCnuDmm8zuR55Fqe5OBkZtLa3ooIzMcfsOvVepGcHx4QwWqSS5htNNifxcq6nLkJd3MaC2KbS_bmYtaNVmnqqDxxjStPHOIKP_Md3bHm2OrsBkAizWSY2wocsoh3t7dpUkwHJIJtZ4GbznMMNjvwCqEeddcIzrF6ej8BM"/>
+<div class="px-3.5 py-2 rounded-2xl bg-white text-text-secondary flex items-center gap-2 border border-border-subtle shadow-xs">
+<div class="flex items-center gap-1">
+<span class="w-1.5 h-1.5 rounded-full bg-primary animate-bounce"></span>
+<span class="w-1.5 h-1.5 rounded-full bg-primary animate-bounce [animation-delay:0.2s]"></span>
+<span class="w-1.5 h-1.5 rounded-full bg-primary animate-bounce [animation-delay:0.4s]"></span>
+</div>
+<span class="font-label-sm text-label-sm text-text-muted italic">Nadia sedang mengetik...</span>
+</div>
+</div>
+</div>
+</div>
+<!-- Floating Bottom Input Island Composer -->
+<div class="p-gutter-md w-full max-w-[840px] mx-auto shrink-0">
+<div class="relative p-1.5 pl-3 rounded-2xl bg-white border border-border-subtle shadow-lg flex items-center gap-2 focus-within:ring-2 focus-within:ring-primary/25 focus-within:border-primary transition-all">
+<!-- Attachment Action Pill -->
+<div class="flex items-center gap-0.5 text-text-muted">
+<button class="w-8 h-8 rounded-xl hover:bg-slate-100 hover:text-on-surface flex items-center justify-center transition-colors" title="Lampirkan Dokumen/Foto">
+<span class="material-symbols-outlined text-[20px]">attach_file</span>
+</button>
+<button class="w-8 h-8 rounded-xl hover:bg-slate-100 hover:text-on-surface flex items-center justify-center transition-colors" title="Pilih Emoji atau Stiker">
+<span class="material-symbols-outlined text-[20px]">sentiment_satisfied</span>
+</button>
+</div>
+<!-- Dynamic Text Area / Input -->
+<input class="flex-1 bg-transparent py-2.5 px-2 text-on-surface placeholder:text-text-muted font-body-md text-body-md focus:outline-none" placeholder="Ketik pesan untuk Nadia... (Tekan Enter untuk kirim)" type="text"/>
+<!-- Voice Note & Send Actions -->
+<div class="flex items-center gap-1">
+<button class="w-9 h-9 rounded-xl text-text-muted hover:bg-slate-100 hover:text-on-surface flex items-center justify-center transition-colors" title="Rekam Catatan Suara">
+<span class="material-symbols-outlined text-[20px]">mic</span>
+</button>
+<button class="w-10 h-10 rounded-xl bg-primary text-white flex items-center justify-center hover:scale-105 active:scale-95 transition-all shadow-[0_4px_14px_0_rgba(79,70,229,0.35)]" title="Kirim Pesan">
+<span class="material-symbols-outlined text-[20px]">send</span>
+</button>
+</div>
+</div>
+</div>
+</main>
+<!-- PANE 3: Contextual User Details Panel (300px) -->
+<aside class="w-[300px] shrink-0 h-full bg-white border-l border-border-subtle flex flex-col z-20 transition-all duration-300" id="contactDetailsPanel">
+<!-- Panel Header -->
+<div class="h-16 px-gutter-md flex items-center justify-between shrink-0 bg-white/95 backdrop-blur-md border-b border-border-subtle">
+<h2 class="font-title-md text-title-md text-on-surface">Detail Kontak</h2>
+<button class="w-8 h-8 rounded-lg text-text-muted hover:text-on-surface hover:bg-slate-100 flex items-center justify-center transition-colors" id="closeDetailsBtn">
+<span class="material-symbols-outlined text-[20px]">close</span>
+</button>
+</div>
+<!-- User Profile Card -->
+<div class="flex-1 overflow-y-auto px-gutter-md pb-6 space-y-gutter-lg">
+<div class="flex flex-col items-center text-center pt-2">
+<div class="relative mb-3">
+<img class="w-20 h-20 rounded-full object-cover shadow-md ring-2 ring-border-subtle" data-alt="High resolution detailed portrait of Nadia Safitri, modern Indonesian tech designer with glasses and gentle ambient studio lighting" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCtr3v-M6NNrNF7xcF_x2mv5jnRaJu1uMbo7P_UqFox0TQjMnyzj_ba4ec2xgiBgmVc2ON2FLmcysqXc_SQsrMSLoV-UC1cldlBuOoGOzfG-D89GcltF1RMuqlvBh5LnUCWAsJI_wmPvSeeCWGOaw7tZ5spPk_hH3ZP4Su_PjNtu78yOpGWbpLp8Nfr5Ycx1U8Pe8rDAmuwcrJugcv7zK4QgdpoiVh_y8S_HLtJR9-Vpju7aNprBGod"/>
+<span class="absolute bottom-1 right-1 w-4 h-4 bg-signal-online rounded-full ring-4 ring-white" title="Status: Online"></span>
+</div>
+<h3 class="font-headline-sm text-headline-sm text-on-surface">Nadia Safitri</h3>
+<p class="font-label-md text-label-md text-primary font-mono mt-0.5">@nadiasafitri</p>
+<div class="mt-2 flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-emerald-50 border border-emerald-200 text-emerald-700 font-label-sm text-label-sm">
+<span class="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-ping"></span>
+            Aktif sekarang • Jakarta (GMT+7)
+          </div>
+</div>
+<!-- Bio Block -->
+<div class="p-3 rounded-xl bg-slate-50 border border-border-subtle text-left">
+<span class="font-label-sm text-label-sm text-text-muted uppercase font-semibold block mb-1">Tentang</span>
+<p class="font-body-sm text-body-sm text-text-secondary leading-relaxed">
+            Senior Product Designer at TechLabs. Suka kopi dan desain minimalis ✨
+          </p>
+</div>
+<!-- Quick Context Actions -->
+<div class="grid grid-cols-3 gap-2">
+<button class="flex flex-col items-center gap-1.5 p-2 rounded-xl bg-slate-50 border border-border-subtle hover:bg-slate-100 transition-colors group">
+<span class="material-symbols-outlined text-text-muted group-hover:text-on-surface text-[20px]">notifications_off</span>
+<span class="font-label-sm text-label-sm text-text-muted group-hover:text-on-surface">Mute</span>
+</button>
+<button class="flex flex-col items-center gap-1.5 p-2 rounded-xl bg-slate-50 border border-border-subtle hover:bg-slate-100 transition-colors group">
+<span class="material-symbols-outlined text-text-muted group-hover:text-on-surface text-[20px]">star</span>
+<span class="font-label-sm text-label-sm text-text-muted group-hover:text-on-surface">Bintangi</span>
+</button>
+<button class="flex flex-col items-center gap-1.5 p-2 rounded-xl bg-slate-50 border border-border-subtle hover:bg-red-50 hover:border-red-200 transition-colors group">
+<span class="material-symbols-outlined text-error text-[20px]">block</span>
+<span class="font-label-sm text-label-sm text-error">Blokir</span>
+</button>
+</div>
+<!-- Shared Media & Documents Bento Section -->
+<div class="space-y-gutter-sm">
+<div class="flex items-center justify-between">
+<span class="font-title-md text-title-md text-on-surface">Media &amp; Dokumen</span>
+<span class="font-label-sm text-label-sm text-primary font-medium cursor-pointer hover:underline">Lihat Semua</span>
+</div>
+<!-- Mini Tabs -->
+<div class="flex gap-2 font-label-sm text-label-sm text-text-muted">
+<span class="text-primary font-semibold pb-1 border-b-2 border-primary cursor-pointer">Foto (12)</span>
+<span class="hover:text-on-surface cursor-pointer">Dokumen (4)</span>
+<span class="hover:text-on-surface cursor-pointer">Tautan (8)</span>
+</div>
+<!-- 4 Thumbnail Media Grid -->
+<div class="grid grid-cols-2 gap-2 pt-1">
+<div class="relative h-20 rounded-xl overflow-hidden group cursor-pointer bg-slate-100 border border-border-subtle">
+<img class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-300" data-alt="Modern mobile app UI showcase card preview with dark purple accents" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBdrUogAahFMRXojfR4PvxTSdIHD790iKZOEXteZcIP5FdX2T38_RoU_WjfnUSbTyLVhPmpm9oGAQSK1eSFNj1LKtlr3kMzvHrUTEibYQm6eoVNJlattSRFRX1UGIROyBUF13VPCnscAf__gVA1Ih0kTxgtri669P2lzs33CjaHtj2-HjdzFF_ptv3Pavq6CrPNjsZo4WKihHhhVbQNPGuwSSTFRByT24lTTOgsd3Z6RZFLBh7GB_v-"/>
+</div>
+<div class="relative h-20 rounded-xl overflow-hidden group cursor-pointer bg-slate-100 border border-border-subtle">
+<img class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-300" data-alt="Design system color palette swatches preview image on digital canvas" src="https://lh3.googleusercontent.com/aida-public/AB6AXuByGTEvdd9PQ-m6ngWMzxrpmBj4ijKFOCT7erk0rsG4Ir4xNx1I-Z1Ax6bz-4rB5ZDt4mmATzPKBcgjCjRoP9-fhdB7rGTQfn-3EzZb8922lkGVneNKZ-TKhNLQwP3aKSaGiffrt3YyIS47VEHhsNAbuaUPIu9n_sZfbeGGuB8L0qloCv2ioLg3lDoLqWZiAaTBCd0FNThpOlQ_y24LRDdw6gaSngESyxdgQ3egh6eeOdGjcHhwcS6O"/>
+</div>
+<div class="relative h-20 rounded-xl overflow-hidden group cursor-pointer bg-slate-100 border border-border-subtle">
+<img class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-300" data-alt="Wireframe vector schematic layout draft preview in subtle neon lines" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDiHJEqT5T2Vi8-o6JGt00SLJgbrkEv_VoPUVppR2RnraxnG8PYISjs0adeHxDI0tq-6F0GvArhIdeq-Vjsova9UileD7dDr0kTHnqqSv9tkD0M7yt6_yvyTrSNJ_o6FA0C2mAkhsO4Yw1EcFrqkFgEk7nVK43ClUtugKVV1itG-WLQtWkZgAACcaTpHR0ZTd0UkBbM_ptCqUzWpqztQ3UAWUICyKtkkr_RPj0IiF19J_Wa0E2bPmJy"/>
+</div>
+<div class="relative h-20 rounded-xl overflow-hidden group cursor-pointer bg-slate-100 border border-border-subtle flex items-center justify-center hover:bg-slate-200 text-on-surface font-title-md text-title-md transition-colors">
+<span>+9</span>
+</div>
+</div>
+<!-- Shared PDF Document Card -->
+<div class="flex items-center gap-3 p-2.5 rounded-xl bg-slate-50 border border-border-subtle hover:bg-slate-100 transition-colors cursor-pointer group">
+<div class="w-9 h-9 rounded-lg bg-red-100 text-error flex items-center justify-center shrink-0">
+<span class="material-symbols-outlined text-[20px]">picture_as_pdf</span>
+</div>
+<div class="min-w-0 flex-1">
+<p class="font-label-md text-label-md text-on-surface truncate group-hover:text-primary transition-colors font-medium">
+                PRD_VibeChat_Final.pdf
+              </p>
+<span class="font-timestamp text-timestamp text-text-muted">2.4 MB • 14 Okt</span>
+</div>
+<button class="text-text-muted hover:text-on-surface p-1 rounded transition-colors" title="Unduh File">
+<span class="material-symbols-outlined text-[18px]">download</span>
+</button>
+</div>
+</div>
+<!-- Privacy & Security Footnote Card -->
+<div class="p-3 rounded-xl bg-slate-50 border border-border-subtle flex items-start gap-2.5">
+<span class="material-symbols-outlined text-emerald-600 text-[20px] shrink-0 mt-0.5">lock</span>
+<div>
+<span class="font-label-md text-label-md text-on-surface font-semibold block">Enkripsi Ujung-ke-Ujung</span>
+<p class="font-label-sm text-label-sm text-text-muted mt-0.5 leading-normal">
+              Pesan dan panggilan Anda dilindungi sandi kriptografi. Tidak seorang pun di luar chat ini yang dapat membaca.
+            </p>
+</div>
+</div>
+</div>
+</aside>
+</div>
+</div>
+<script>
+  (function() {
+    const toggleBtn = document.getElementById('toggleDetailsBtn');
+    const closeBtn = document.getElementById('closeDetailsBtn');
+    const panel = document.getElementById('contactDetailsPanel');
+
+    if (toggleBtn && closeBtn && panel) {
+      function togglePanel() {
+        panel.classList.toggle('hidden');
+      }
+
+      toggleBtn.addEventListener('click', togglePanel);
+      closeBtn.addEventListener('click', () => {
+        panel.classList.add('hidden');
+      });
+    }
+  })();
+</script></main></div></body></html>
