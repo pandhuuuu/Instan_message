@@ -47,13 +47,16 @@ const SingleChat = ({ fetchAgain, setFetchAgain }) => {
   const [messages, setMessages] = useState([]);
   const [loading, setLoading] = useState(false);
   const [newMessage, setNewMessage] = useState("");
-  const [socketConnected, setSocketConnected] = useState(false);
   const [typing, setTyping] = useState(false);
   const [istyping, setIsTyping] = useState(false);
+  const [typingUserName, setTypingUserName] = useState("");
   const [inputFocused, setInputFocused] = useState(false);
   const toast = useToast();
   const inputRef = useRef();
   const typingTimerRef = useRef(null);
+  const receiverTypingTimeoutRef = useRef(null);
+  const previousChatIdRef = useRef(null);
+  const messagesEndRef = useRef(null);
 
   const [isClearModalOpen, setIsClearModalOpen] = useState(false);
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
@@ -72,20 +75,41 @@ const SingleChat = ({ fetchAgain, setFetchAgain }) => {
   } = ChatState();
 
   const fetchMessages = async () => {
-    if (!selectedChat) return;
+    if (!selectedChat?._id) return;
     try {
       const config = { headers: { Authorization: `Bearer ${user.token}` } };
       setLoading(true);
       const { data } = await axios.get(`/api/message/${selectedChat._id}`, config);
       setMessages(data);
       setLoading(false);
-      socket?.emit("join chat", selectedChat._id);
 
-      // Mark messages as read
+      if (socket) {
+        socket.emit("join chat", selectedChat._id);
+        socket.emit("mark messages read", { chatId: selectedChat._id, userId: user._id });
+
+        // Mark any received messages as delivered if not already marked
+        const undeliveredIds = data
+          .filter((m) => {
+            const senderId = String(m.sender?._id || m.sender);
+            const isMe = senderId === String(user._id);
+            const delivered = m.deliveredTo && m.deliveredTo.some((u) => String(u._id || u) === String(user._id));
+            return !isMe && !delivered;
+          })
+          .map((m) => m._id);
+
+        if (undeliveredIds.length > 0) {
+          socket.emit("mark messages delivered", {
+            messageIds: undeliveredIds,
+            userId: user._id,
+            chatId: selectedChat._id,
+          });
+        }
+      }
+
+      // Mark messages as read via REST
       axios.put(`/api/message/read/${selectedChat._id}`, {}, config).catch(() => {});
-      socket?.emit("mark messages read", { chatId: selectedChat._id, userId: user._id });
       setChats((prev) =>
-        prev?.map((c) => (c._id === selectedChat._id ? { ...c, unreadCount: 0 } : c))
+        prev?.map((c) => (String(c._id) === String(selectedChat._id) ? { ...c, unreadCount: 0 } : c))
       );
     } catch (error) {
       toast({ title: "Failed to load messages", status: "error", duration: 5000, isClosable: true, position: "bottom" });
@@ -93,22 +117,28 @@ const SingleChat = ({ fetchAgain, setFetchAgain }) => {
   };
 
   const sendMessage = async (event) => {
-    if (event.key === "Enter" && newMessage) {
-      socket?.emit("stop typing", selectedChat._id);
+    if (event.key === "Enter" && newMessage.trim()) {
+      if (typingTimerRef.current) clearTimeout(typingTimerRef.current);
+      if (socket && selectedChat?._id) {
+        socket.emit("stop typing", { chatId: selectedChat._id, senderId: user._id });
+      }
+      setTyping(false);
+
       try {
         const config = {
           headers: { "Content-type": "application/json", Authorization: `Bearer ${user.token}` },
         };
+        const contentToSend = newMessage.trim();
         setNewMessage("");
-        const { data } = await axios.post("/api/message", { content: newMessage, chatId: selectedChat._id }, config);
+        const { data } = await axios.post("/api/message", { content: contentToSend, chatId: selectedChat._id }, config);
         socket?.emit("new message", data);
-        setMessages([...messages, data]);
+        setMessages((prev) => [...prev, data]);
         setChats((prev) => {
           if (!prev) return prev;
-          const target = prev.find((c) => c._id === selectedChat._id);
+          const target = prev.find((c) => String(c._id) === String(selectedChat._id));
           if (!target) return prev;
           const updated = { ...target, latestMessage: data, unreadCount: 0 };
-          return [updated, ...prev.filter((c) => c._id !== selectedChat._id)];
+          return [updated, ...prev.filter((c) => String(c._id) !== String(selectedChat._id))];
         });
       } catch (error) {
         toast({ title: "Failed to send message", status: "error", duration: 5000, isClosable: true, position: "bottom" });
@@ -117,7 +147,7 @@ const SingleChat = ({ fetchAgain, setFetchAgain }) => {
   };
 
   const sendMessageClick = async () => {
-    if (!newMessage) return;
+    if (!newMessage.trim()) return;
     await sendMessage({ key: "Enter" });
     inputRef.current?.focus();
   };
@@ -226,43 +256,104 @@ const SingleChat = ({ fetchAgain, setFetchAgain }) => {
   };
 
   useEffect(() => {
-    if (!socket) return;
-    setSocketConnected(true);
+    if (!socket || !selectedChat?._id) return;
+    const currentId = String(selectedChat._id);
 
-    const typingHandler = () => setIsTyping(true);
-    const stopTypingHandler = () => setIsTyping(false);
+    // Leave previous room if switching
+    if (previousChatIdRef.current && previousChatIdRef.current !== currentId) {
+      socket.emit("leave chat", previousChatIdRef.current);
+    }
 
-    socket.on("typing", typingHandler);
-    socket.on("stop typing", stopTypingHandler);
+    // Reset receiver typing state when switching chats
+    setIsTyping(false);
+    setTypingUserName("");
+    if (receiverTypingTimeoutRef.current) clearTimeout(receiverTypingTimeoutRef.current);
+
+    // Join new room
+    socket.emit("join chat", currentId);
+    previousChatIdRef.current = currentId;
 
     return () => {
-      socket.off("typing", typingHandler);
-      socket.off("stop typing", stopTypingHandler);
+      if (socket && currentId) {
+        socket.emit("leave chat", currentId);
+      }
     };
-  }, [socket]);
+  }, [socket, selectedChat]);
 
   useEffect(() => {
     fetchMessages();
     selectedChatCompare = selectedChat;
+    setIsTyping(false);
+    setTypingUserName("");
     // eslint-disable-next-line
   }, [selectedChat]);
+
+  useEffect(() => {
+    messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
+  }, [messages, istyping]);
 
   useEffect(() => {
     if (!socket || !user) return;
     const config = { headers: { Authorization: `Bearer ${user.token}` } };
 
+    const typingHandler = (data) => {
+      if (!data) return;
+      const typingChatId = typeof data === "object" ? String(data.chatId || data.room) : String(data);
+      const senderId = typeof data === "object" ? String(data.senderId || data.userId || "") : "";
+      const senderName = typeof data === "object" ? (data.senderName || data.name || "") : "";
+
+      // Ignore if typing from oneself
+      if (senderId && String(senderId) === String(user._id)) return;
+
+      // STRICT CHECK: only show typing if it matches the current active chat room
+      if (selectedChatCompare && String(selectedChatCompare._id) === typingChatId) {
+        setIsTyping(true);
+        setTypingUserName(senderName);
+
+        // Safety timeout on receiver side: auto-clear after 4 seconds
+        if (receiverTypingTimeoutRef.current) clearTimeout(receiverTypingTimeoutRef.current);
+        receiverTypingTimeoutRef.current = setTimeout(() => {
+          setIsTyping(false);
+          setTypingUserName("");
+        }, 4000);
+      }
+    };
+
+    const stopTypingHandler = (data) => {
+      if (!data) {
+        setIsTyping(false);
+        setTypingUserName("");
+        return;
+      }
+      const typingChatId = typeof data === "object" ? String(data.chatId || data.room) : String(data);
+      if (selectedChatCompare && String(selectedChatCompare._id) === typingChatId) {
+        setIsTyping(false);
+        setTypingUserName("");
+        if (receiverTypingTimeoutRef.current) clearTimeout(receiverTypingTimeoutRef.current);
+      }
+    };
+
     const messageHandler = (newMessageRecieved) => {
       const activeChatId = selectedChatCompare ? String(selectedChatCompare._id) : null;
       const incomingChatId = String(newMessageRecieved.chat?._id || newMessageRecieved.chat);
 
+      // Acknowledge receipt to server
+      if (socket && user && newMessageRecieved._id) {
+        socket.emit("mark messages delivered", {
+          messageIds: [newMessageRecieved._id],
+          userId: user._id,
+          chatId: incomingChatId,
+        });
+      }
+
       if (!activeChatId || activeChatId !== incomingChatId) {
-        if (!notification.some((n) => n._id === newMessageRecieved._id)) {
+        if (!notification.some((n) => String(n._id) === String(newMessageRecieved._id))) {
           setNotification((prev) => [newMessageRecieved, ...prev]);
           setFetchAgain(!fetchAgain);
         }
       } else {
         setMessages((prev) => {
-          if (prev.some((m) => m._id === newMessageRecieved._id)) return prev;
+          if (prev.some((m) => String(m._id) === String(newMessageRecieved._id))) return prev;
           return [...prev, newMessageRecieved];
         });
         // Because chat is actively open, mark as read immediately
@@ -278,29 +369,43 @@ const SingleChat = ({ fetchAgain, setFetchAgain }) => {
       }
     };
 
-    const deliveryHandler = ({ messageId, deliveredTo }) => {
+    const deliveryHandler = (data) => {
+      if (!data) return;
+      const ids = data.messageIds
+        ? data.messageIds.map(String)
+        : data.messageId
+        ? [String(data.messageId)]
+        : [];
+      const users = data.deliveredTo
+        ? data.deliveredTo.map(String)
+        : data.userId
+        ? [String(data.userId)]
+        : [];
+      if (!ids.length) return;
+
       setMessages((prev) =>
-        prev.map((msg) =>
-          msg._id === messageId
-            ? {
-                ...msg,
-                deliveredTo: Array.from(new Set([...(msg.deliveredTo || []), ...(deliveredTo || [])])),
-              }
-            : msg
-        )
+        prev.map((msg) => {
+          if (ids.includes(String(msg._id))) {
+            return {
+              ...msg,
+              deliveredTo: Array.from(new Set([...(msg.deliveredTo || []).map((u) => String(u._id || u)), ...users])),
+            };
+          }
+          return msg;
+        })
       );
     };
 
     const readHandler = ({ chatId, readerId }) => {
-      if (selectedChatCompare && selectedChatCompare._id === chatId) {
+      if (selectedChatCompare && String(selectedChatCompare._id) === String(chatId)) {
         setMessages((prev) =>
           prev.map((msg) => {
             const senderId = msg.sender?._id || msg.sender;
             if (String(senderId) === String(user._id)) {
               return {
                 ...msg,
-                readBy: Array.from(new Set([...(msg.readBy || []), readerId])),
-                deliveredTo: Array.from(new Set([...(msg.deliveredTo || []), readerId])),
+                readBy: Array.from(new Set([...(msg.readBy || []).map((u) => String(u._id || u)), String(readerId)])),
+                deliveredTo: Array.from(new Set([...(msg.deliveredTo || []).map((u) => String(u._id || u)), String(readerId)])),
               };
             }
             return msg;
@@ -310,35 +415,38 @@ const SingleChat = ({ fetchAgain, setFetchAgain }) => {
     };
 
     const clearChatHandler = (clearedChatId) => {
-      if (selectedChatCompare && selectedChatCompare._id === clearedChatId) {
+      if (selectedChatCompare && String(selectedChatCompare._id) === String(clearedChatId)) {
         setMessages([]);
         setFetchAgain(!fetchAgain);
       }
     };
 
     const deleteMessageHandler = ({ messageId, chatId }) => {
-      if (selectedChatCompare && selectedChatCompare._id === chatId) {
-        setMessages((prev) => prev.filter((m) => m._id !== messageId));
+      if (selectedChatCompare && String(selectedChatCompare._id) === String(chatId)) {
+        setMessages((prev) => prev.filter((m) => String(m._id) !== String(messageId)));
         setFetchAgain(!fetchAgain);
       }
     };
 
     const deleteChatHandler = (deletedChatId) => {
-      if (selectedChatCompare && selectedChatCompare._id === deletedChatId) {
+      if (selectedChatCompare && String(selectedChatCompare._id) === String(deletedChatId)) {
         setSelectedChat(null);
         setFetchAgain(!fetchAgain);
       }
     };
 
     const groupUpdateHandler = (updatedChat) => {
-      if (selectedChatCompare && selectedChatCompare._id === updatedChat._id) {
+      if (selectedChatCompare && String(selectedChatCompare._id) === String(updatedChat._id)) {
         setSelectedChat(updatedChat);
       }
       setFetchAgain(!fetchAgain);
     };
 
+    socket.on("typing", typingHandler);
+    socket.on("stop typing", stopTypingHandler);
     socket.on("message recieved", messageHandler);
     socket.on("message delivered update", deliveryHandler);
+    socket.on("messages delivered update", deliveryHandler);
     socket.on("messages read update", readHandler);
     socket.on("chat cleared", clearChatHandler);
     socket.on("message deleted", deleteMessageHandler);
@@ -346,8 +454,11 @@ const SingleChat = ({ fetchAgain, setFetchAgain }) => {
     socket.on("group updated", groupUpdateHandler);
 
     return () => {
+      socket.off("typing", typingHandler);
+      socket.off("stop typing", stopTypingHandler);
       socket.off("message recieved", messageHandler);
       socket.off("message delivered update", deliveryHandler);
+      socket.off("messages delivered update", deliveryHandler);
       socket.off("messages read update", readHandler);
       socket.off("chat cleared", clearChatHandler);
       socket.off("message deleted", deleteMessageHandler);
@@ -357,15 +468,32 @@ const SingleChat = ({ fetchAgain, setFetchAgain }) => {
   }, [socket, notification, fetchAgain, setFetchAgain, setNotification, user, setSelectedChat, setChats]);
 
   const typingHandler = (e) => {
-    setNewMessage(e.target.value);
-    if (!socketConnected) return;
+    const val = e.target.value;
+    setNewMessage(val);
+
+    if (!socket || !selectedChat?._id) return;
+
+    if (!val.trim()) {
+      if (typing) {
+        socket.emit("stop typing", { chatId: selectedChat._id, senderId: user._id });
+        setTyping(false);
+      }
+      if (typingTimerRef.current) clearTimeout(typingTimerRef.current);
+      return;
+    }
+
     if (!typing) {
       setTyping(true);
-      socket.emit("typing", selectedChat._id);
+      socket.emit("typing", {
+        chatId: selectedChat._id,
+        senderId: user._id,
+        senderName: user.name || user.username || "User",
+      });
     }
+
     if (typingTimerRef.current) clearTimeout(typingTimerRef.current);
     typingTimerRef.current = setTimeout(() => {
-      socket.emit("stop typing", selectedChat._id);
+      socket.emit("stop typing", { chatId: selectedChat._id, senderId: user._id });
       setTyping(false);
     }, 2500);
   };
@@ -455,7 +583,9 @@ const SingleChat = ({ fetchAgain, setFetchAgain }) => {
                 <span style={{ fontSize: "12px", fontWeight: "500", marginTop: "1px" }}>
                   {istyping ? (
                     <span style={{ color: "#c3c0ff", animation: "pulse 1.5s infinite" }}>
-                      {selectedChat.isGroupChat ? "someone is typing..." : "typing..."}
+                      {selectedChat.isGroupChat
+                        ? `${typingUserName || "Someone"} is typing...`
+                        : `${typingUserName || chatName} is typing...`}
                     </span>
                   ) : selectedChat.isGroupChat ? (
                     <span style={{ color: "#918fa1" }}>
@@ -547,7 +677,7 @@ const SingleChat = ({ fetchAgain, setFetchAgain }) => {
 
           {/* ── Messages Area ── */}
           <div
-            className="flex-1 overflow-y-auto px-4 md:px-8 py-4 flex flex-col relative"
+            className="flex-1 overflow-hidden px-4 md:px-8 py-4 flex flex-col relative"
             style={{
               background: "#0b1326",
             }}>
@@ -559,8 +689,9 @@ const SingleChat = ({ fetchAgain, setFetchAgain }) => {
                 </div>
               </div>
             ) : (
-              <div className="messages flex-1 flex flex-col">
+              <div className="messages flex-1 flex flex-col overflow-y-auto">
                 <ScrollableChat messages={messages} onDeleteMessage={handleDeleteSingleMessage} />
+                <div ref={messagesEndRef} />
               </div>
             )}
           </div>
@@ -575,7 +706,9 @@ const SingleChat = ({ fetchAgain, setFetchAgain }) => {
                 <span className="typing-dot" />
                 <span className="typing-dot" />
                 <span style={{ fontSize: "12px", color: "#918fa1", marginLeft: "4px" }}>
-                  {chatName} is typing...
+                  {selectedChat.isGroupChat
+                    ? `${typingUserName || "Someone"} is typing...`
+                    : `${chatName} is typing...`}
                 </span>
               </div>
             </div>

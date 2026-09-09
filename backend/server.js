@@ -213,12 +213,42 @@ io.on("connection", (socket) => {
   });
 
   socket.on("join chat", (room) => {
-    socket.join(room);
-    console.log("User Joined Room: " + room);
+    if (!room) return;
+    const roomStr = String(room);
+    socket.join(roomStr);
+    console.log("User Joined Room: " + roomStr);
   });
 
-  socket.on("typing", (room) => socket.in(room).emit("typing"));
-  socket.on("stop typing", (room) => socket.in(room).emit("stop typing"));
+  socket.on("leave chat", (room) => {
+    if (!room) return;
+    const roomStr = String(room);
+    socket.leave(roomStr);
+    console.log("User Left Room: " + roomStr);
+  });
+
+  socket.on("join user chats", (chatIds) => {
+    if (Array.isArray(chatIds)) {
+      chatIds.forEach((id) => {
+        if (id) socket.join(String(id));
+      });
+    }
+  });
+
+  socket.on("typing", (data) => {
+    if (!data) return;
+    const room = typeof data === "object" ? String(data.chatId || data.room) : String(data);
+    if (!room) return;
+    const payload = typeof data === "object" ? data : { chatId: room };
+    socket.to(room).emit("typing", payload);
+  });
+
+  socket.on("stop typing", (data) => {
+    if (!data) return;
+    const room = typeof data === "object" ? String(data.chatId || data.room) : String(data);
+    if (!room) return;
+    const payload = typeof data === "object" ? data : { chatId: room };
+    socket.to(room).emit("stop typing", payload);
+  });
 
   socket.on("new message", async (newMessageRecieved) => {
     var chat = newMessageRecieved.chat;
@@ -243,20 +273,19 @@ io.on("connection", (socket) => {
       }
     });
 
-    // Juga kirim ke chat room jika pengguna bergabung ke room
-    socket.in(chatIdStr).emit("message recieved", newMessageRecieved);
-
     if (isDeliveredToAny && newMessageRecieved._id) {
       try {
         await Message.findByIdAndUpdate(newMessageRecieved._id, {
           $addToSet: { deliveredTo: { $each: deliveredUserIds } },
         });
 
-        // Notify sender that message has been delivered!
+        // Notify sender that message has been delivered to active online user(s)
         socket.emit("message delivered update", {
           messageId: newMessageRecieved._id,
+          messageIds: [newMessageRecieved._id],
           chatId: chat._id,
           deliveredTo: deliveredUserIds,
+          userId: deliveredUserIds[0],
         });
       } catch (err) {
         console.error("Error updating deliveredTo in new message:", err);
@@ -266,10 +295,11 @@ io.on("connection", (socket) => {
 
   socket.on("mark messages read", async ({ chatId, userId }) => {
     if (!chatId || !userId) return;
+    const chatIdStr = String(chatId);
     try {
       await Message.updateMany(
         {
-          chat: chatId,
+          chat: chatIdStr,
           sender: { $ne: userId },
           readBy: { $ne: userId },
         },
@@ -281,13 +311,9 @@ io.on("connection", (socket) => {
         }
       );
 
-      // Broadcast to room and to user's peers
-      io.in(chatId).emit("messages read update", {
-        chatId,
-        readerId: userId,
-      });
-      socket.broadcast.emit("messages read update", {
-        chatId,
+      // Broadcast to room and chat participants
+      io.in(chatIdStr).emit("messages read update", {
+        chatId: chatIdStr,
         readerId: userId,
       });
     } catch (err) {
@@ -295,7 +321,7 @@ io.on("connection", (socket) => {
     }
   });
 
-  socket.on("mark messages delivered", async ({ messageIds, userId }) => {
+  socket.on("mark messages delivered", async ({ messageIds, userId, chatId }) => {
     if (!messageIds || !messageIds.length || !userId) return;
     try {
       await Message.updateMany(
@@ -308,25 +334,36 @@ io.on("connection", (socket) => {
         }
       );
 
-      io.emit("messages delivered update", {
+      const payload = {
         messageIds,
+        messageId: messageIds[0],
         userId,
-      });
+        deliveredTo: [userId],
+        chatId,
+      };
+
+      if (chatId) {
+        io.in(String(chatId)).emit("message delivered update", payload);
+        io.in(String(chatId)).emit("messages delivered update", payload);
+      } else {
+        io.emit("message delivered update", payload);
+        io.emit("messages delivered update", payload);
+      }
     } catch (err) {
       console.error("Error in mark messages delivered socket event:", err);
     }
   });
 
   socket.on("clear chat", (chatId) => {
-    io.in(chatId).emit("chat cleared", chatId);
+    io.in(String(chatId)).emit("chat cleared", String(chatId));
   });
 
   socket.on("delete message", ({ messageId, chatId }) => {
-    io.in(chatId).emit("message deleted", { messageId, chatId });
+    io.in(String(chatId)).emit("message deleted", { messageId, chatId: String(chatId) });
   });
 
   socket.on("delete chat", (chatId) => {
-    io.in(chatId).emit("chat deleted", chatId);
+    io.in(String(chatId)).emit("chat deleted", String(chatId));
   });
 
   socket.on("disconnect", async () => {

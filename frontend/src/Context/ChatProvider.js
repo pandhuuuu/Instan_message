@@ -17,6 +17,16 @@ const ChatProvider = ({ children }) => {
   const history = useHistory();
   const isAwayRef = useRef(false);
   const socketRef = useRef(null);
+  const selectedChatRef = useRef(selectedChat);
+  const chatsRef = useRef(chats);
+
+  useEffect(() => {
+    selectedChatRef.current = selectedChat;
+  }, [selectedChat]);
+
+  useEffect(() => {
+    chatsRef.current = chats;
+  }, [chats]);
 
   useEffect(() => {
     const userInfo = JSON.parse(localStorage.getItem("userInfo"));
@@ -49,6 +59,12 @@ const ChatProvider = ({ children }) => {
     newSocket.on("connect", () => {
       newSocket.emit("setup", user);
       newSocket.emit("get online users");
+      if (selectedChatRef.current && selectedChatRef.current._id) {
+        newSocket.emit("join chat", selectedChatRef.current._id);
+      }
+      if (chatsRef.current && Array.isArray(chatsRef.current) && chatsRef.current.length > 0) {
+        newSocket.emit("join user chats", chatsRef.current.map((c) => c._id));
+      }
     });
 
     newSocket.on("connected", (initialUsers) => {

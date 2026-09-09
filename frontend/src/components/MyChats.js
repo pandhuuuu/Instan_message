@@ -18,6 +18,7 @@ const MyChats = ({ fetchAgain }) => {
   const [searchResult, setSearchResult] = useState([]);
   const [loadingSearch, setLoadingSearch] = useState(false);
   const [activeTab, setActiveTab] = useState("chats"); // "chats" | "online"
+  const [typingChats, setTypingChats] = useState({});
 
   const {
     selectedChat,
@@ -58,6 +59,9 @@ const MyChats = ({ fetchAgain }) => {
       const config = { headers: { Authorization: `Bearer ${user.token}` } };
       const { data } = await axios.get("/api/chat", config);
       setChats(data);
+      if (socket && data?.length) {
+        socket.emit("join user chats", data.map((c) => c._id));
+      }
     } catch (error) {
       toast({ title: "Failed to load chats", status: "error", duration: 4000, isClosable: true, position: "bottom-left" });
     }
@@ -69,20 +73,28 @@ const MyChats = ({ fetchAgain }) => {
     // eslint-disable-next-line
   }, [fetchAgain]);
 
-  // Real-time socket message handler for unread badge counters & sorting
+  // Real-time socket message handler for unread badge counters, typing & sync
   useEffect(() => {
     if (!socket) return;
 
     const handleMessageRecieved = (newMessage) => {
       if (!newMessage || !newMessage.chat) return;
 
-      const chatId = newMessage.chat._id || newMessage.chat;
-      const isCurrentChat = selectedChat && selectedChat._id === chatId;
+      const chatId = String(newMessage.chat._id || newMessage.chat);
+      const isCurrentChat = selectedChat && String(selectedChat._id) === chatId;
+
+      // Clear typing indicator for this chat upon receiving a new message
+      setTypingChats((prev) => {
+        if (!prev[chatId]) return prev;
+        const updated = { ...prev };
+        delete updated[chatId];
+        return updated;
+      });
 
       setChats((prevChats) => {
         if (!prevChats) return prevChats;
 
-        const existingIndex = prevChats.findIndex((c) => c._id === chatId);
+        const existingIndex = prevChats.findIndex((c) => String(c._id) === chatId);
 
         if (existingIndex === -1) {
           fetchChats();
@@ -97,7 +109,7 @@ const MyChats = ({ fetchAgain }) => {
           unreadCount: isCurrentChat ? 0 : (targetChat.unreadCount || 0) + (isSystem ? 0 : 1),
         };
 
-        const remainingChats = prevChats.filter((c) => c._id !== chatId);
+        const remainingChats = prevChats.filter((c) => String(c._id) !== chatId);
         return [updatedChat, ...remainingChats];
       });
     };
@@ -105,19 +117,96 @@ const MyChats = ({ fetchAgain }) => {
     const handleMessagesReadUpdate = ({ chatId, readerId }) => {
       if (user && String(readerId) === String(user._id)) {
         setChats((prevChats) =>
-          prevChats?.map((c) => (c._id === chatId ? { ...c, unreadCount: 0 } : c))
+          prevChats?.map((c) => (String(c._id) === String(chatId) ? { ...c, unreadCount: 0 } : c))
         );
       }
     };
 
+    const handleTyping = (data) => {
+      if (!data) return;
+      const chatId = typeof data === "object" ? String(data.chatId || data.room) : String(data);
+      const senderId = typeof data === "object" ? String(data.senderId || data.userId || "") : "";
+      const senderName = typeof data === "object" ? (data.senderName || data.name || "") : "";
+
+      if (senderId && user && String(senderId) === String(user._id)) return;
+      if (!chatId) return;
+
+      setTypingChats((prev) => ({
+        ...prev,
+        [chatId]: senderName || "Someone",
+      }));
+    };
+
+    const handleStopTyping = (data) => {
+      if (!data) return;
+      const chatId = typeof data === "object" ? String(data.chatId || data.room) : String(data);
+      if (!chatId) return;
+
+      setTypingChats((prev) => {
+        if (!prev[chatId]) return prev;
+        const updated = { ...prev };
+        delete updated[chatId];
+        return updated;
+      });
+    };
+
+    const handleChatCleared = (clearedChatId) => {
+      const idStr = String(clearedChatId);
+      setChats((prevChats) =>
+        prevChats?.map((c) =>
+          String(c._id) === idStr ? { ...c, latestMessage: null, unreadCount: 0 } : c
+        )
+      );
+    };
+
+    const handleMessageDeleted = ({ messageId, chatId }) => {
+      const idStr = String(chatId);
+      setChats((prevChats) =>
+        prevChats?.map((c) => {
+          if (String(c._id) === idStr && String(c.latestMessage?._id) === String(messageId)) {
+            return { ...c, latestMessage: null };
+          }
+          return c;
+        })
+      );
+      fetchChats();
+    };
+
+    const handleChatDeleted = (deletedChatId) => {
+      const idStr = String(deletedChatId);
+      setChats((prevChats) => prevChats?.filter((c) => String(c._id) !== idStr));
+      if (selectedChat && String(selectedChat._id) === idStr) {
+        setSelectedChat(null);
+      }
+    };
+
+    const handleGroupUpdated = (updatedChat) => {
+      if (!updatedChat?._id) return;
+      const idStr = String(updatedChat._id);
+      setChats((prevChats) =>
+        prevChats?.map((c) => (String(c._id) === idStr ? { ...c, ...updatedChat } : c))
+      );
+    };
+
     socket.on("message recieved", handleMessageRecieved);
     socket.on("messages read update", handleMessagesReadUpdate);
+    socket.on("typing", handleTyping);
+    socket.on("stop typing", handleStopTyping);
+    socket.on("chat cleared", handleChatCleared);
+    socket.on("message deleted", handleMessageDeleted);
+    socket.on("chat deleted", handleChatDeleted);
+    socket.on("group updated", handleGroupUpdated);
 
     return () => {
       socket.off("message recieved", handleMessageRecieved);
       socket.off("messages read update", handleMessagesReadUpdate);
+      socket.off("typing", handleTyping);
+      socket.off("stop typing", handleStopTyping);
+      socket.off("chat cleared", handleChatCleared);
+      socket.off("message deleted", handleMessageDeleted);
+      socket.off("chat deleted", handleChatDeleted);
+      socket.off("group updated", handleGroupUpdated);
     };
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [socket, selectedChat, user]);
 
   const handleSelectChat = (chat) => {
@@ -288,15 +377,24 @@ const MyChats = ({ fetchAgain }) => {
             </MenuButton>
             <MenuList pl={2} zIndex="popover">
               {!notification.length && <MenuItem style={{ fontSize: "13px", color: "#918fa1" }}>No notifications</MenuItem>}
-              {notification.map((notif) => (
-                <MenuItem
-                  key={notif._id}
-                  onClick={() => { setSelectedChat(notif.chat); setNotification(notification.filter((n) => n !== notif)); }}>
-                  {notif.chat.isGroupChat
-                    ? `💬 New message in ${notif.chat.chatName}`
-                    : `💬 New message from ${getSender(user, notif.chat.users)}`}
-                </MenuItem>
-              ))}
+              {notification.map((notif) => {
+                const notifChatId = String(notif.chat?._id || notif.chat);
+                return (
+                  <MenuItem
+                    key={notif._id}
+                    onClick={() => {
+                      setSelectedChat(notif.chat);
+                      setNotification((prev) => prev.filter((n) => String(n.chat?._id || n.chat) !== notifChatId));
+                      setChats((prev) =>
+                        prev?.map((c) => (String(c._id) === notifChatId ? { ...c, unreadCount: 0 } : c))
+                      );
+                    }}>
+                    {notif.chat.isGroupChat
+                      ? `💬 New message in ${notif.chat.chatName}`
+                      : `💬 New message from ${getSender(user, notif.chat.users)}`}
+                  </MenuItem>
+                );
+              })}
             </MenuList>
           </Menu>
 
@@ -676,7 +774,23 @@ const MyChats = ({ fetchAgain }) => {
                         )}
                       </div>
                       <div className="flex items-center justify-between gap-2">
-                        {chat.latestMessage ? (
+                        {typingChats[String(chat._id)] ? (
+                          <p style={{
+                            fontSize: "12.5px",
+                            color: "#34d399",
+                            fontWeight: "600",
+                            fontStyle: "italic",
+                            overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap",
+                            flex: 1,
+                            minWidth: 0,
+                            display: "flex",
+                            alignItems: "center",
+                            gap: "4px",
+                          }}>
+                            <span>✍️</span>
+                            <span>{chat.isGroupChat ? `${typingChats[String(chat._id)]} is typing...` : "typing..."}</span>
+                          </p>
+                        ) : chat.latestMessage ? (
                           <p style={{
                             fontSize: "12.5px",
                             color: hasUnread ? "#e2e8f0" : "#918fa1",
