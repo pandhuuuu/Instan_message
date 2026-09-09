@@ -172,6 +172,7 @@ const quickConnectUser = asyncHandler(async (req, res) => {
       username: cleanUsername,
       name: displayName,
       password: "QuickConnectPassword123!",
+      isQuickConnect: true,
     });
   }
 
@@ -181,6 +182,7 @@ const quickConnectUser = asyncHandler(async (req, res) => {
       username: user.username,
       name: user.name,
       isAdmin: user.isAdmin,
+      isQuickConnect: user.isQuickConnect || false,
       pic: user.pic,
       status: "online",
       lastSeen: new Date(),

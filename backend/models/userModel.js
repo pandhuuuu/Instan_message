@@ -27,6 +27,10 @@ const userSchema = mongoose.Schema(
       type: Date,
       default: Date.now,
     },
+    isQuickConnect: {
+      type: Boolean,
+      default: false,
+    },
   },
   { timestamps: true }
 );
