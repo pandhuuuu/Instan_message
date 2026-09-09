@@ -1,0 +1,8 @@
+/* App.css — minimal wrapper, all design tokens live in index.css */
+.App {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  background-color: #0b1326;
+}

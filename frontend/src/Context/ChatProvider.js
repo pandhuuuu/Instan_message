@@ -1,0 +1,182 @@
+import React, { createContext, useContext, useEffect, useRef, useState } from "react";
+import { useHistory } from "react-router-dom";
+import io from "socket.io-client";
+import { getServerBaseUrl } from "../config/serverConfig";
+
+const ChatContext = createContext();
+
+const ChatProvider = ({ children }) => {
+  const [selectedChat, setSelectedChat] = useState();
+  const [user, setUser] = useState();
+  const [notification, setNotification] = useState([]);
+  const [chats, setChats] = useState();
+  const [socket, setSocket] = useState(null);
+  const [onlineUsers, setOnlineUsers] = useState({});
+  const [myStatus, setMyStatus] = useState("online");
+
+  const history = useHistory();
+  const isAwayRef = useRef(false);
+  const socketRef = useRef(null);
+
+  useEffect(() => {
+    const userInfo = JSON.parse(localStorage.getItem("userInfo"));
+    setUser(userInfo);
+
+    if (!userInfo) history.push("/");
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [history]);
+
+  // Inisialisasi Socket.io global saat user sudah login
+  useEffect(() => {
+    if (!user) {
+      if (socketRef.current) {
+        socketRef.current.disconnect();
+        socketRef.current = null;
+        setSocket(null);
+      }
+      return;
+    }
+
+    const endpoint = getServerBaseUrl();
+    const newSocket = io(endpoint, {
+      reconnection: true,
+      reconnectionAttempts: 10,
+      reconnectionDelay: 1000,
+    });
+    socketRef.current = newSocket;
+    setSocket(newSocket);
+
+    newSocket.on("connect", () => {
+      newSocket.emit("setup", user);
+      newSocket.emit("get online users");
+    });
+
+    newSocket.on("connected", (initialUsers) => {
+      if (initialUsers) {
+        setOnlineUsers((prev) => ({ ...prev, ...initialUsers }));
+      }
+    });
+
+    newSocket.on("online users list", (usersList) => {
+      if (usersList) {
+        setOnlineUsers((prev) => ({ ...prev, ...usersList }));
+      }
+    });
+
+    newSocket.on("user status change", ({ userId, status, lastSeen, name, username, pic }) => {
+      if (!userId) return;
+      const idStr = String(userId);
+      setOnlineUsers((prev) => {
+        if (status === "offline") {
+          const updated = { ...prev };
+          delete updated[idStr];
+          return updated;
+        }
+        return {
+          ...prev,
+          [idStr]: {
+            status,
+            lastSeen: lastSeen || new Date(),
+            name: name || prev[idStr]?.name,
+            username: username || prev[idStr]?.username,
+            pic: pic || prev[idStr]?.pic,
+          },
+        };
+      });
+    });
+
+    // ── Sinkronisasi saat jendela kembali difokuskan (dibatasi minimal jeda 5 detik) ──
+    let lastFocusSync = 0;
+    const handleWindowFocus = () => {
+      const now = Date.now();
+      if (newSocket.connected && now - lastFocusSync > 5000) {
+        lastFocusSync = now;
+        newSocket.emit("get online users");
+      }
+    };
+
+    // ── Deteksi Tab Aktif / Inaktif (Visibility Change) ──
+    const handleVisibilityChange = () => {
+      if (document.hidden) {
+        isAwayRef.current = true;
+        setMyStatus("away");
+        newSocket.emit("user away");
+      } else {
+        isAwayRef.current = false;
+        setMyStatus("online");
+        newSocket.emit("user active");
+        newSocket.emit("get online users");
+        resetIdle();
+      }
+    };
+
+    // ── Deteksi Idle (2 menit inaktif) dengan Throttling ──
+    let idleTimer = null;
+    let lastActivityTime = 0;
+    const IDLE_TIME = 2 * 60 * 1000;
+
+    const resetIdle = () => {
+      if (isAwayRef.current && !document.hidden) {
+        isAwayRef.current = false;
+        setMyStatus("online");
+        newSocket.emit("user active");
+      }
+      if (idleTimer) clearTimeout(idleTimer);
+      idleTimer = setTimeout(() => {
+        isAwayRef.current = true;
+        setMyStatus("away");
+        newSocket.emit("user away");
+      }, IDLE_TIME);
+    };
+
+    // Throttle deteksi aktivitas agar tidak membakar CPU di setiap pixel cursor bergerak
+    const handleThrottledActivity = () => {
+      const now = Date.now();
+      if (now - lastActivityTime < 3000) return; // Maksimal eksekusi 1x setiap 3 detik
+      lastActivityTime = now;
+      resetIdle();
+    };
+
+    // Gunakan event interaksi yang ringan (hindari mousemove & scroll langsung)
+    const activityEvents = ["click", "keydown", "touchstart", "mousedown"];
+    activityEvents.forEach((ev) => window.addEventListener(ev, handleThrottledActivity, { passive: true }));
+    window.addEventListener("focus", handleWindowFocus);
+    document.addEventListener("visibilitychange", handleVisibilityChange);
+    resetIdle();
+
+    return () => {
+      if (idleTimer) clearTimeout(idleTimer);
+      activityEvents.forEach((ev) => window.removeEventListener(ev, handleThrottledActivity));
+      window.removeEventListener("focus", handleWindowFocus);
+      document.removeEventListener("visibilitychange", handleVisibilityChange);
+      newSocket.disconnect();
+      socketRef.current = null;
+    };
+  }, [user]);
+
+  return (
+    <ChatContext.Provider
+      value={{
+        selectedChat,
+        setSelectedChat,
+        user,
+        setUser,
+        notification,
+        setNotification,
+        chats,
+        setChats,
+        socket,
+        onlineUsers,
+        myStatus,
+      }}
+    >
+      {children}
+    </ChatContext.Provider>
+  );
+};
+
+export const ChatState = () => {
+  return useContext(ChatContext);
+};
+
+export default ChatProvider;

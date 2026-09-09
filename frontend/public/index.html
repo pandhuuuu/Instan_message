@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <link rel="icon" href="%PUBLIC_URL%/favicon.ico" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="theme-color" content="#0b1326" />
+    <meta
+      name="description"
+      content="Talk-A-Tive — Real-time chat that is fast, secure, and modern. Start conversations, create groups, and stay connected anytime."
+    />
+    <link rel="apple-touch-icon" href="%PUBLIC_URL%/logo192.png" />
+    <link rel="manifest" href="%PUBLIC_URL%/manifest.json" />
+
+    <!-- Google Fonts: Inter + Plus Jakarta Sans -->
+    <link href="https://fonts.googleapis.com" rel="preconnect"/>
+    <link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Plus+Jakarta+Sans:wght@500;600;700;800&display=swap" rel="stylesheet"/>
+
+    <!-- Material Symbols -->
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" rel="stylesheet"/>
+
+    <!-- Tailwind CSS via CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+      tailwind.config = {
+        theme: {
+          extend: {
+            colors: {
+              /* VibeChat Dark Palette */
+              "vc-bg":           "#0b1326",
+              "vc-bg-dim":       "#060e20",
+              "vc-surface":      "#171f33",
+              "vc-surface-low":  "#131b2e",
+              "vc-surface-high": "#222a3d",
+              "vc-surface-top":  "#2d3449",
+              "vc-on-surface":   "#dae2fd",
+              "vc-muted":        "#c7c4d8",
+              "vc-outline":      "#918fa1",
+              "vc-divider":      "#464555",
+              "vc-primary":      "#4f46e5",
+              "vc-primary-bright": "#c3c0ff",
+              "vc-primary-hover":"#4338ca",
+              "vc-secondary":    "#8b5cf6",
+              "vc-tertiary":     "#10b981",
+              "vc-error":        "#ef4444",
+              "vc-bubble-out":   "#4f46e5",
+              "vc-bubble-in":    "#1e293b",
+            },
+            fontFamily: {
+              sans:    ["Inter", "system-ui", "sans-serif"],
+              heading: ["Plus Jakarta Sans", "system-ui", "sans-serif"],
+            },
+            borderRadius: {
+              "bubble": "1.25rem",
+            },
+            boxShadow: {
+              "glow-primary": "0 4px 24px 0 rgba(79,70,229,0.35)",
+              "glass":        "0 8px 32px -4px rgba(0,0,0,0.45)",
+            },
+            animation: {
+              "fade-in":    "fadeIn 0.4s ease-out both",
+              "slide-up":   "slideUp 0.4s ease-out both",
+              "pulse-slow": "pulse 3s ease-in-out infinite",
+            },
+            keyframes: {
+              fadeIn: {
+                "0%":   { opacity: "0" },
+                "100%": { opacity: "1" },
+              },
+              slideUp: {
+                "0%":   { opacity: "0", transform: "translateY(24px)" },
+                "100%": { opacity: "1", transform: "translateY(0)" },
+              },
+            },
+          }
+        }
+      }
+    </script>
+
+    <title>Talk-A-Tive — Real-Time Chat App</title>
+  </head>
+  <body>
+    <noscript>You need to enable JavaScript to run this app.</noscript>
+    <div id="root"></div>
+  </body>
+</html>
