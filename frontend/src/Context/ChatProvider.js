@@ -30,9 +30,15 @@ const ChatProvider = ({ children }) => {
 
   useEffect(() => {
     const userInfo = JSON.parse(localStorage.getItem("userInfo"));
-    setUser(userInfo);
-
-    if (!userInfo) history.push("/");
+    if (userInfo) {
+      if (userInfo.pic && userInfo.pic.includes("anonymous-avatar-icon")) {
+        userInfo.pic = "";
+        localStorage.setItem("userInfo", JSON.stringify(userInfo));
+      }
+      setUser(userInfo);
+    } else {
+      history.push("/");
+    }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [history]);
 

@@ -10,6 +10,7 @@ import {
 } from "@chakra-ui/react";
 import { ChatState } from "../../Context/ChatProvider";
 import { getUserPresence, getStatusColor, formatLastSeen } from "../../config/userStatus";
+import UserAvatar from "../userAvatar/UserAvatar";
 
 const ProfileModal = ({ user, children }) => {
   const { isOpen, onOpen, onClose } = useDisclosure();
@@ -57,29 +58,16 @@ const ProfileModal = ({ user, children }) => {
 
           <ModalBody style={{ display: "flex", flexDirection: "column", alignItems: "center", gap: "20px", padding: "28px 24px" }}>
             {/* Avatar */}
-            {user.pic ? (
-              <img
-                src={user.pic}
-                alt={user.name}
-                style={{
-                  width: 100, height: 100, borderRadius: "50%",
-                  objectFit: "cover",
-                  border: "3px solid #4f46e5",
-                  boxShadow: "0 0 0 4px rgba(79,70,229,0.2)",
-                }}
-              />
-            ) : (
-              <div style={{
-                width: 100, height: 100, borderRadius: "50%",
-                background: "linear-gradient(135deg, #4f46e5, #7c3aed)",
-                display: "flex", alignItems: "center", justifyContent: "center",
-                color: "#fff", fontWeight: "800", fontSize: "40px",
-                fontFamily: "'Plus Jakarta Sans', sans-serif",
-                boxShadow: "0 0 0 4px rgba(79,70,229,0.2)",
-              }}>
-                {user.name?.charAt(0).toUpperCase()}
-              </div>
-            )}
+            <UserAvatar
+              user={user}
+              size={100}
+              fontSize={40}
+              fontWeight="800"
+              style={{
+                boxShadow: "0 0 0 4px rgba(0, 168, 132, 0.25)",
+                border: "3px solid #00a884",
+              }}
+            />
 
             {/* Presence status */}
             <div className="flex items-center gap-2 px-3 py-1.5 rounded-full"

@@ -21,6 +21,7 @@ import axios from "axios";
 import ProfileModal from "./miscellaneous/ProfileModal";
 import ScrollableChat from "./ScrollableChat";
 import UpdateGroupChatModal from "./miscellaneous/UpdateGroupChatModal";
+import UserAvatar from "./userAvatar/UserAvatar";
 import { ChatState } from "../Context/ChatProvider";
 import { getUserPresence, getStatusColor, formatLastSeen } from "../config/userStatus";
 
@@ -662,15 +663,8 @@ const SingleChat = ({ fetchAgain, setFetchAgain }) => {
                   >
                     {selectedChat.isGroupChat ? (
                       <GroupAvatar size={40} />
-                    ) : chatPartner?.pic ? (
-                      <img
-                        alt={chatName}
-                        src={chatPartner.pic}
-                        className="rounded-full object-cover"
-                        style={{ width: 40, height: 40 }}
-                      />
                     ) : (
-                      <AvatarInitial name={chatName} size={40} />
+                      <UserAvatar user={chatPartner} name={chatName} size={40} />
                     )}
 
                     {!selectedChat.isGroupChat && partnerPresence && (

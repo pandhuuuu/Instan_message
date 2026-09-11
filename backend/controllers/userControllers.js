@@ -41,11 +41,13 @@ const registerUser = asyncHandler(async (req, res) => {
 
   const displayName = (name && name.trim()) || cleanUsername;
 
+  const cleanPic = (pic && typeof pic === "string" && !pic.includes("anonymous-avatar-icon")) ? pic.trim() : "";
+
   const user = await User.create({
     username: cleanUsername,
     name: displayName,
     password,
-    pic,
+    pic: cleanPic,
   });
 
   if (user) {
@@ -54,7 +56,7 @@ const registerUser = asyncHandler(async (req, res) => {
       username: user.username,
       name: user.name,
       isAdmin: user.isAdmin,
-      pic: user.pic,
+      pic: (user.pic && !user.pic.includes("anonymous-avatar-icon")) ? user.pic : "",
       status: user.status,
       lastSeen: user.lastSeen,
       token: generateToken(user._id),
@@ -106,7 +108,7 @@ const authUser = asyncHandler(async (req, res) => {
       username: user.username,
       name: user.name,
       isAdmin: user.isAdmin,
-      pic: user.pic,
+      pic: (user.pic && !user.pic.includes("anonymous-avatar-icon")) ? user.pic : "",
       status: user.status,
       lastSeen: user.lastSeen,
       token: generateToken(user._id),
@@ -183,7 +185,7 @@ const quickConnectUser = asyncHandler(async (req, res) => {
       name: user.name,
       isAdmin: user.isAdmin,
       isQuickConnect: user.isQuickConnect || false,
-      pic: user.pic,
+      pic: (user.pic && !user.pic.includes("anonymous-avatar-icon")) ? user.pic : "",
       status: "online",
       lastSeen: new Date(),
       token: generateToken(user._id),

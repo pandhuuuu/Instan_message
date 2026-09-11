@@ -7,6 +7,7 @@ import {
   isSameUser,
 } from "../config/ChatLogics";
 import { ChatState } from "../Context/ChatProvider";
+import UserAvatar from "./userAvatar/UserAvatar";
 
 /* ─── Date Pill Helpers ─────────────────────────────────── */
 const isSameDay = (date1, date2) => {
@@ -300,36 +301,7 @@ const ScrollableChat = ({ messages, onDeleteMessage, searchQuery = "" }) => {
                   <div style={{ width: 28, marginRight: 6, flexShrink: 0, marginBottom: 2 }}>
                     {showAvatar ? (
                       <div title={m.sender.name}>
-                        {m.sender.pic ? (
-                          <img
-                            src={m.sender.pic}
-                            alt={m.sender.name}
-                            style={{
-                              width: 28,
-                              height: 28,
-                              borderRadius: "50%",
-                              objectFit: "cover",
-                            }}
-                          />
-                        ) : (
-                          <div
-                            style={{
-                              width: 28,
-                              height: 28,
-                              borderRadius: "50%",
-                              background: getSenderColor(m.sender.name),
-                              display: "flex",
-                              alignItems: "center",
-                              justifyContent: "center",
-                              color: "#fff",
-                              fontWeight: "700",
-                              fontSize: "12px",
-                              fontFamily: "'Segoe UI', 'Inter', sans-serif",
-                            }}
-                          >
-                            {m.sender.name?.charAt(0).toUpperCase()}
-                          </div>
-                        )}
+                        <UserAvatar user={m.sender} size={28} fontSize={12} />
                       </div>
                     ) : null}
                   </div>

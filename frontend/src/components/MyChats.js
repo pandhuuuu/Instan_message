@@ -7,6 +7,7 @@ import ChatLoading from "./ChatLoading";
 import GroupChatModal from "./miscellaneous/GroupChatModal";
 import ProfileModal from "./miscellaneous/ProfileModal";
 import UserListItem from "./userAvatar/UserListItem";
+import UserAvatar from "./userAvatar/UserAvatar";
 import { ChatState } from "../Context/ChatProvider";
 import { Menu, MenuButton, MenuList, MenuItem } from "@chakra-ui/menu";
 import { Spinner } from "@chakra-ui/react";
@@ -566,16 +567,7 @@ const MyChats = ({ fetchAgain }) => {
         <div className="flex items-center gap-3">
           <ProfileModal user={user}>
             <div className="relative cursor-pointer" title="View profile">
-              {user.pic ? (
-                <img
-                  alt="Profile"
-                  className="rounded-full object-cover"
-                  style={{ width: 40, height: 40 }}
-                  src={user.pic}
-                />
-              ) : (
-                <AvatarInitial name={user.name} size={40} />
-              )}
+              <UserAvatar user={user} size={40} />
               {/* Online indicator dot */}
               <span
                 style={{
@@ -994,16 +986,7 @@ const MyChats = ({ fetchAgain }) => {
                       onMouseLeave={(e) => (e.currentTarget.style.background = "transparent")}
                     >
                       <div className="relative mr-3 shrink-0" style={{ width: 49, height: 49 }}>
-                        {peerData.pic ? (
-                          <img
-                            alt="User"
-                            src={peerData.pic}
-                            className="rounded-full object-cover"
-                            style={{ width: 49, height: 49 }}
-                          />
-                        ) : (
-                          <AvatarInitial name={displayName} size={49} />
-                        )}
+                        <UserAvatar user={peerData} name={displayName} size={49} />
                         <span
                           style={{
                             position: "absolute",
@@ -1108,15 +1091,8 @@ const MyChats = ({ fetchAgain }) => {
                       <div className="relative mr-3 shrink-0" style={{ width: 49, height: 49 }}>
                         {chat.isGroupChat ? (
                           <GroupAvatar size={49} />
-                        ) : otherUser?.pic ? (
-                          <img
-                            alt={chatName}
-                            src={otherUser.pic}
-                            className="rounded-full object-cover"
-                            style={{ width: 49, height: 49 }}
-                          />
                         ) : (
-                          <AvatarInitial name={chatName} size={49} />
+                          <UserAvatar user={otherUser} name={chatName} size={49} />
                         )}
                         {!chat.isGroupChat && presence && (
                           <span
@@ -1295,15 +1271,8 @@ const MyChats = ({ fetchAgain }) => {
                     <div className="relative mr-3 shrink-0" style={{ width: 49, height: 49 }}>
                       {chat.isGroupChat ? (
                         <GroupAvatar size={49} />
-                      ) : otherUser?.pic ? (
-                        <img
-                          alt={chatName}
-                          src={otherUser.pic}
-                          className="rounded-full object-cover"
-                          style={{ width: 49, height: 49 }}
-                        />
                       ) : (
-                        <AvatarInitial name={chatName} size={49} />
+                        <UserAvatar user={otherUser} name={chatName} size={49} />
                       )}
 
                       {/* Online indicator on avatar */}

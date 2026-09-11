@@ -1,4 +1,5 @@
 import { getStatusColor, getStatusLabel } from "../../config/userStatus";
+import UserAvatar from "./UserAvatar";
 
 const UserListItem = ({ user, handleFunction, presence }) => {
   const currentPresence = presence || {
@@ -16,26 +17,7 @@ const UserListItem = ({ user, handleFunction, presence }) => {
 
       {/* Avatar with Presence dot */}
       <div style={{ position: "relative", flexShrink: 0 }}>
-        {user.pic ? (
-          <img
-            src={user.pic}
-            alt={user.name}
-            style={{
-              width: 40, height: 40, borderRadius: "50%",
-              objectFit: "cover", border: "2px solid rgba(70,69,85,0.5)",
-            }}
-          />
-        ) : (
-          <div style={{
-            width: 40, height: 40, borderRadius: "50%",
-            background: "linear-gradient(135deg, #4f46e5, #7c3aed)",
-            display: "flex", alignItems: "center", justifyContent: "center",
-            color: "#fff", fontWeight: "700", fontSize: "16px",
-            fontFamily: "'Plus Jakarta Sans', sans-serif",
-          }}>
-            {user.name?.charAt(0).toUpperCase()}
-          </div>
-        )}
+        <UserAvatar user={user} size={40} />
         <span
           title={`Status: ${currentPresence.status}`}
           style={{
