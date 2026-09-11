@@ -8,11 +8,11 @@ const generateToken = require("../config/generateToken");
 const allUsers = asyncHandler(async (req, res) => {
   const keyword = req.query.search
     ? {
-        $or: [
-          { name: { $regex: req.query.search, $options: "i" } },
-          { username: { $regex: req.query.search, $options: "i" } },
-        ],
-      }
+      $or: [
+        { name: { $regex: req.query.search, $options: "i" } },
+        { username: { $regex: req.query.search, $options: "i" } },
+      ],
+    }
     : {};
 
   const users = await User.find(keyword).find({ _id: { $ne: req.user._id } });

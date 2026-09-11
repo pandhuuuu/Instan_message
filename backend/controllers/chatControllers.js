@@ -63,14 +63,40 @@ const accessChat = asyncHandler(async (req, res) => {
   });
 
   if (isChat.length > 0) {
+    // If chat was previously deleted/hidden by current user, restore it
+    if (isChat[0].deletedBy && isChat[0].deletedBy.some((u) => String(u) === String(req.user._id))) {
+      await Chat.findByIdAndUpdate(isChat[0]._id, {
+        $pull: { deletedBy: req.user._id },
+      });
+    }
+
     const unread = await Message.countDocuments({
       chat: isChat[0]._id,
       sender: { $ne: req.user._id },
       readBy: { $ne: req.user._id },
       isSystemMessage: { $ne: true },
+      deletedFor: { $ne: req.user._id },
     });
     const chatObj = isChat[0].toObject ? isChat[0].toObject() : isChat[0];
     chatObj.unreadCount = unread;
+
+    // If latestMessage is deleted/cleared for current user, find previous or null
+    if (
+      chatObj.latestMessage &&
+      chatObj.latestMessage.deletedFor &&
+      chatObj.latestMessage.deletedFor.some(
+        (uId) => String(uId._id || uId) === String(req.user._id)
+      )
+    ) {
+      const prevMessage = await Message.findOne({
+        chat: chatObj._id,
+        deletedFor: { $ne: req.user._id },
+      })
+        .sort({ createdAt: -1 })
+        .populate("sender", "name pic username");
+      chatObj.latestMessage = prevMessage || null;
+    }
+
     res.send(chatObj);
   } else {
     var chatData = {
@@ -100,7 +126,10 @@ const accessChat = asyncHandler(async (req, res) => {
 //@access          Protected
 const fetchChats = asyncHandler(async (req, res) => {
   try {
-    let results = await Chat.find({ users: { $elemMatch: { $eq: req.user._id } } })
+    let results = await Chat.find({
+      users: { $elemMatch: { $eq: req.user._id } },
+      deletedBy: { $ne: req.user._id },
+    })
       .populate("users", "-password")
       .populate("groupAdmin", "-password")
       .populate("groupAdmins", "-password")
@@ -121,6 +150,7 @@ const fetchChats = asyncHandler(async (req, res) => {
           sender: { $ne: req.user._id },
           readBy: { $ne: req.user._id },
           isSystemMessage: { $ne: true },
+          deletedFor: { $ne: req.user._id },
         },
       },
       {
@@ -136,11 +166,31 @@ const fetchChats = asyncHandler(async (req, res) => {
       unreadMap[item._id.toString()] = item.count;
     });
 
-    const chatsWithUnread = results.map((chat) => {
-      const chatObj = chat.toObject ? chat.toObject() : chat;
-      chatObj.unreadCount = unreadMap[chat._id.toString()] || 0;
-      return chatObj;
-    });
+    const chatsWithUnread = await Promise.all(
+      results.map(async (chat) => {
+        const chatObj = chat.toObject ? chat.toObject() : chat;
+        chatObj.unreadCount = unreadMap[chat._id.toString()] || 0;
+
+        // If latestMessage was cleared/deleted for this user, resolve to the previous visible message
+        if (
+          chatObj.latestMessage &&
+          chatObj.latestMessage.deletedFor &&
+          chatObj.latestMessage.deletedFor.some(
+            (uId) => String(uId._id || uId) === String(req.user._id)
+          )
+        ) {
+          const prevMessage = await Message.findOne({
+            chat: chatObj._id,
+            deletedFor: { $ne: req.user._id },
+          })
+            .sort({ createdAt: -1 })
+            .populate("sender", "name pic username");
+          chatObj.latestMessage = prevMessage || null;
+        }
+
+        return chatObj;
+      })
+    );
 
     res.status(200).send(chatsWithUnread);
   } catch (error) {
@@ -491,7 +541,7 @@ const demoteAdmin = asyncHandler(async (req, res) => {
   res.json(updated);
 });
 
-// @desc    Delete an entire chat (for 1-on-1, or for group owner)
+// @desc    Delete a chat for current user (per-user soft delete)
 // @route   DELETE /api/chat/:chatId
 // @access  Protected
 const deleteChat = asyncHandler(async (req, res) => {
@@ -503,17 +553,26 @@ const deleteChat = asyncHandler(async (req, res) => {
     throw new Error("Chat not found");
   }
 
-  // If group, only admins can delete the group
-  if (chat.isGroupChat && !isUserAdmin(chat, req.user._id)) {
+  // Validate: Is user a participant
+  const isParticipant = chat.users.some(
+    (u) => String(u._id || u) === String(req.user._id)
+  );
+  if (!isParticipant) {
     res.status(403);
-    throw new Error("Only admins can delete this group");
+    throw new Error("You are not a member of this chat");
   }
 
-  // Delete all messages in the chat
+  // Mark all current messages in this chat as deleted for req.user._id
   const Message = require("../models/messageModel");
-  await Message.deleteMany({ chat: chatId });
-  // Delete the chat itself
-  await Chat.findByIdAndDelete(chatId);
+  await Message.updateMany(
+    { chat: chatId },
+    { $addToSet: { deletedFor: req.user._id } }
+  );
+
+  // Add user to chat.deletedBy so it is hidden from their chat list
+  await Chat.findByIdAndUpdate(chatId, {
+    $addToSet: { deletedBy: req.user._id },
+  });
 
   res.json({ success: true, message: "Chat deleted successfully", chatId });
 });

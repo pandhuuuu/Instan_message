@@ -8,7 +8,10 @@ const Chat = require("../models/chatModel");
 //@access          Protected
 const allMessages = asyncHandler(async (req, res) => {
   try {
-    const messages = await Message.find({ chat: req.params.chatId })
+    const messages = await Message.find({
+      chat: req.params.chatId,
+      deletedFor: { $ne: req.user._id },
+    })
       .populate("sender", "name pic username")
       .populate("chat");
     res.json(messages);
@@ -35,6 +38,7 @@ const sendMessage = asyncHandler(async (req, res) => {
     chat: chatId,
     readBy: [req.user._id],
     deliveredTo: [],
+    deletedFor: [],
   };
 
   try {
@@ -47,7 +51,11 @@ const sendMessage = asyncHandler(async (req, res) => {
       select: "name pic username",
     });
 
-    await Chat.findByIdAndUpdate(req.body.chatId, { latestMessage: message });
+    // Update latestMessage and revive chat in list for any user who deleted it
+    await Chat.findByIdAndUpdate(req.body.chatId, {
+      latestMessage: message,
+      deletedBy: [],
+    });
 
     res.json(message);
   } catch (error) {
@@ -69,6 +77,7 @@ const markMessagesAsRead = asyncHandler(async (req, res) => {
         chat: chatId,
         sender: { $ne: userId },
         readBy: { $ne: userId },
+        deletedFor: { $ne: userId },
       },
       {
         $addToSet: {
@@ -111,7 +120,7 @@ const markMessagesAsDelivered = asyncHandler(async (req, res) => {
   }
 });
 
-//@description     Clear all messages in a chat
+//@description     Clear messages in a chat for the current user
 //@route           DELETE /api/message/clear/:chatId
 //@access          Protected
 const clearChatMessages = asyncHandler(async (req, res) => {
@@ -132,21 +141,11 @@ const clearChatMessages = asyncHandler(async (req, res) => {
     throw new Error("You are not a member of this chat");
   }
 
-  // If group chat, only admin/owner can clear group messages
-  if (chat.isGroupChat) {
-    const isOwner = String(chat.groupAdmin?._id || chat.groupAdmin) === String(req.user._id);
-    const isAdmin = chat.groupAdmins && chat.groupAdmins.some((a) => String(a._id || a) === String(req.user._id));
-    if (!isOwner && !isAdmin) {
-      res.status(403);
-      throw new Error("Only group admins can clear group messages");
-    }
-  }
-
-  // Delete all messages
-  await Message.deleteMany({ chat: chatId });
-
-  // Reset latestMessage on Chat
-  await Chat.findByIdAndUpdate(chatId, { latestMessage: null });
+  // Soft delete for this user: Add user to deletedFor of all existing messages in this chat
+  await Message.updateMany(
+    { chat: chatId },
+    { $addToSet: { deletedFor: req.user._id } }
+  );
 
   res.json({ success: true, message: "Chat cleared successfully", chatId });
 });

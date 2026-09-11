@@ -38,7 +38,7 @@ const GroupChatModal = ({ children }) => {
   const [loading, setLoading] = useState(false);
   const toast = useToast();
 
-  const { user, chats, setChats } = ChatState();
+  const { user, setChats, socket } = ChatState();
 
   const handleGroup = (userToAdd) => {
     if (selectedUsers.find(u => u._id === userToAdd._id)) {
@@ -78,7 +78,10 @@ const GroupChatModal = ({ children }) => {
         { name: groupChatName, users: JSON.stringify(selectedUsers.map((u) => u._id)) },
         config
       );
-      setChats([data, ...chats]);
+      setChats((prev) => [data, ...(Array.isArray(prev) ? prev : [])]);
+      if (socket && data?._id) {
+        socket.emit("join chat", data._id);
+      }
       onClose();
       toast({ title: "Group created successfully! 🎉", status: "success", duration: 4000, isClosable: true, position: "bottom" });
     } catch (error) {

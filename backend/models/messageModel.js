@@ -9,6 +9,7 @@ const messageSchema = mongoose.Schema(
     readBy: [{ type: mongoose.Schema.Types.ObjectId, ref: "User" }],
     isSystemMessage: { type: Boolean, default: false },
     systemMessageType: { type: String, default: "" },
+    deletedFor: [{ type: mongoose.Schema.Types.ObjectId, ref: "User" }],
   },
   { timestamps: true }
 );

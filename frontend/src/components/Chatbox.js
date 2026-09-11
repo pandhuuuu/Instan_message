@@ -8,7 +8,7 @@ const Chatbox = ({ fetchAgain, setFetchAgain }) => {
   return (
     <main
       className={`flex-1 h-full flex flex-col relative overflow-hidden ${selectedChat ? "flex" : "hidden md:flex"}`}
-      style={{ background: "#0b1326" }}>
+      style={{ background: "#0b141a" }}>
       <SingleChat fetchAgain={fetchAgain} setFetchAgain={setFetchAgain} />
     </main>
   );

@@ -10,14 +10,13 @@ const Chatpage = () => {
   return (
     <div
       className="w-full h-screen flex items-stretch font-sans overflow-hidden"
-      style={{ background: "#060e20" }}>
+      style={{ background: "#0c1317" }}>
 
       {/* Main App Shell */}
       <div
         className="w-full flex overflow-hidden"
         style={{
-          background: "#0b1326",
-          boxShadow: "0 0 60px rgba(0,0,0,0.6)",
+          background: "#111b21",
         }}>
         {user && <MyChats fetchAgain={fetchAgain} />}
         {user && (
