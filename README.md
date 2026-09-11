@@ -69,10 +69,13 @@ IM_Project/
 
 ## 💻 Panduan Menjalankan Secara Lokal
 
+> 📖 **Panduan Menyiapkan di Laptop Baru**:
+> Jika Anda menggunakan laptop yang baru atau baru pertama kali meng-install Node.js & MongoDB, silakan baca panduan lengkap langkah-demi-langkah di file **[PANDUAN_SETUP.md](./PANDUAN_SETUP.md)**.
+
 ### 1. Clone Repository
 ```bash
-git clone https://github.com/pandhuuuu/IM_Project.git
-cd IM_Project
+git clone https://github.com/pandhuuuu/Instan_message.git
+cd Instan_message
 ```
 
 ### 2. Install Dependensi
@@ -82,7 +85,7 @@ npm install
 
 # Install dependensi frontend
 cd frontend
-npm install
+npm install --legacy-peer-deps
 cd ..
 ```
 
@@ -91,12 +94,17 @@ Buat file `.env` di folder root proyek:
 ```env
 PORT=5000
 MONGO_URI=mongodb://127.0.0.1:27017/chat-app
-JWT_SECRET=your_jwt_secret_key
+JWT_SECRET=your_jwt_secret_key_2026
 NODE_ENV=development
 ```
 
-### 4. Jalankan Aplikasi
-Buka dua jendela terminal:
+### 4. Jalankan Automated Tests (Verifikasi 44 Skenario)
+```bash
+npm test
+```
+
+### 5. Jalankan Aplikasi
+Buka dua jendela terminal terpisah:
 
 **Terminal 1 — Jalankan Backend Server:**
 ```bash
@@ -109,7 +117,7 @@ npm run server
 cd frontend
 npm start
 ```
-*(Aplikasi akan terbuka otomatis di browser pada `http://localhost:3000`)*.
+*(Aplikasi akan terbuka otomatis di browser pada `http://localhost:3000` atau `3001`)*.
 
 ---
 
