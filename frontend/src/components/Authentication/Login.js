@@ -80,19 +80,20 @@ const Login = () => {
       const config = { headers: { "Content-type": "application/json" } };
       const { data } = await axios.post("/api/user/login", { username, password }, config);
       toast({
-        title: "Login successful! 🎉",
+        title: "Login successful",
         status: "success",
         duration: 3000,
         isClosable: true,
         position: "top",
       });
       setUser(data);
-      localStorage.setItem("userInfo", JSON.stringify(data));
+      sessionStorage.setItem("userInfo", JSON.stringify(data));
+      localStorage.removeItem("userInfo");
       setLoading(false);
       history.push("/chats");
     } catch (error) {
       toast({
-        title: error.response?.status === 409 ? "⚠️ Akun Sedang Aktif" : "Login failed",
+        title: error.response?.status === 409 ? "Akun Sedang Aktif" : "Login failed",
         description: error.response?.data?.message || "Invalid username or password.",
         status: "error",
         duration: 6000,

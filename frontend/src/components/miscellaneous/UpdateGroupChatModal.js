@@ -41,8 +41,18 @@ const actionBtnStyle = {
   transition: "all 0.15s ease",
 };
 
-const UpdateGroupChatModal = ({ fetchMessages, fetchAgain, setFetchAgain }) => {
-  const { isOpen, onOpen, onClose } = useDisclosure();
+const UpdateGroupChatModal = ({
+  fetchMessages,
+  fetchAgain,
+  setFetchAgain,
+  children,
+  isOpen: externalIsOpen,
+  onClose: externalOnClose,
+}) => {
+  const disclosure = useDisclosure();
+  const isOpen = externalIsOpen !== undefined ? externalIsOpen : disclosure.isOpen;
+  const onOpen = disclosure.onOpen;
+  const onClose = externalOnClose !== undefined ? externalOnClose : disclosure.onClose;
   const [groupChatName, setGroupChatName] = useState("");
   const [search, setSearch] = useState("");
   const [searchResult, setSearchResult] = useState([]);
@@ -55,25 +65,35 @@ const UpdateGroupChatModal = ({ fetchMessages, fetchAgain, setFetchAgain }) => {
 
   if (!selectedChat) return null;
 
-  // Helper identifikasi peran
+  // Helper identifikasi peran yang konsisten dan tahan variasi struktur MongoDB
   const getOwnerId = () => {
+    if (!selectedChat) return null;
     const adminId = selectedChat.groupAdmin?._id || selectedChat.groupAdmin;
-    const adminStillInGroup = selectedChat.users?.some(
-      (u) => String(u._id || u) === String(adminId)
-    );
-    if (adminId && adminStillInGroup) return adminId;
-    return selectedChat.users?.[0]?._id;
+    if (adminId) {
+      const adminStr = String(adminId._id || adminId);
+      const stillInGroup = selectedChat.users?.some(
+        (u) => String(u._id || u) === adminStr
+      );
+      if (stillInGroup) return adminStr;
+    }
+    return selectedChat.users?.[0]?._id ? String(selectedChat.users[0]._id) : null;
   };
 
   const isUserOwner = (u) => {
-    return String(getOwnerId()) === String(u._id || u);
+    if (!u) return false;
+    const ownerId = getOwnerId();
+    if (!ownerId) return false;
+    const targetId = String(u._id || u);
+    return ownerId === targetId;
   };
 
   const isUserAdmin = (u) => {
+    if (!u) return false;
     if (isUserOwner(u)) return true;
-    if (selectedChat.groupAdmins && Array.isArray(selectedChat.groupAdmins)) {
+    const targetId = String(u._id || u);
+    if (selectedChat?.groupAdmins && Array.isArray(selectedChat.groupAdmins)) {
       return selectedChat.groupAdmins.some(
-        (a) => String(a._id || a) === String(u._id || u)
+        (a) => String(a._id || a) === targetId
       );
     }
     return false;
@@ -390,33 +410,39 @@ const UpdateGroupChatModal = ({ fetchMessages, fetchAgain, setFetchAgain }) => {
 
   return (
     <>
-      <button
-        onClick={onOpen}
-        title="Group Settings & Members"
-        style={{
-          background: "none",
-          border: "none",
-          cursor: "pointer",
-          display: "inline-flex",
-          alignItems: "center",
-          color: "#918fa1",
-          padding: "4px",
-          borderRadius: "0.5rem",
-          transition: "all 0.15s ease",
-        }}
-        onMouseEnter={(e) => {
-          e.currentTarget.style.color = "#c3c0ff";
-          e.currentTarget.style.background = "rgba(79,70,229,0.15)";
-        }}
-        onMouseLeave={(e) => {
-          e.currentTarget.style.color = "#918fa1";
-          e.currentTarget.style.background = "none";
-        }}
-      >
-        <span className="material-symbols-outlined" style={{ fontSize: "19px" }}>
-          settings
+      {children ? (
+        <span onClick={onOpen} style={{ cursor: "pointer", display: "inline-flex", width: "100%" }}>
+          {children}
         </span>
-      </button>
+      ) : externalIsOpen === undefined ? (
+        <button
+          onClick={onOpen}
+          title="Group Settings & Members"
+          style={{
+            background: "none",
+            border: "none",
+            cursor: "pointer",
+            display: "inline-flex",
+            alignItems: "center",
+            color: "#918fa1",
+            padding: "4px",
+            borderRadius: "0.5rem",
+            transition: "all 0.15s ease",
+          }}
+          onMouseEnter={(e) => {
+            e.currentTarget.style.color = "#c3c0ff";
+            e.currentTarget.style.background = "rgba(79,70,229,0.15)";
+          }}
+          onMouseLeave={(e) => {
+            e.currentTarget.style.color = "#918fa1";
+            e.currentTarget.style.background = "none";
+          }}
+        >
+          <span className="material-symbols-outlined" style={{ fontSize: "19px" }}>
+            settings
+          </span>
+        </button>
+      ) : null}
 
       <Modal isLazy onClose={onClose} isOpen={isOpen} isCentered size="md">
         <ModalOverlay bg="blackAlpha.700" backdropFilter="blur(5px)" />
@@ -475,9 +501,9 @@ const UpdateGroupChatModal = ({ fetchMessages, fetchAgain, setFetchAgain }) => {
               <div style={{ fontSize: "12px", color: "#918fa1", fontWeight: "500" }}>
                 Your Role:{" "}
                 {isMeOwner ? (
-                  <span style={{ color: "#fbbf24", fontWeight: "700" }}>👑 Group Owner</span>
+                  <span style={{ color: "#fbbf24", fontWeight: "700" }}>Group Owner</span>
                 ) : isMeAdmin ? (
-                  <span style={{ color: "#34d399", fontWeight: "700" }}>⭐ Admin</span>
+                  <span style={{ color: "#34d399", fontWeight: "700" }}>Admin</span>
                 ) : (
                   <span style={{ color: "#c3c0ff", fontWeight: "600" }}>Member</span>
                 )}
@@ -586,7 +612,7 @@ const UpdateGroupChatModal = ({ fetchMessages, fetchAgain, setFetchAgain }) => {
                     borderRadius: "6px",
                   }}
                 >
-                  🔒 Admin Only
+                  Admin only
                 </span>
               </div>
             )}
@@ -836,8 +862,8 @@ const UpdateGroupChatModal = ({ fetchMessages, fetchAgain, setFetchAgain }) => {
                         {isOwner ? (
                           <span
                             style={{
-                              fontSize: "10px",
-                              fontWeight: "700",
+                              fontSize: "10.5px",
+                              fontWeight: "600",
                               padding: "2px 8px",
                               borderRadius: "9999px",
                               background: "rgba(245, 158, 11, 0.15)",
@@ -845,16 +871,15 @@ const UpdateGroupChatModal = ({ fetchMessages, fetchAgain, setFetchAgain }) => {
                               color: "#fbbf24",
                               display: "inline-flex",
                               alignItems: "center",
-                              gap: "3px",
                             }}
                           >
-                            👑 Owner
+                            Group Owner
                           </span>
                         ) : isAdmin ? (
                           <span
                             style={{
-                              fontSize: "10px",
-                              fontWeight: "700",
+                              fontSize: "10.5px",
+                              fontWeight: "600",
                               padding: "2px 8px",
                               borderRadius: "9999px",
                               background: "rgba(16, 185, 129, 0.15)",
@@ -862,16 +887,15 @@ const UpdateGroupChatModal = ({ fetchMessages, fetchAgain, setFetchAgain }) => {
                               color: "#34d399",
                               display: "inline-flex",
                               alignItems: "center",
-                              gap: "3px",
                             }}
                           >
-                            ⭐ Admin
+                            Admin
                           </span>
                         ) : (
                           <span
                             style={{
-                              fontSize: "10px",
-                              fontWeight: "600",
+                              fontSize: "10.5px",
+                              fontWeight: "500",
                               padding: "2px 8px",
                               borderRadius: "9999px",
                               background: "rgba(145, 143, 161, 0.12)",

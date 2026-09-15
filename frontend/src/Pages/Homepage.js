@@ -10,7 +10,8 @@ function Homepage() {
   const [activeTab, setActiveTab] = useState("login");
 
   useEffect(() => {
-    const user = JSON.parse(localStorage.getItem("userInfo"));
+    localStorage.removeItem("userInfo");
+    const user = JSON.parse(sessionStorage.getItem("userInfo"));
     if (user) history.push("/chats");
   }, [history]);
 

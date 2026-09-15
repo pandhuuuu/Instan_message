@@ -29,11 +29,12 @@ const ChatProvider = ({ children }) => {
   }, [chats]);
 
   useEffect(() => {
-    const userInfo = JSON.parse(localStorage.getItem("userInfo"));
+    localStorage.removeItem("userInfo");
+    const userInfo = JSON.parse(sessionStorage.getItem("userInfo"));
     if (userInfo) {
       if (userInfo.pic && userInfo.pic.includes("anonymous-avatar-icon")) {
         userInfo.pic = "";
-        localStorage.setItem("userInfo", JSON.stringify(userInfo));
+        sessionStorage.setItem("userInfo", JSON.stringify(userInfo));
       }
       setUser(userInfo);
     } else {
@@ -164,6 +165,12 @@ const ChatProvider = ({ children }) => {
     activityEvents.forEach((ev) => window.addEventListener(ev, handleThrottledActivity, { passive: true }));
     window.addEventListener("focus", handleWindowFocus);
     document.addEventListener("visibilitychange", handleVisibilityChange);
+    const handleBeforeUnload = () => {
+      if (socketRef.current) {
+        socketRef.current.disconnect();
+      }
+    };
+    window.addEventListener("beforeunload", handleBeforeUnload);
     resetIdle();
 
     return () => {
@@ -171,6 +178,7 @@ const ChatProvider = ({ children }) => {
       activityEvents.forEach((ev) => window.removeEventListener(ev, handleThrottledActivity));
       window.removeEventListener("focus", handleWindowFocus);
       document.removeEventListener("visibilitychange", handleVisibilityChange);
+      window.removeEventListener("beforeunload", handleBeforeUnload);
       newSocket.disconnect();
       socketRef.current = null;
     };

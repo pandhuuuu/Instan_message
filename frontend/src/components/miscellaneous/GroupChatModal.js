@@ -29,8 +29,20 @@ const darkInput = {
   marginBottom: "12px",
 };
 
-const GroupChatModal = ({ children }) => {
-  const { isOpen, onOpen, onClose } = useDisclosure();
+const GroupChatModal = ({ children, isOpen: externalIsOpen, onClose: externalOnClose }) => {
+  const disclosure = useDisclosure();
+  const isOpen = externalIsOpen !== undefined ? externalIsOpen : disclosure.isOpen;
+  const onOpen = disclosure.onOpen;
+  const onClose = externalOnClose !== undefined ? externalOnClose : disclosure.onClose;
+
+  const handleClose = () => {
+    setGroupChatName("");
+    setSelectedUsers([]);
+    setSearch("");
+    setSearchResult([]);
+    onClose();
+  };
+
   const [groupChatName, setGroupChatName] = useState("");
   const [selectedUsers, setSelectedUsers] = useState([]);
   const [search, setSearch] = useState("");
@@ -82,8 +94,8 @@ const GroupChatModal = ({ children }) => {
       if (socket && data?._id) {
         socket.emit("join chat", data._id);
       }
-      onClose();
-      toast({ title: "Group created successfully! 🎉", status: "success", duration: 4000, isClosable: true, position: "bottom" });
+      handleClose();
+      toast({ title: "Group created successfully", status: "success", duration: 4000, isClosable: true, position: "bottom" });
     } catch (error) {
       toast({ title: "Failed to create group", description: error.response?.data, status: "error", duration: 4000, isClosable: true, position: "bottom" });
     }
@@ -91,9 +103,9 @@ const GroupChatModal = ({ children }) => {
 
   return (
     <>
-      <span onClick={onOpen}>{children}</span>
+      {children && <span onClick={onOpen}>{children}</span>}
 
-      <Modal isLazy onClose={onClose} isOpen={isOpen} isCentered>
+      <Modal isLazy onClose={handleClose} isOpen={isOpen} isCentered>
         <ModalOverlay />
         <ModalContent style={{ background: "#171f33", border: "1px solid #464555", borderRadius: "1rem", color: "#dae2fd", maxWidth: "420px" }}>
           <ModalHeader style={{ fontFamily: "'Plus Jakarta Sans', sans-serif", fontSize: "18px", fontWeight: "700", color: "#dae2fd", borderBottom: "1px solid rgba(70,69,85,0.4)", textAlign: "center" }}>
@@ -153,7 +165,7 @@ const GroupChatModal = ({ children }) => {
           </ModalBody>
 
           <ModalFooter style={{ borderTop: "1px solid rgba(70,69,85,0.3)", gap: "8px", justifyContent: "flex-end" }}>
-            <button onClick={onClose}
+            <button onClick={handleClose}
               style={{
                 padding: "8px 16px", borderRadius: "0.75rem",
                 background: "rgba(70,69,85,0.3)", border: "1px solid rgba(70,69,85,0.5)",

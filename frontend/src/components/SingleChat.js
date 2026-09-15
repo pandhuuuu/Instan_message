@@ -14,6 +14,7 @@ import {
   ModalFooter,
   ModalBody,
   ModalCloseButton,
+  useDisclosure,
 } from "@chakra-ui/react";
 import { getSender, getSenderFull } from "../config/ChatLogics";
 import { useEffect, useRef, useState } from "react";
@@ -104,6 +105,11 @@ const SingleChat = ({ fetchAgain, setFetchAgain }) => {
 
   const [isClearModalOpen, setIsClearModalOpen] = useState(false);
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
+  const {
+    isOpen: isGroupModalOpen,
+    onOpen: onOpenGroupModal,
+    onClose: onCloseGroupModal,
+  } = useDisclosure();
   const [clearLoading, setClearLoading] = useState(false);
   const [deleteLoading, setDeleteLoading] = useState(false);
 
@@ -653,95 +659,132 @@ const SingleChat = ({ fetchAgain, setFetchAgain }) => {
                     </span>
                   </button>
 
-                  {/* Avatar with online presence dot */}
-                  <div
-                    className="relative cursor-pointer shrink-0"
-                    style={{ width: 40, height: 40 }}
-                    onClick={() => {
-                      // Trigger profile modal or group modal if clicked
-                    }}
-                  >
-                    {selectedChat.isGroupChat ? (
-                      <GroupAvatar size={40} />
-                    ) : (
-                      <UserAvatar user={chatPartner} name={chatName} size={40} />
-                    )}
-
-                    {!selectedChat.isGroupChat && partnerPresence && (
-                      <span
-                        title={`Status: ${partnerPresence.status}`}
-                        style={{
-                          position: "absolute",
-                          bottom: 0,
-                          right: 0,
-                          width: 10,
-                          height: 10,
-                          borderRadius: "50%",
-                          background: getStatusColor(partnerPresence.status),
-                          border: "2px solid #202c33",
-                          boxShadow:
-                            partnerPresence.status === "online"
-                              ? "0 0 5px rgba(0, 168, 132, 0.8)"
-                              : "none",
-                        }}
-                      />
-                    )}
-                  </div>
-
-                  {/* Name & Sub-text Presence Status */}
-                  <div className="min-w-0 flex flex-col justify-center">
-                    <span
-                      style={{
-                        fontSize: "16px",
-                        fontWeight: "600",
-                        color: "#e9edef",
-                        fontFamily: "'Segoe UI', 'Inter', sans-serif",
-                        overflow: "hidden",
-                        textOverflow: "ellipsis",
-                        whiteSpace: "nowrap",
-                        lineHeight: 1.25,
-                      }}
+                  {/* Left: Chat info with clickable header */}
+                  {selectedChat.isGroupChat ? (
+                    <div
+                      onClick={onOpenGroupModal}
+                      className="flex items-center gap-3 cursor-pointer min-w-0 flex-1"
+                      title="Click to view Group info"
                     >
-                      {chatName}
-                    </span>
+                      {/* Avatar */}
+                      <div className="relative shrink-0" style={{ width: 40, height: 40 }}>
+                        <GroupAvatar size={40} />
+                      </div>
 
-                    {/* Dynamic Sub-text Presence */}
-                    <span
-                      style={{
-                        fontSize: "12.5px",
-                        fontFamily: "'Segoe UI', 'Inter', sans-serif",
-                        marginTop: "1px",
-                        overflow: "hidden",
-                        textOverflow: "ellipsis",
-                        whiteSpace: "nowrap",
-                      }}
-                    >
-                      {istyping ? (
-                        <span style={{ color: "#00a884", fontWeight: "500" }}>
-                          {selectedChat.isGroupChat
-                            ? `${typingUserName || "Someone"} is typing...`
-                            : "typing..."}
+                      {/* Name & Sub-text Presence Status */}
+                      <div className="min-w-0 flex flex-col justify-center text-left">
+                        <span
+                          style={{
+                            fontSize: "16px",
+                            fontWeight: "600",
+                            color: "#e9edef",
+                            fontFamily: "'Segoe UI', 'Inter', sans-serif",
+                            overflow: "hidden",
+                            textOverflow: "ellipsis",
+                            whiteSpace: "nowrap",
+                            lineHeight: 1.25,
+                          }}
+                        >
+                          {chatName}
                         </span>
-                      ) : selectedChat.isGroupChat ? (
-                        <span style={{ color: "#8696a0" }}>
-                          {selectedChat.users.length} members
-                          {onlineMembersCount > 0 && (
-                            <>, <span style={{ color: "#00a884" }}>{onlineMembersCount} online</span></>
+
+                        <span
+                          style={{
+                            fontSize: "12.5px",
+                            fontFamily: "'Segoe UI', 'Inter', sans-serif",
+                            marginTop: "1px",
+                            overflow: "hidden",
+                            textOverflow: "ellipsis",
+                            whiteSpace: "nowrap",
+                          }}
+                        >
+                          {istyping ? (
+                            <span style={{ color: "#00a884", fontWeight: "500" }}>
+                              {typingUserName ? `${typingUserName} is typing...` : "typing..."}
+                            </span>
+                          ) : (
+                            <span style={{ color: "#8696a0" }}>
+                              {selectedChat.users.length} members
+                              {onlineMembersCount > 0 && (
+                                <>, <span style={{ color: "#00a884" }}>{onlineMembersCount} online</span></>
+                              )}
+                            </span>
                           )}
                         </span>
-                      ) : partnerPresence?.status === "online" ? (
-                        <span style={{ color: "#00a884", fontWeight: "500" }}>online</span>
-                      ) : partnerPresence?.status === "away" ? (
-                        <span style={{ color: "#f59e0b", fontWeight: "500" }}>away</span>
-                      ) : (
-                        <span style={{ color: "#8696a0" }}>
-                          {partnerPresence?.lastSeen
-                            ? `last seen ${formatLastSeen(partnerPresence.lastSeen)}`
-                            : "offline"}
-                        </span>
-                      )}
-                    </span>
-                  </div>
+                      </div>
+                    </div>
+                  ) : (
+                    <ProfileModal user={chatPartner}>
+                      <div className="flex items-center gap-3 cursor-pointer min-w-0 flex-1">
+                        {/* Avatar with online presence dot */}
+                        <div className="relative shrink-0" style={{ width: 40, height: 40 }}>
+                          <UserAvatar user={chatPartner} name={chatName} size={40} />
+                          {partnerPresence && (
+                            <span
+                              title={`Status: ${partnerPresence.status}`}
+                              style={{
+                                position: "absolute",
+                                bottom: 0,
+                                right: 0,
+                                width: 10,
+                                height: 10,
+                                borderRadius: "50%",
+                                background: getStatusColor(partnerPresence.status),
+                                border: "2px solid #202c33",
+                                boxShadow:
+                                  partnerPresence.status === "online"
+                                    ? "0 0 5px rgba(0, 168, 132, 0.8)"
+                                    : "none",
+                              }}
+                            />
+                          )}
+                        </div>
+
+                        {/* Name & Sub-text Presence Status */}
+                        <div className="min-w-0 flex flex-col justify-center text-left">
+                          <span
+                            style={{
+                              fontSize: "16px",
+                              fontWeight: "600",
+                              color: "#e9edef",
+                              fontFamily: "'Segoe UI', 'Inter', sans-serif",
+                              overflow: "hidden",
+                              textOverflow: "ellipsis",
+                              whiteSpace: "nowrap",
+                              lineHeight: 1.25,
+                            }}
+                          >
+                            {chatName}
+                          </span>
+
+                          <span
+                            style={{
+                              fontSize: "12.5px",
+                              fontFamily: "'Segoe UI', 'Inter', sans-serif",
+                              marginTop: "1px",
+                              overflow: "hidden",
+                              textOverflow: "ellipsis",
+                              whiteSpace: "nowrap",
+                            }}
+                          >
+                            {istyping ? (
+                              <span style={{ color: "#00a884", fontWeight: "500" }}>typing...</span>
+                            ) : partnerPresence?.status === "online" ? (
+                              <span style={{ color: "#00a884", fontWeight: "500" }}>online</span>
+                            ) : partnerPresence?.status === "away" ? (
+                              <span style={{ color: "#f59e0b", fontWeight: "500" }}>away</span>
+                            ) : (
+                              <span style={{ color: "#8696a0" }}>
+                                {partnerPresence?.lastSeen
+                                  ? `last seen ${formatLastSeen(partnerPresence.lastSeen)}`
+                                  : "offline"}
+                              </span>
+                            )}
+                          </span>
+                        </div>
+                      </div>
+                    </ProfileModal>
+                  )}
                 </div>
 
                 {/* Right Header Actions */}
@@ -780,34 +823,17 @@ const SingleChat = ({ fetchAgain, setFetchAgain }) => {
                       px={1}
                       zIndex="popover"
                     >
-                      {!selectedChat.isGroupChat ? (
-                        <ProfileModal user={chatPartner}>
-                          <MenuItem
-                            bg="transparent"
-                            _hover={{ bg: "#111b21", color: "#00a884" }}
-                            borderRadius="6px"
-                            fontSize="14px"
-                            fontFamily="'Segoe UI', 'Inter', sans-serif"
-                          >
-                            Contact info
-                          </MenuItem>
-                        </ProfileModal>
-                      ) : (
-                        <UpdateGroupChatModal
-                          fetchMessages={fetchMessages}
-                          fetchAgain={fetchAgain}
-                          setFetchAgain={setFetchAgain}
+                      {selectedChat.isGroupChat && (
+                        <MenuItem
+                          bg="transparent"
+                          _hover={{ bg: "#111b21", color: "#00a884" }}
+                          borderRadius="6px"
+                          fontSize="14px"
+                          fontFamily="'Segoe UI', 'Inter', sans-serif"
+                          onClick={onOpenGroupModal}
                         >
-                          <MenuItem
-                            bg="transparent"
-                            _hover={{ bg: "#111b21", color: "#00a884" }}
-                            borderRadius="6px"
-                            fontSize="14px"
-                            fontFamily="'Segoe UI', 'Inter', sans-serif"
-                          >
-                            Group info
-                          </MenuItem>
-                        </UpdateGroupChatModal>
+                          Group info
+                        </MenuItem>
                       )}
 
                       <MenuItem
@@ -913,7 +939,7 @@ const SingleChat = ({ fetchAgain, setFetchAgain }) => {
             }}
             onKeyDown={sendMessage}
           >
-            {/* Emoji Button (😊) */}
+            {/* Emoji Button */}
             <button
               onClick={() => setShowEmojiPicker((prev) => !prev)}
               title="Emoji"
@@ -1196,6 +1222,17 @@ const SingleChat = ({ fetchAgain, setFetchAgain }) => {
           </ModalFooter>
         </ModalContent>
       </Modal>
+
+      {/* Group Info Modal */}
+      {selectedChat?.isGroupChat && (
+        <UpdateGroupChatModal
+          isOpen={isGroupModalOpen}
+          onClose={onCloseGroupModal}
+          fetchMessages={fetchMessages}
+          fetchAgain={fetchAgain}
+          setFetchAgain={setFetchAgain}
+        />
+      )}
     </>
   );
 };

@@ -81,7 +81,7 @@ const ServerConfigModal = ({ children }) => {
         <ModalOverlay bg="blackAlpha.700" backdropFilter="blur(8px)" />
         <ModalContent bg="#131b2e" color="#dae2fd" border="1px solid rgba(255,255,255,0.1)" borderRadius="16px">
           <ModalHeader fontSize="18px" fontWeight="700" fontFamily="'Plus Jakarta Sans', sans-serif">
-            🌐 Network Server Configuration
+            Network Server Configuration
           </ModalHeader>
           <ModalCloseButton color="#918fa1" />
           <ModalBody pb={6} className="space-y-4">

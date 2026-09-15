@@ -1,7 +1,13 @@
 // Helper to manage dynamic Server IP & Port configuration for IM Client
 
-const DEFAULT_HOST = window.location.hostname || "localhost";
-const DEFAULT_PORT = "5000";
+const isLocalhost = typeof window !== "undefined" && Boolean(
+  window.location.hostname === "localhost" ||
+  window.location.hostname === "127.0.0.1" ||
+  window.location.hostname === "0.0.0.0"
+);
+
+const DEFAULT_HOST = (typeof window !== "undefined" && window.location.hostname) ? window.location.hostname : "localhost";
+const DEFAULT_PORT = isLocalhost ? ((typeof window !== "undefined" && window.location.port === "3000") ? "5000" : (window.location.port || "5000")) : "";
 
 export const getServerConfig = () => {
   try {
@@ -10,7 +16,7 @@ export const getServerConfig = () => {
       const parsed = JSON.parse(saved);
       return {
         host: parsed.host || DEFAULT_HOST,
-        port: parsed.port || DEFAULT_PORT,
+        port: parsed.port !== undefined ? parsed.port : DEFAULT_PORT,
       };
     }
   } catch (e) {
@@ -25,7 +31,7 @@ export const getServerConfig = () => {
 export const setServerConfig = (host, port) => {
   const config = {
     host: (host || DEFAULT_HOST).trim(),
-    port: (port || DEFAULT_PORT).trim(),
+    port: port !== undefined ? port.trim() : DEFAULT_PORT,
   };
   localStorage.setItem("imServerConfig", JSON.stringify(config));
   return config;
@@ -37,6 +43,6 @@ export const getServerBaseUrl = () => {
   if (host.startsWith("http://") || host.startsWith("https://")) {
     return port ? `${host}:${port}` : host;
   }
-  const protocol = window.location.protocol === "https:" ? "https:" : "http:";
-  return `${protocol}//${host}:${port}`;
+  const protocol = typeof window !== "undefined" && window.location.protocol === "https:" ? "https:" : "http:";
+  return port ? `${protocol}//${host}:${port}` : `${protocol}//${host}`;
 };

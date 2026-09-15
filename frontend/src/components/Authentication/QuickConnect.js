@@ -55,7 +55,7 @@ const QuickConnect = () => {
       const { data } = await axios.post("/api/user/quick-connect", { username, name }, config);
 
       toast({
-        title: "Connected Successfully! 🚀",
+        title: "Connected Successfully",
         description: `Welcome to Instant Messaging, ${data.name}!`,
         status: "success",
         duration: 3000,
@@ -64,13 +64,14 @@ const QuickConnect = () => {
       });
 
       setUser(data);
-      localStorage.setItem("userInfo", JSON.stringify(data));
+      sessionStorage.setItem("userInfo", JSON.stringify(data));
+      localStorage.removeItem("userInfo");
       setLoading(false);
       history.push("/chats");
     } catch (error) {
       const msg = error.response?.data?.message || "Failed to connect to server.";
       toast({
-        title: error.response?.status === 409 ? "⚠️ Username Collision Detected" : "Connection Failed",
+        title: error.response?.status === 409 ? "Username Collision Detected" : "Connection Failed",
         description: msg,
         status: "error",
         duration: 6000,

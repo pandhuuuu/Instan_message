@@ -98,13 +98,14 @@ const Signup = () => {
         config
       );
       toast({
-        title: "Registration successful! 🎉",
+        title: "Registration successful",
         status: "success",
         duration: 3000,
         isClosable: true,
         position: "top",
       });
-      localStorage.setItem("userInfo", JSON.stringify(data));
+      sessionStorage.setItem("userInfo", JSON.stringify(data));
+      localStorage.removeItem("userInfo");
       setPicLoading(false);
       history.push("/chats");
     } catch (error) {
@@ -223,7 +224,7 @@ const Signup = () => {
             {pic ? "check_circle" : "cloud_upload"}
           </span>
           <label htmlFor="signup-pic" style={{ cursor: "pointer", fontSize: "13px", flex: 1, margin: 0, color: "inherit", fontFamily: "'Inter', sans-serif" }}>
-            {pic ? "Photo uploaded successfully ✓" : "Click to upload photo (JPG/PNG)"}
+            {pic ? "Photo uploaded successfully" : "Click to upload photo (JPG/PNG)"}
           </label>
           <input
             id="signup-pic"

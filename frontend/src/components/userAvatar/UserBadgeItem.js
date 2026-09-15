@@ -37,7 +37,7 @@ const UserBadgeItem = ({ user, handleFunction, admin }) => {
       </span>
       {user.name}
       {admin?._id === user._id && (
-        <span style={{ fontSize: "10px", color: "#10b981", fontWeight: "700" }}>★</span>
+        <span style={{ fontSize: "10px", color: "#10b981", fontWeight: "600", marginLeft: "2px" }}>(Admin)</span>
       )}
       <span style={{ fontSize: "14px", lineHeight: 1 }}>×</span>
     </span>

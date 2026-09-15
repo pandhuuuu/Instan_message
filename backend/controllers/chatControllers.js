@@ -329,30 +329,41 @@ const removeFromGroup = asyncHandler(async (req, res) => {
     throw new Error("Only admins can remove members");
   }
 
+  const ownerId = String(chat.groupAdmin?._id || chat.groupAdmin);
+  const requesterId = String(req.user._id);
+
   // Other admins cannot remove the primary group owner
-  if (!isLeaving && String(chat.groupAdmin) === String(userId)) {
+  if (!isLeaving && ownerId === String(userId)) {
     res.status(403);
     throw new Error("The group owner cannot be removed by other admins");
+  }
+
+  // Non-owner admin cannot remove another admin
+  const isTargetAdmin = chat.groupAdmins && chat.groupAdmins.some((a) => String(a._id || a) === String(userId));
+  if (!isLeaving && isTargetAdmin && ownerId !== requesterId) {
+    res.status(403);
+    throw new Error("Only the group owner can remove other admins");
   }
 
   const targetUser = await User.findById(userId);
   const targetName = targetUser ? targetUser.name : "Member";
 
   // Remove from users and groupAdmins
-  chat.users = chat.users.filter((u) => String(u) !== String(userId));
+  chat.users = chat.users.filter((u) => String(u._id || u) !== String(userId));
   if (chat.groupAdmins) {
-    chat.groupAdmins = chat.groupAdmins.filter((a) => String(a) !== String(userId));
+    chat.groupAdmins = chat.groupAdmins.filter((a) => String(a._id || a) !== String(userId));
   }
 
   // Admin Leaving scenario: auto transfer ownership
-  if (isLeaving && String(chat.groupAdmin) === String(userId)) {
+  if (isLeaving && ownerId === String(userId)) {
     if (chat.users.length > 0) {
       const newAdmin = chat.groupAdmins && chat.groupAdmins.length > 0
         ? chat.groupAdmins[0]
         : chat.users[0];
       chat.groupAdmin = newAdmin;
       if (!chat.groupAdmins) chat.groupAdmins = [];
-      if (!chat.groupAdmins.some((a) => String(a) === String(newAdmin))) {
+      const newAdminId = String(newAdmin._id || newAdmin);
+      if (!chat.groupAdmins.some((a) => String(a._id || a) === newAdminId)) {
         chat.groupAdmins.push(newAdmin);
       }
     } else {
@@ -458,11 +469,12 @@ const promoteToAdmin = asyncHandler(async (req, res) => {
   }
 
   if (!chat.groupAdmins) chat.groupAdmins = [];
-  if (chat.groupAdmin && !chat.groupAdmins.some((a) => String(a) === String(chat.groupAdmin))) {
+  const ownerId = String(chat.groupAdmin?._id || chat.groupAdmin);
+  if (ownerId && !chat.groupAdmins.some((a) => String(a._id || a) === ownerId)) {
     chat.groupAdmins.push(chat.groupAdmin);
   }
 
-  if (!chat.groupAdmins.some((a) => String(a) === String(userId))) {
+  if (!chat.groupAdmins.some((a) => String(a._id || a) === String(userId))) {
     chat.groupAdmins.push(userId);
     await chat.save();
   }
@@ -503,18 +515,21 @@ const demoteAdmin = asyncHandler(async (req, res) => {
   }
 
   // Only primary group owner can demote admins
-  if (String(chat.groupAdmin) !== String(req.user._id)) {
+  const ownerId = String(chat.groupAdmin?._id || chat.groupAdmin);
+  const requesterId = String(req.user._id);
+
+  if (ownerId !== requesterId) {
     res.status(403);
     throw new Error("Only the group owner can demote admins");
   }
 
-  if (String(chat.groupAdmin) === String(userId)) {
+  if (ownerId === String(userId)) {
     res.status(400);
     throw new Error("The group owner cannot be demoted");
   }
 
   if (chat.groupAdmins) {
-    chat.groupAdmins = chat.groupAdmins.filter((a) => String(a) !== String(userId));
+    chat.groupAdmins = chat.groupAdmins.filter((a) => String(a._id || a) !== String(userId));
     await chat.save();
   }
 

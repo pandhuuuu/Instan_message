@@ -10,7 +10,7 @@ import UserListItem from "./userAvatar/UserListItem";
 import UserAvatar from "./userAvatar/UserAvatar";
 import { ChatState } from "../Context/ChatProvider";
 import { Menu, MenuButton, MenuList, MenuItem } from "@chakra-ui/menu";
-import { Spinner } from "@chakra-ui/react";
+import { Spinner, useDisclosure } from "@chakra-ui/react";
 import { useHistory } from "react-router-dom";
 
 const MyChats = ({ fetchAgain }) => {
@@ -24,6 +24,11 @@ const MyChats = ({ fetchAgain }) => {
   const searchInputRef = useRef(null);
   const searchTimeoutRef = useRef(null);
   const typingTimeoutsRef = useRef({});
+  const {
+    isOpen: isNewGroupOpen,
+    onOpen: onOpenNewGroup,
+    onClose: onCloseNewGroup,
+  } = useDisclosure();
 
   const {
     selectedChat,
@@ -63,7 +68,7 @@ const MyChats = ({ fetchAgain }) => {
 
   const fetchChats = async () => {
     try {
-      const currentUser = user || JSON.parse(localStorage.getItem("userInfo"));
+      const currentUser = user || JSON.parse(sessionStorage.getItem("userInfo"));
       if (!currentUser?.token) return;
       const config = { headers: { Authorization: `Bearer ${currentUser.token}` } };
       const { data } = await axios.get("/api/chat", config);
@@ -77,7 +82,7 @@ const MyChats = ({ fetchAgain }) => {
   };
 
   useEffect(() => {
-    setLoggedUser(JSON.parse(localStorage.getItem("userInfo")));
+    setLoggedUser(JSON.parse(sessionStorage.getItem("userInfo")));
     fetchChats();
     // eslint-disable-next-line
   }, [fetchAgain]);
@@ -357,7 +362,7 @@ const MyChats = ({ fetchAgain }) => {
     setLoadingSearch(true);
     searchTimeoutRef.current = setTimeout(async () => {
       try {
-        const currentUser = user || JSON.parse(localStorage.getItem("userInfo"));
+        const currentUser = user || JSON.parse(sessionStorage.getItem("userInfo"));
         if (!currentUser?.token) return;
         const config = { headers: { Authorization: `Bearer ${currentUser.token}` } };
         const { data } = await axios.get(
@@ -375,7 +380,7 @@ const MyChats = ({ fetchAgain }) => {
 
   const accessChat = async (userId) => {
     try {
-      const currentUser = user || JSON.parse(localStorage.getItem("userInfo"));
+      const currentUser = user || JSON.parse(sessionStorage.getItem("userInfo"));
       if (!currentUser?.token) return;
       const config = {
         headers: { "Content-type": "application/json", Authorization: `Bearer ${currentUser.token}` },
@@ -401,6 +406,7 @@ const MyChats = ({ fetchAgain }) => {
     if (socket) {
       socket.disconnect();
     }
+    sessionStorage.removeItem("userInfo");
     localStorage.removeItem("userInfo");
     if (setUser) setUser(null);
     if (setSelectedChat) setSelectedChat(null);
@@ -649,26 +655,25 @@ const MyChats = ({ fetchAgain }) => {
           </button>
 
           {/* New Group button */}
-          <GroupChatModal>
-            <button
-              className="flex items-center justify-center rounded-full transition-colors"
-              style={{
-                width: 40,
-                height: 40,
-                color: "#aebac1",
-                background: "transparent",
-                border: "none",
-                cursor: "pointer",
-              }}
-              title="New Group"
-              onMouseEnter={(e) => (e.currentTarget.style.color = "#e9edef")}
-              onMouseLeave={(e) => (e.currentTarget.style.color = "#aebac1")}
-            >
-              <span className="material-symbols-outlined" style={{ fontSize: "22px" }}>
-                groups
-              </span>
-            </button>
-          </GroupChatModal>
+          <button
+            onClick={onOpenNewGroup}
+            className="flex items-center justify-center rounded-full transition-colors"
+            style={{
+              width: 40,
+              height: 40,
+              color: "#aebac1",
+              background: "transparent",
+              border: "none",
+              cursor: "pointer",
+            }}
+            title="New Group"
+            onMouseEnter={(e) => (e.currentTarget.style.color = "#e9edef")}
+            onMouseLeave={(e) => (e.currentTarget.style.color = "#aebac1")}
+          >
+            <span className="material-symbols-outlined" style={{ fontSize: "22px" }}>
+              groups
+            </span>
+          </button>
 
           {/* New Chat button */}
           <button
@@ -726,17 +731,16 @@ const MyChats = ({ fetchAgain }) => {
               px={1}
               zIndex="popover"
             >
-              <GroupChatModal>
-                <MenuItem
-                  bg="transparent"
-                  _hover={{ bg: "#111b21", color: "#00a884" }}
-                  borderRadius="6px"
-                  fontSize="14px"
-                  fontFamily="'Segoe UI', 'Inter', sans-serif"
-                >
-                  New Group
-                </MenuItem>
-              </GroupChatModal>
+              <MenuItem
+                bg="transparent"
+                _hover={{ bg: "#111b21", color: "#00a884" }}
+                borderRadius="6px"
+                fontSize="14px"
+                fontFamily="'Segoe UI', 'Inter', sans-serif"
+                onClick={onOpenNewGroup}
+              >
+                New Group
+              </MenuItem>
 
               <MenuItem
                 bg="transparent"
@@ -748,18 +752,6 @@ const MyChats = ({ fetchAgain }) => {
               >
                 Active Users ({onlineCount})
               </MenuItem>
-
-              <ProfileModal user={user}>
-                <MenuItem
-                  bg="transparent"
-                  _hover={{ bg: "#111b21", color: "#00a884" }}
-                  borderRadius="6px"
-                  fontSize="14px"
-                  fontFamily="'Segoe UI', 'Inter', sans-serif"
-                >
-                  My Profile
-                </MenuItem>
-              </ProfileModal>
 
               <MenuItem
                 bg="transparent"
@@ -1416,6 +1408,12 @@ const MyChats = ({ fetchAgain }) => {
           </div>
         )}
       </div>
+
+      {/* Create Group Modal */}
+      <GroupChatModal
+        isOpen={isNewGroupOpen}
+        onClose={onCloseNewGroup}
+      />
     </section>
   );
 };
