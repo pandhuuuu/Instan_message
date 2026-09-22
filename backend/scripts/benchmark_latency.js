@@ -137,6 +137,8 @@ async function runBenchmark() {
       if (aReady) resolve();
     });
   });
+  // Berikan jeda 500ms agar event join room selesai diproses oleh server event loop
+  await new Promise((r) => setTimeout(r, 500));
   console.log("   ✓ Socket Alice dan Bob berhasil terhubung dan join room.");
 
   // 3. PENGUJIAN 1: Ephemeral In-Memory Signal (Typing Indicator)
@@ -145,7 +147,12 @@ async function runBenchmark() {
   for (let i = 1; i <= 5; i++) {
     const t0 = performance.now();
     await new Promise((resolve) => {
+      const retryInterval = setInterval(() => {
+        socketA.emit("typing", chat._id);
+      }, 500);
+
       socketB.once("typing", () => {
+        clearInterval(retryInterval);
         const rtt = performance.now() - t0;
         typingLatencies.push(rtt);
         console.log(`   Sample #${i} Typing Indicator RTT: ${rtt.toFixed(2)} ms`);
@@ -153,7 +160,7 @@ async function runBenchmark() {
       });
       socketA.emit("typing", chat._id);
     });
-    await new Promise((r) => setTimeout(r, 50));
+    await new Promise((r) => setTimeout(r, 100));
   }
 
   // 4. PENGUJIAN 2: Full End-to-End Pipeline (HTTP POST ➔ DB Save ➔ Socket Broadcast ➔ Recipient)

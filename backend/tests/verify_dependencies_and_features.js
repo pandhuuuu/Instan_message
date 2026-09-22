@@ -402,10 +402,12 @@ async function runVerification() {
       const socketA = ioClient(`http://${BASE_HOST}:${BASE_PORT}`, {
         transports: ["websocket"],
         forceNew: true,
+        auth: { token: token1 },
       });
       const socketB = ioClient(`http://${BASE_HOST}:${BASE_PORT}`, {
         transports: ["websocket"],
         forceNew: true,
+        auth: { token: token2 },
       });
 
       let connectedCount = 0;

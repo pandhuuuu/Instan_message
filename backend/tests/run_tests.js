@@ -50,9 +50,9 @@ function httpRequest({ method, path: reqPath, data, token }) {
         res.on("end", () => {
           try {
             const parsed = body ? JSON.parse(body) : {};
-            resolve({ status: res.statusCode, data: parsed });
+            resolve({ status: res.statusCode, data: parsed, headers: res.headers });
           } catch (e) {
-            resolve({ status: res.statusCode, text: body });
+            resolve({ status: res.statusCode, text: body, headers: res.headers });
           }
         });
       }
@@ -124,6 +124,20 @@ async function runTests() {
     assert(
       resNotFound.status === 404,
       "TC-03: Error Middleware Catches Non-Existent API Route (404 Not Found)"
+    );
+
+    // TC-03B: Security Headers Presence Verification (Helmet)
+    const hasNosniff = resNotFound.headers && resNotFound.headers["x-content-type-options"] === "nosniff";
+    assert(
+      hasNosniff,
+      "TC-03B: Security Headers: Helmet Injects 'X-Content-Type-Options: nosniff'"
+    );
+
+    // TC-03C: Information Leak Prevention (No Internal Stack Trace in Production)
+    const noStackLeak = !resNotFound.data?.stack;
+    assert(
+      noStackLeak,
+      "TC-03C: Information Leak Prevention: Stack Trace Hidden in Error Response"
     );
 
     // =========================================================================
@@ -229,6 +243,17 @@ async function runTests() {
       "TC-09: Quick Connect Rejects Empty Username (400 Bad Request)"
     );
 
+    // TC-09B: Security Check - Quick Connect Rejects Taking Over Registered Password Account (403)
+    const resTakeover = await httpRequest({
+      method: "POST",
+      path: "/api/user/quick-connect",
+      data: { username: standardUser },
+    });
+    assert(
+      resTakeover.status === 403,
+      "TC-09B: Security Check: Quick Connect Blocks Takeover on Registered Password Accounts (403 Forbidden)"
+    );
+
     // TC-10: User Search with Regex Query (Excludes Self)
     const resSearch = await httpRequest({
       method: "GET",
@@ -239,6 +264,30 @@ async function runTests() {
     assert(
       resSearch.status === 200 && foundSearch,
       "TC-10: Directory Search Query (Excludes Requesting User from Results)"
+    );
+
+    // TC-10B: ReDoS Immunity Test on Directory Search Query
+    const startReDoS = Date.now();
+    const resReDoS = await httpRequest({
+      method: "GET",
+      path: "/api/user?search=(a%2B)%2B%24",
+      token: tokenA,
+    });
+    const durationReDoS = Date.now() - startReDoS;
+    assert(
+      resReDoS.status === 200 && durationReDoS < 500,
+      `TC-10B: ReDoS Immunity: Malicious Nested Regex Query Safely Handled in ${durationReDoS}ms`
+    );
+
+    // TC-10C: Regex Special Characters Injection Immunity
+    const resRegexChars = await httpRequest({
+      method: "GET",
+      path: "/api/user?search=%5B%5E%24.*%2B%3F%28%29%5C%5D",
+      token: tokenA,
+    });
+    assert(
+      resRegexChars.status === 200 && Array.isArray(resRegexChars.data),
+      "TC-10C: Regex Injection Protection: Special Characters Safely Escaped Without 500 Crash"
     );
 
     // =========================================================================
@@ -313,6 +362,29 @@ async function runTests() {
       "TC-15: Recipient Fetches Conversation Message History"
     );
 
+    // TC-15B: Security Check - Non-Participant Cannot Read Messages (BOLA/IDOR 403 Forbidden)
+    const resIdorRead = await httpRequest({
+      method: "GET",
+      path: `/api/message/${chatId}`,
+      token: tokenC,
+    });
+    assert(
+      resIdorRead.status === 403,
+      "TC-15B: Security Check: BOLA/IDOR Protection Prevents Non-Participant from Reading Messages (403 Forbidden)"
+    );
+
+    // TC-15C: Security Check - Non-Participant Cannot Send Messages to Chat (403 Forbidden)
+    const resIdorSend = await httpRequest({
+      method: "POST",
+      path: "/api/message",
+      token: tokenC,
+      data: { chatId, content: "Unauthorized message attempt" },
+    });
+    assert(
+      resIdorSend.status === 403,
+      "TC-15C: Security Check: Unauthorized Message Injection Blocked (403 Forbidden)"
+    );
+
     // TC-16: Batch Mark Messages Delivered
     const resDelivered = await httpRequest({
       method: "PUT",
@@ -335,6 +407,18 @@ async function runTests() {
     assert(
       resRead.status === 200 && resRead.data.success === true,
       "TC-17: Atomic Read Receipt State Update (Marks Messages Read By Recipient)"
+    );
+
+    // TC-17B: BOLA/IDOR Check - Non-Participant Cannot Mark Messages as Read (403 Forbidden)
+    const resUnauthRead = await httpRequest({
+      method: "PUT",
+      path: `/api/message/read/${chatId}`,
+      token: tokenC,
+      data: {},
+    });
+    assert(
+      resUnauthRead.status === 403,
+      "TC-17B: BOLA/IDOR Protection: Non-Participant Cannot Mark Messages as Read (403 Forbidden)"
     );
 
     // TC-18: Unauthorized Message Deletion Forbidden (Bob tries to delete Alice's message -> 403)
@@ -396,6 +480,17 @@ async function runTests() {
       "TC-21: Clear Conversation History Triggered by User A (Alice)"
     );
 
+    // TC-21B: BOLA/IDOR Check - Non-Participant Cannot Clear Chat (403 Forbidden)
+    const resUnauthClear = await httpRequest({
+      method: "DELETE",
+      path: `/api/message/clear/${chatId}`,
+      token: tokenC,
+    });
+    assert(
+      resUnauthClear.status === 403,
+      "TC-21B: BOLA/IDOR Protection: Non-Participant Cannot Clear Chat Messages (403 Forbidden)"
+    );
+
     // TC-22: Invariant: Alice sees 0 messages
     const resHistACleared = await httpRequest({
       method: "GET",
@@ -428,6 +523,17 @@ async function runTests() {
     assert(
       resDeleteChat.status === 200 && resDeleteChat.data.success === true,
       "TC-24: Per-User Delete Chat Triggered by Alice"
+    );
+
+    // TC-24B: BOLA/IDOR Check - Non-Participant Cannot Delete Conversation (403 Forbidden)
+    const resUnauthDelChat = await httpRequest({
+      method: "DELETE",
+      path: `/api/chat/${chatId}`,
+      token: tokenC,
+    });
+    assert(
+      resUnauthDelChat.status === 403,
+      "TC-24B: BOLA/IDOR Protection: Non-Participant Cannot Delete Conversation (403 Forbidden)"
     );
 
     // TC-25: Invariant: Chat is removed from Alice's chat list
@@ -612,6 +718,30 @@ async function runTests() {
       data: { username: daveUser, name: "Dave Auto" },
     });
     const userDId = resDave.data._id;
+    const tokenDave = resDave.data.token;
+
+    // TC-34B: BOLA/IDOR Protection: Non-Member Dave Cannot Read Group Message History (403)
+    const resDaveReadGroup = await httpRequest({
+      method: "GET",
+      path: `/api/message/${groupChatId}`,
+      token: tokenDave,
+    });
+    assert(
+      resDaveReadGroup.status === 403,
+      "TC-34B: BOLA/IDOR Protection: Non-Member Dave Cannot Read Group Message History (403 Forbidden)"
+    );
+
+    // TC-34C: Unauthorized Message Injection: Non-Member Dave Cannot Post to Group (403)
+    const resDaveSendGroup = await httpRequest({
+      method: "POST",
+      path: "/api/message",
+      token: tokenDave,
+      data: { chatId: groupChatId, content: "Dave unauthorized group message" },
+    });
+    assert(
+      resDaveSendGroup.status === 403,
+      "TC-34C: Unauthorized Message Injection: Non-Member Dave Cannot Post to Group (403 Forbidden)"
+    );
 
     // TC-35: Co-Admin Bob Adds Member Dave to Group
     const resAddMember = await httpRequest({
@@ -658,6 +788,21 @@ async function runTests() {
     assert(
       resDemote.status === 200 && !bobStillAdmin,
       "TC-37: Group Owner Demotes Co-Admin Bob Back to Regular Member"
+    );
+
+    // TC-37B: Security Check - Demoted Member Bob Cannot Demote Group Owner (403 Forbidden)
+    const resBobDemoteOwner = await httpRequest({
+      method: "PUT",
+      path: "/api/chat/groupadmin/demote",
+      token: tokenB,
+      data: {
+        chatId: groupChatId,
+        userId: userAId,
+      },
+    });
+    assert(
+      resBobDemoteOwner.status === 403,
+      "TC-37B: RBAC Hierarchy: Non-Owner Cannot Demote Group Owner (403 Forbidden)"
     );
 
     // TC-38: Co-Admin Demotion Enforced: Bob Cannot Perform Admin Actions After Demotion (403)
@@ -729,11 +874,48 @@ async function runTests() {
         const socketA = ioClient(`http://${BASE_HOST}:${BASE_PORT}`, {
           transports: ["websocket"],
           forceNew: true,
+          auth: { token: tokenA },
         });
         const socketB = ioClient(`http://${BASE_HOST}:${BASE_PORT}`, {
           transports: ["websocket"],
           forceNew: true,
+          auth: { token: tokenB },
         });
+
+        // Unauthenticated socket connection verification
+        const socketUnauth = ioClient(`http://${BASE_HOST}:${BASE_PORT}`, {
+          transports: ["websocket"],
+          forceNew: true,
+        });
+        let unauthRejected = false;
+        socketUnauth.on("connect_error", (err) => {
+          if (err && err.message.includes("Authentication error")) {
+            unauthRejected = true;
+          }
+          socketUnauth.disconnect();
+        });
+
+        // Tampered token socket connection verification
+        const socketTampered = ioClient(`http://${BASE_HOST}:${BASE_PORT}`, {
+          transports: ["websocket"],
+          forceNew: true,
+          auth: { token: "forged.tampered.token_fail" },
+        });
+        let tamperedRejected = false;
+        socketTampered.on("connect_error", (err) => {
+          if (err && err.message.includes("Authentication error")) {
+            tamperedRejected = true;
+          }
+          socketTampered.disconnect();
+        });
+
+        // Socket C (Charlie) - Valid user attempting unauthorized eavesdropping
+        const socketC = ioClient(`http://${BASE_HOST}:${BASE_PORT}`, {
+          transports: ["websocket"],
+          forceNew: true,
+          auth: { token: tokenC },
+        });
+        let charlieEavesdropped = false;
 
         let socketAConnected = false;
         let socketBConnected = false;
@@ -743,6 +925,10 @@ async function runTests() {
         const cleanup = () => {
           socketA.disconnect();
           socketB.disconnect();
+          socketC.disconnect();
+          assert(unauthRejected, "TC-41B: Security Check: WebSocket Rejects Connection Without Valid JWT Auth");
+          assert(tamperedRejected, "TC-41C: Security Check: WebSocket Rejects Connection With Tampered JWT Token");
+          assert(!charlieEavesdropped, "TC-44B: Eavesdropping Prevention: Unauthorized Socket Cannot Intercept Private Room Messages");
           resolveSocket();
         };
 
@@ -751,7 +937,7 @@ async function runTests() {
           assert(typingReceived, "TC-43: Real-Time Typing Indicator Transmission via WebSocket", "Timeout");
           assert(messageReceived, "TC-44: Real-Time Instant Message Delivery via WebSocket", "Timeout");
           cleanup();
-        }, 3000);
+        }, 3500);
 
         socketA.on("connect", () => {
           socketA.emit("setup", { _id: userAId, name: "Alice Auto" });
@@ -763,6 +949,15 @@ async function runTests() {
           socketB.emit("setup", { _id: userBId, name: "Bob Auto" });
           socketB.emit("join chat", chatId);
           socketBConnected = true;
+
+          // Charlie attempts unauthorized join into Alice & Bob's private room
+          socketC.on("connect", () => {
+            socketC.emit("setup", { _id: userCId, name: "Charlie Auto" });
+            socketC.emit("join chat", chatId);
+            socketC.on("message recieved", () => {
+              charlieEavesdropped = true;
+            });
+          });
 
           // Bob listens for typing and message from Alice
           socketB.on("typing", (room) => {
