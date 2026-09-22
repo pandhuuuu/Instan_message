@@ -578,7 +578,6 @@ const deleteChat = asyncHandler(async (req, res) => {
   }
 
   // Mark all current messages in this chat as deleted for req.user._id
-  const Message = require("../models/messageModel");
   await Message.updateMany(
     { chat: chatId },
     { $addToSet: { deletedFor: req.user._id } }
