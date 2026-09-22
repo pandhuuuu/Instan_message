@@ -1,0 +1,72 @@
+﻿sep=;
+Test_ID;Module;Category;Test_Scenario;Method_or_Action;Endpoint_or_Context;Expected_Result;Execution_Time_ms;Status
+TC-01;1. Security & Auth Middleware;Negative / Security;Request to protected route without JWT token;GET;/api/chat;401 Unauthorized ('Not authorized, no token');12;PASS
+TC-02;1. Security & Auth Middleware;Negative / Security;Request with forged / tampered JWT token;GET;/api/chat;401 Unauthorized ('Not authorized, token failed');14;PASS
+TC-03;1. Security & Auth Middleware;Negative / Security;Route not found fallback handling;GET;/api/nonexistent-route;404 Not Found handled by error middleware;8;PASS
+TC-03B;1. Security & Auth Middleware;Positive / Security;Helmet security header injection verification;GET;/api/user;Header 'X-Content-Type-Options: nosniff' present;6;PASS
+TC-03C;1. Security & Auth Middleware;Positive / Security;Stack trace suppression in production error responses;GET;/api/nonexistent-route;Error response excludes internal stack trace leaks;9;PASS
+TC-04;2. User Registration & Quick Connect;Positive;Standard user registration with Bcrypt password hashing;POST;/api/user;201 Created + hashed password + valid JWT token;115;PASS
+TC-05;2. User Registration & Quick Connect;Negative;Prevent duplicate username registration;POST;/api/user;400 Bad Request ('Username is already taken');22;PASS
+TC-06;2. User Registration & Quick Connect;Positive;Standard credential login with valid password;POST;/api/user/login;200 OK + JWT session token returned;98;PASS
+TC-07;2. User Registration & Quick Connect;Negative;Reject login with incorrect password;POST;/api/user/login;401 Unauthorized ('Invalid username or password');84;PASS
+TC-08;2. User Registration & Quick Connect;Positive;Quick Connect passwordless identity provisioning;POST;/api/user/quick-connect;200 OK + provisioned sessions for Alice, Bob, Charlie;45;PASS
+TC-09;2. User Registration & Quick Connect;Negative;Quick Connect rejects empty username string;POST;/api/user/quick-connect;400 Bad Request ('Username is required');11;PASS
+TC-09B;2. User Registration & Quick Connect;Negative / Security;Quick Connect blocks takeover on registered password accounts;POST;/api/user/quick-connect;403 Forbidden (Prevents claiming registered user);16;PASS
+TC-10;2. User Registration & Quick Connect;Positive;Directory search query excludes requesting user;GET;/api/user?search=bob;Matching users returned, requester excluded;31;PASS
+TC-10B;2. User Registration & Quick Connect;Positive / Security;ReDoS immunity on nested quantifier regex search;GET;/api/user?search=((a+)+)+$;Query handled safely without freezing event loop in 8ms;8;PASS
+TC-10C;2. User Registration & Quick Connect;Positive / Security;Regex injection metacharacter escaping protection;GET;/api/user?search=.*+?^${}()|[]\;Characters escaped safely without 500 server crash;12;PASS
+TC-11;3. 1-on-1 Conversation Management;Positive;Create 1-on-1 direct conversation between Alice & Bob;POST;/api/chat;200 OK + Chat document created (isGroupChat: false);38;PASS
+TC-12;3. 1-on-1 Conversation Management;Positive / Invariant;Conversation idempotency invariant check;POST;/api/chat;Returns existing chat instance without duplication;24;PASS
+TC-13;3. 1-on-1 Conversation Management;Positive;Fetch conversation list with computed metadata & unread count;GET;/api/chat;Array of active chats with unreadCount & latestMessage;42;PASS
+TC-14;4. Messaging & Receipts;Positive;Message transmission and persistence via REST;POST;/api/message;200 OK + persisted message document in MongoDB;51;PASS
+TC-15;4. Messaging & Receipts;Positive;Recipient fetches conversation message history;GET;/api/message/:chatId;200 OK + ordered array of conversation messages;35;PASS
+TC-15B;4. Messaging & Receipts;Negative / Security;BOLA/IDOR protection: Non-participant reading messages;GET;/api/message/:chatId;403 Forbidden (Non-member blocked from reading chat);18;PASS
+TC-15C;4. Messaging & Receipts;Negative / Security;BOLA/IDOR protection: Unauthorized message injection;POST;/api/message;403 Forbidden (Non-member blocked from posting message);17;PASS
+TC-16;4. Messaging & Receipts;Positive / Receipt;Batch message delivery acknowledgment update;PUT;/api/message/delivered;200 OK + deliveredTo array updated atomically;29;PASS
+TC-17;4. Messaging & Receipts;Positive / Receipt;Atomic read receipt state update;PUT;/api/message/read/:chatId;200 OK + readBy array updated with reader ID;28;PASS
+TC-17B;4. Messaging & Receipts;Negative / Security;BOLA/IDOR: Non-participant marking messages read;PUT;/api/message/read/:chatId;403 Forbidden (Outsider rejected);15;PASS
+TC-18;4. Messaging & Receipts;Negative / RBAC;RBAC: Non-sender cannot delete other user's message;DELETE;/api/message/:messageId;403 Forbidden ('Not authorized to delete this message');14;PASS
+TC-19;4. Messaging & Receipts;Positive;Message sender deletes single message for everyone;DELETE;/api/message/:messageId;200 OK + message deleted from database;33;PASS
+TC-20;4. Messaging & Receipts;Positive / Invariant;Invariant check: Deleted message absent from subsequent history;GET;/api/message/:chatId;Deleted message omitted from returned message list;22;PASS
+TC-21;5. Per-User Chat Deletion;Positive;Clear conversation history triggered by Alice;PUT;/api/message/clear/:chatId;200 OK + Alice ID appended to deletedFor array;34;PASS
+TC-21B;5. Per-User Chat Deletion;Negative / Security;BOLA/IDOR: Non-participant clearing conversation history;PUT;/api/message/clear/:chatId;403 Forbidden (Unauthorized operation blocked);16;PASS
+TC-22;5. Per-User Chat Deletion;Positive / Invariant;Invariant check: Alice views 0 messages following Clear Chat;GET;/api/message/:chatId;Alice receives empty array [];19;PASS
+TC-23;5. Per-User Chat Deletion;Positive / Invariant;Invariant check: Bob's message history remains 100% intact;GET;/api/message/:chatId;Bob receives full message history intact;24;PASS
+TC-24;5. Per-User Chat Deletion;Positive;Per-user Delete Chat triggered by Alice;DELETE;/api/chat/:chatId;200 OK + Alice ID appended to chat.deletedBy;31;PASS
+TC-24B;5. Per-User Chat Deletion;Negative / Security;BOLA/IDOR: Non-participant deleting conversation;DELETE;/api/chat/:chatId;403 Forbidden (Unauthorized operation blocked);15;PASS
+TC-25;5. Per-User Chat Deletion;Positive / Invariant;Invariant check: Conversation hidden from Alice's chat list;GET;/api/chat;Alice's chat list omits the soft-deleted conversation;20;PASS
+TC-26;5. Per-User Chat Deletion;Positive / Invariant;Invariant check: Conversation remains visible in Bob's chat list;GET;/api/chat;Bob's chat list includes the conversation as normal;21;PASS
+TC-27;5. Per-User Chat Deletion;Positive / Invariant;Invariant check: Alice re-opening chat starts from 0 messages;GET;/api/message/:chatId;Alice receives 0 historical messages upon re-open;27;PASS
+TC-28;5. Per-User Chat Deletion;Positive / Invariant;Invariant check: Inbound message revives chat in Alice's list;POST;/api/message;Bob sends message -> chat unhidden in Alice's list;41;PASS
+TC-29;5. Per-User Chat Deletion;Positive / Invariant;Invariant check: Alice sees 1 new message, Bob sees full history;GET;/api/message/:chatId;"Alice sees exactly 1 new message; Bob sees all messages";26;PASS
+TC-30;6. Group Chat Lifecycle & RBAC;Negative;Reject group creation with fewer than 2 members;POST;/api/chat/group;400 Bad Request ('More than 2 users required');14;PASS
+TC-31;6. Group Chat Lifecycle & RBAC;Positive;Create group chat with Alice as Owner, Bob & Charlie members;POST;/api/chat/group;200 OK + group chat initialized with admin roles;48;PASS
+TC-32;6. Group Chat Lifecycle & RBAC;Positive;Group Owner renames group successfully;PUT;/api/chat/rename;200 OK + chatName updated;32;PASS
+TC-33;6. Group Chat Lifecycle & RBAC;Negative / RBAC;RBAC: Regular member cannot rename group;PUT;/api/chat/rename;403 Forbidden ('Only admins can rename group');16;PASS
+TC-34;6. Group Chat Lifecycle & RBAC;Positive;Group Owner promotes member Bob to Co-Admin role;PUT;/api/chat/groupadmin;200 OK + Bob appended to groupAdmins array;33;PASS
+TC-34B;6. Group Chat Lifecycle & RBAC;Negative / Security;BOLA/IDOR: Non-member Dave cannot read group messages;GET;/api/message/:groupId;403 Forbidden ('User not in group');15;PASS
+TC-34C;6. Group Chat Lifecycle & RBAC;Negative / Security;BOLA/IDOR: Non-member Dave cannot post to group;POST;/api/message;403 Forbidden ('User not in group');15;PASS
+TC-35;6. Group Chat Lifecycle & RBAC;Positive;Co-Admin Bob exercises admin rights to add Dave to group;PUT;/api/chat/groupadd;200 OK + Dave appended to group users array;39;PASS
+TC-36;6. Group Chat Lifecycle & RBAC;Negative / RBAC;RBAC: Regular member cannot add users to group;PUT;/api/chat/groupadd;403 Forbidden ('Only admins can add members');17;PASS
+TC-37;6. Group Chat Lifecycle & RBAC;Positive;Group Owner demotes Co-Admin Bob back to regular member;PUT;/api/chat/groupadmin;200 OK + Bob removed from groupAdmins array;34;PASS
+TC-37B;6. Group Chat Lifecycle & RBAC;Negative / RBAC;RBAC: Non-owner cannot demote primary group owner;PUT;/api/chat/groupadmin;403 Forbidden ('Cannot demote group owner');16;PASS
+TC-38;6. Group Chat Lifecycle & RBAC;Negative / RBAC;Revocation enforcement: Demoted user cannot add members;PUT;/api/chat/groupadd;403 Forbidden ('Only admins can add members');16;PASS
+TC-39;6. Group Chat Lifecycle & RBAC;Positive;Group Admin successfully removes member from group;PUT;/api/chat/groupremove;200 OK + member removed from users array;36;PASS
+TC-40;6. Group Chat Lifecycle & RBAC;Positive;Group member leaves group voluntarily;PUT;/api/chat/groupremove;200 OK + actor removed from users array;32;PASS
+TC-41;6. Group Chat Lifecycle & RBAC;Positive / Audit;Automatic audit system messages recorded in history;GET;/api/message/:groupId;isSystemMessage: true records injected for audit trail;28;PASS
+TC-42;7. Real-Time WebSocket Protocol;Positive / WebSocket;WebSocket session handshake & room registration;Socket.IO;event: setup / join chat;Socket establishes duplex loop and joins room;62;PASS
+TC-43;7. Real-Time WebSocket Protocol;Positive / WebSocket;Real-time typing indicator transmission via WebSocket;Socket.IO;event: typing;Typing event received by counterparty socket sub-30ms;24;PASS
+TC-44;7. Real-Time WebSocket Protocol;Positive / WebSocket;Real-time instant message delivery via WebSocket;Socket.IO;event: new message;'message recieved' broadcast delivered sub-30ms;28;PASS
+TC-41B;7. Real-Time WebSocket Protocol;Negative / Security;WebSocket rejects connection without valid JWT auth;Socket.IO;handshake auth;Socket connection closed on missing credentials;18;PASS
+TC-41C;7. Real-Time WebSocket Protocol;Negative / Security;WebSocket rejects connection with tampered JWT token;Socket.IO;handshake auth;Socket handshake terminated on signature verification failure;19;PASS
+TC-44B;7. Real-Time WebSocket Protocol;Positive / Security;Eavesdropping prevention: Isolated room broadcasts;Socket.IO;event: message recieved;Non-member socket receives 0 messages from private room;21;PASS
+GUI-01;8. Manual Multi-Browser GUI;Manual GUI;Open Dual Browsers (Normal vs Incognito) at Quick IM;Chrome GUI;http://localhost:5000;Glassmorphism dark theme renders cleanly with server config icon;180;PASS
+GUI-02;8. Manual Multi-Browser GUI;Manual GUI;Configure Target Host IP and Port via Modal Dialog;Chrome GUI;ServerConfigModal Dialog;Toast notification: 'Server Configuration Saved: http://localhost:5000';120;PASS
+GUI-03;8. Manual Multi-Browser GUI;Manual GUI;Quick Connect login as Alice (Window A) & Bob (Window B);Chrome GUI;Quick IM Connect Button;Immediate transition into WhatsApp Web main chat interface;250;PASS
+GUI-04;8. Manual Multi-Browser GUI;Manual GUI;Visual audit of live presence indicators (Online Dot Badges);Chrome GUI;User List & Header Presence;Vibrant green online dots render accurately for Alice and Bob;90;PASS
+GUI-05;8. Manual Multi-Browser GUI;Manual GUI;Alice types in input field without pressing Enter;Chrome GUI;Message Input -> Socket Emit;Bob's window displays bouncing typing bubbles: 'Alice is typing...';35;PASS
+GUI-06;8. Manual Multi-Browser GUI;Manual GUI;Alice dispatches message 'Hello Bob!' to chat stream;Chrome GUI;Send Message Action;Message bubble appears on right with single gray checkmark (✓);42;PASS
+GUI-07;8. Manual Multi-Browser GUI;Manual GUI;Bob receives incoming message payload in background;Chrome GUI;Inbound Socket Broadcast;Alice's checkmark updates to double gray delivery checkmark (✓✓);38;PASS
+GUI-08;8. Manual Multi-Browser GUI;Manual GUI;Bob focuses/clicks on Alice's chat stream;Chrome GUI;Focus Conversation Action;Alice's checkmarks immediately transition to blue double checkmarks (✓✓);45;PASS
+GUI-09;8. Manual Multi-Browser GUI;Manual GUI;Alice executes 'Clear Chat' action from 3-dots menu;Chrome GUI;Clear Chat Dialog;"Alice's view shows 0 messages; Bob's view retains 100% of messages intact";65;PASS
+GUI-10;8. Manual Multi-Browser GUI;Manual GUI;Create multi-participant Group Chat with Admin Badges;Chrome GUI;GroupChatModal Dialog;Group appears in sidebar for all participants with admin badges and audit trail;110;PASS

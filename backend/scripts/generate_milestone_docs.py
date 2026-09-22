@@ -63,6 +63,24 @@ DOCUMENTS = [
         "title": "Critical & High-Risk Areas of the Design",
         "subtitle": "Design Vulnerability Assessment & Mitigation Recommendations",
     },
+    {
+        "md_file": "revised-design-milestone-3.md",
+        "docx_file": "Revised_Design_Milestone_3.docx",
+        "title": "Revised Design Specification",
+        "subtitle": "Final Architecture, Protocol Grammar (BNF), & State Machines (Milestone 3)",
+    },
+    {
+        "md_file": "testing-report-milestone-3.md",
+        "docx_file": "Testing_Report_Milestone_3.docx",
+        "title": "Comprehensive Testing Report",
+        "subtitle": "Automated & Manual Verification Evidence, Scorecard & Results (Milestone 3)",
+    },
+    {
+        "md_file": "individual-reflection.md",
+        "docx_file": "Individual_Reflection.docx",
+        "title": "Individual Reflection",
+        "subtitle": "Product, Team, and Personal Engineering Commentary (Milestone 3)",
+    },
 ]
 
 AUTHOR = "IM Project Development Team"
