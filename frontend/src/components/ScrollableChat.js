@@ -5,6 +5,7 @@ import {
   isLastMessage,
   isSameSender,
   isSameUser,
+  getMessageStatus as computeMessageStatus,
 } from "../config/ChatLogics";
 import { ChatState } from "../Context/ChatProvider";
 import UserAvatar from "./userAvatar/UserAvatar";
@@ -68,31 +69,7 @@ const ScrollableChat = ({ messages, onDeleteMessage, searchQuery = "" }) => {
 
   const formatTime = formatMessageTime;
 
-  const getMessageStatus = (message) => {
-    const isGroup = selectedChat?.isGroupChat;
-    const readBy = message.readBy || [];
-    const deliveredTo = message.deliveredTo || [];
-    const myId = user?._id ? String(user._id) : "";
-
-    if (isGroup) {
-      const readersOtherThanMe = readBy.filter((u) => String(u._id || u) !== myId);
-      if (readersOtherThanMe.length > 0) return "read";
-      const deliveredOtherThanMe = deliveredTo.filter((u) => String(u._id || u) !== myId);
-      if (deliveredOtherThanMe.length > 0) return "delivered";
-      return "sent";
-    } else {
-      const recipient = selectedChat?.users?.find((u) => String(u._id || u) !== myId);
-      const recipientId = recipient ? String(recipient._id || recipient) : "";
-
-      if (recipientId && readBy.some((u) => String(u._id || u) === recipientId)) {
-        return "read";
-      }
-      if (recipientId && deliveredTo.some((u) => String(u._id || u) === recipientId)) {
-        return "delivered";
-      }
-      return "sent";
-    }
-  };
+  const getMessageStatus = (message) => computeMessageStatus(message, user?._id, selectedChat);
 
   // Helper to highlight matching search text
   const renderMessageContent = (content) => {
@@ -210,7 +187,7 @@ const ScrollableChat = ({ messages, onDeleteMessage, searchQuery = "" }) => {
             isGroup && selectedChat.groupAdmins?.some((a) => String(a._id || a) === String(user._id));
           const canDelete = isMyMessage || isOwner || isAdmin;
           const showAvatar = isSameSender(messages, m, i, user._id) || isLastMessage(messages, i, user._id);
-          const isFirstInSequence = !isSameUser(messages, m, i, user._id);
+          const isFirstInSequence = !isSameUser(messages, m, i);
           const marginTop = isFirstInSequence ? "8px" : "2px";
 
           const handleDeleteMsg = async (e) => {

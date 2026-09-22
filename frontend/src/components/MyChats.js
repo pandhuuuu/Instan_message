@@ -1,12 +1,13 @@
 import { useToast } from "@chakra-ui/toast";
 import axios from "axios";
 import { useEffect, useState, useRef } from "react";
-import { getSender, getSenderFull } from "../config/ChatLogics";
+import { getSender, getSenderFull, getMessageStatus as computeMessageStatus } from "../config/ChatLogics";
 import { getUserPresence, getStatusColor } from "../config/userStatus";
 import GroupChatModal from "./miscellaneous/GroupChatModal";
 import ProfileModal from "./miscellaneous/ProfileModal";
 import UserListItem from "./userAvatar/UserListItem";
 import UserAvatar from "./userAvatar/UserAvatar";
+import GroupAvatar from "./userAvatar/GroupAvatar";
 import { ChatState } from "../Context/ChatProvider";
 import { Menu, MenuButton, MenuList, MenuItem } from "@chakra-ui/menu";
 import { Spinner, useDisclosure } from "@chakra-ui/react";
@@ -418,29 +419,6 @@ const MyChats = ({ fetchAgain }) => {
     history.push("/");
   };
 
-  /* ─── Group Avatar Helper ───────────────────── */
-  const GroupAvatar = ({ size = 49 }) => (
-    <div
-      style={{
-        width: size,
-        height: size,
-        borderRadius: "50%",
-        background: "#202c33",
-        display: "flex",
-        alignItems: "center",
-        justifyContent: "center",
-        color: "#8696a0",
-        border: "1px solid #2a3942",
-        flexShrink: 0,
-      }}
-    >
-      <span className="material-symbols-outlined" style={{ fontSize: Math.round(size * 0.54) }}>
-        groups
-      </span>
-    </div>
-  );
-
-
   /* ─── Chat time format (Exact WhatsApp date logic) ─────────────────── */
   const formatTime = (dateStr) => {
     if (!dateStr) return "";
@@ -468,11 +446,8 @@ const MyChats = ({ fetchAgain }) => {
     const senderId = String(latestMsg.sender?._id || latestMsg.sender || "");
     if (senderId !== currentUserId) return null;
 
-    const readBy = Array.isArray(latestMsg.readBy) ? latestMsg.readBy : [];
-    const deliveredTo = Array.isArray(latestMsg.deliveredTo) ? latestMsg.deliveredTo : [];
-
-    const isReadByOther = readBy.some((u) => String(u._id || u) !== currentUserId);
-    if (isReadByOther) {
+    const status = computeMessageStatus(latestMsg, currentUserId, { isGroupChat: false });
+    if (status === "read") {
       return (
         <span
           className="material-symbols-outlined shrink-0"
@@ -484,8 +459,7 @@ const MyChats = ({ fetchAgain }) => {
       );
     }
 
-    const isDeliveredToOther = deliveredTo.some((u) => String(u._id || u) !== currentUserId);
-    if (isDeliveredToOther) {
+    if (status === "delivered") {
       return (
         <span
           className="material-symbols-outlined shrink-0"

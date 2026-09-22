@@ -23,33 +23,11 @@ import ProfileModal from "./miscellaneous/ProfileModal";
 import ScrollableChat from "./ScrollableChat";
 import UpdateGroupChatModal from "./miscellaneous/UpdateGroupChatModal";
 import UserAvatar from "./userAvatar/UserAvatar";
+import GroupAvatar from "./userAvatar/GroupAvatar";
 import { ChatState } from "../Context/ChatProvider";
 import { getUserPresence, getStatusColor, formatLastSeen } from "../config/userStatus";
 
 var selectedChatCompare;
-
-
-/* ─── Group Avatar Helper ────────────────────────────── */
-const GroupAvatar = ({ size = 40 }) => (
-  <div
-    style={{
-      width: size,
-      height: size,
-      borderRadius: "50%",
-      background: "#202c33",
-      display: "flex",
-      alignItems: "center",
-      justifyContent: "center",
-      color: "#8696a0",
-      border: "1px solid #2a3942",
-      flexShrink: 0,
-    }}
-  >
-    <span className="material-symbols-outlined" style={{ fontSize: Math.round(size * 0.54) }}>
-      groups
-    </span>
-  </div>
-);
 
 const QUICK_EMOJIS = ["😊", "😂", "❤️", "👍", "🔥", "🙏", "🎉", "🚀", "😍", "✨", "🙌", "💯", "👋", "🥳", "😎", "🤝"];
 
