@@ -1,21 +1,27 @@
+const crypto = require("crypto");
 const asyncHandler = require("express-async-handler");
 const User = require("../models/userModel");
 const generateToken = require("../config/generateToken");
+
+function escapeRegex(text) {
+  return typeof text === "string" ? text.replace(/[-[\]{}()*+?.,\\^$|#\s]/g, "\\$&") : "";
+}
 
 //@description     Get or Search all users
 //@route           GET /api/user?search=
 //@access          Public
 const allUsers = asyncHandler(async (req, res) => {
-  const keyword = req.query.search
+  const search = typeof req.query.search === "string" ? req.query.search.trim() : "";
+  const keyword = search
     ? {
       $or: [
-        { name: { $regex: req.query.search, $options: "i" } },
-        { username: { $regex: req.query.search, $options: "i" } },
+        { name: { $regex: escapeRegex(search), $options: "i" } },
+        { username: { $regex: escapeRegex(search), $options: "i" } },
       ],
     }
     : {};
 
-  const users = await User.find(keyword).find({ _id: { $ne: req.user._id } });
+  const users = await User.find(keyword).find({ _id: { $ne: req.user._id } }).select("-password");
   res.send(users);
 });
 
@@ -79,10 +85,11 @@ const authUser = asyncHandler(async (req, res) => {
     throw new Error("Please enter username and password");
   }
 
+  const safeIdentifier = escapeRegex(identifier);
   const user = await User.findOne({
     $or: [
       { username: identifier.toLowerCase() },
-      { name: { $regex: `^${identifier}$`, $options: "i" } },
+      { name: { $regex: `^${safeIdentifier}$`, $options: "i" } },
       { email: identifier.toLowerCase() },
     ],
   });
@@ -155,6 +162,12 @@ const quickConnectUser = asyncHandler(async (req, res) => {
   // 2. Find existing user or create on-the-fly
   let user = await User.findOne({ username: cleanUsername });
 
+  // Prevent account takeover: Do not allow quick-connect if user is a registered password account
+  if (user && !user.isQuickConnect) {
+    res.status(403);
+    throw new Error("Akun ini terdaftar dengan password. Silakan login melalui form Sign In.");
+  }
+
   if (user && onlineUsers) {
     const existingPresence = onlineUsers.get(user._id.toString());
     if (
@@ -173,7 +186,7 @@ const quickConnectUser = asyncHandler(async (req, res) => {
     user = await User.create({
       username: cleanUsername,
       name: displayName,
-      password: "QuickConnectPassword123!",
+      password: crypto.randomBytes(24).toString("hex"),
       isQuickConnect: true,
     });
   }

@@ -7,9 +7,25 @@ const Chat = require("../models/chatModel");
 //@route           GET /api/Message/:chatId
 //@access          Protected
 const allMessages = asyncHandler(async (req, res) => {
+  const { chatId } = req.params;
+
+  const chat = await Chat.findById(chatId);
+  if (!chat) {
+    res.status(404);
+    throw new Error("Chat not found");
+  }
+
+  const isParticipant = chat.users.some(
+    (u) => String(u._id || u) === String(req.user._id)
+  );
+  if (!isParticipant) {
+    res.status(403);
+    throw new Error("You are not authorized to view messages in this chat");
+  }
+
   try {
     const messages = await Message.find({
-      chat: req.params.chatId,
+      chat: chatId,
       deletedFor: { $ne: req.user._id },
     })
       .populate("sender", "name pic username")
@@ -29,7 +45,21 @@ const sendMessage = asyncHandler(async (req, res) => {
 
   if (!content || !chatId) {
     console.log("Invalid data passed into request");
-    return res.sendStatus(400);
+    return res.status(400).json({ message: "Content and chatId are required" });
+  }
+
+  const chat = await Chat.findById(chatId);
+  if (!chat) {
+    res.status(404);
+    throw new Error("Chat not found");
+  }
+
+  const isParticipant = chat.users.some(
+    (u) => String(u._id || u) === String(req.user._id)
+  );
+  if (!isParticipant) {
+    res.status(403);
+    throw new Error("You are not authorized to send messages in this chat");
   }
 
   var newMessage = {
@@ -70,6 +100,20 @@ const sendMessage = asyncHandler(async (req, res) => {
 const markMessagesAsRead = asyncHandler(async (req, res) => {
   const { chatId } = req.params;
   const userId = req.user._id;
+
+  const chat = await Chat.findById(chatId);
+  if (!chat) {
+    res.status(404);
+    throw new Error("Chat not found");
+  }
+
+  const isParticipant = chat.users.some(
+    (u) => String(u._id || u) === String(userId)
+  );
+  if (!isParticipant) {
+    res.status(403);
+    throw new Error("You are not authorized to update messages in this chat");
+  }
 
   try {
     await Message.updateMany(

@@ -7,9 +7,10 @@ const notFound = (req, res, next) => {
 const errorHandler = (err, req, res, next) => {
   const statusCode = res.statusCode === 200 ? 500 : res.statusCode;
   res.status(statusCode);
+  const isProd = process.env.NODE_ENV === "production";
   res.json({
-    message: err.message,
-    stack: process.env.NODE_ENV === "production" ? null : err.stack,
+    message: statusCode === 500 && isProd ? "Internal Server Error" : err.message,
+    stack: isProd ? null : err.stack,
   });
 };
 

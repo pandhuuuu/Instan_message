@@ -1,6 +1,7 @@
 const express = require("express");
 const connectDB = require("./config/db");
 const dotenv = require("dotenv");
+const helmet = require("helmet");
 const userRoutes = require("./routes/userRoutes");
 const chatRoutes = require("./routes/chatRoutes");
 const messageRoutes = require("./routes/messageRoutes");
@@ -11,22 +12,30 @@ dotenv.config();
 connectDB();
 const app = express();
 
+app.use(helmet({
+  contentSecurityPolicy: false,
+  crossOriginEmbedderPolicy: false,
+}));
 app.use(express.json()); // to accept json data
 
-// Enable CORS for all incoming client requests
+const allowedOrigins = process.env.ALLOWED_ORIGINS
+  ? process.env.ALLOWED_ORIGINS.split(",").map(o => o.trim())
+  : ["http://localhost:3000", "http://localhost:5000", "http://127.0.0.1:3000", "http://127.0.0.1:5000"];
+
+// Enable CORS with origin validation
 app.use((req, res, next) => {
-  res.header("Access-Control-Allow-Origin", "*");
+  const origin = req.headers.origin;
+  if (!origin || allowedOrigins.includes(origin) || process.env.NODE_ENV !== "production") {
+    res.header("Access-Control-Allow-Origin", origin || "*");
+  }
   res.header("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS");
   res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept, Authorization");
+  res.header("Access-Control-Allow-Credentials", "true");
   if (req.method === "OPTIONS") {
     return res.sendStatus(200);
   }
   next();
 });
-
-// app.get("/", (req, res) => {
-//   res.send("API Running!");
-// });
 
 app.use("/api/user", userRoutes);
 app.use("/api/chat", chatRoutes);
@@ -37,12 +46,25 @@ app.use("/api/message", messageRoutes);
 const __dirname1 = path.resolve();
 
 if (process.env.NODE_ENV === "production" || require("fs").existsSync(path.join(__dirname1, "/frontend/build"))) {
-  app.use(express.static(path.join(__dirname1, "/frontend/build")));
+  app.use(
+    express.static(path.join(__dirname1, "/frontend/build"), {
+      setHeaders: (res, filePath) => {
+        if (filePath.endsWith("index.html")) {
+          res.setHeader("Cache-Control", "no-cache, no-store, must-revalidate");
+          res.setHeader("Pragma", "no-cache");
+          res.setHeader("Expires", "0");
+        }
+      },
+    })
+  );
 
   app.get("*", (req, res, next) => {
     if (req.originalUrl.startsWith("/api")) {
       return next();
     }
+    res.setHeader("Cache-Control", "no-cache, no-store, must-revalidate");
+    res.setHeader("Pragma", "no-cache");
+    res.setHeader("Expires", "0");
     res.sendFile(path.resolve(__dirname1, "frontend", "build", "index.html"));
   });
 } else {
@@ -65,14 +87,45 @@ const server = app.listen(
 );
 
 const User = require("./models/userModel");
+const Chat = require("./models/chatModel");
 const Message = require("./models/messageModel");
+const jwt = require("jsonwebtoken");
 
 const io = require("socket.io")(server, {
   pingTimeout: 60000,
   cors: {
-    origin: "*",
+    origin: (origin, callback) => {
+      if (!origin || allowedOrigins.includes(origin) || process.env.NODE_ENV !== "production") {
+        callback(null, true);
+      } else {
+        callback(new Error("Blocked by CORS policy"));
+      }
+    },
     methods: ["GET", "POST"],
+    credentials: true,
   },
+});
+
+// Socket.IO Handshake Authentication Middleware
+io.use((socket, next) => {
+  const token =
+    socket.handshake.auth?.token ||
+    (socket.handshake.headers?.authorization &&
+      socket.handshake.headers.authorization.startsWith("Bearer")
+        ? socket.handshake.headers.authorization.split(" ")[1]
+        : null);
+
+  if (!token) {
+    return next(new Error("Authentication error: Token required"));
+  }
+
+  try {
+    const decoded = jwt.verify(token, process.env.JWT_SECRET);
+    socket.userId = decoded.id.toString();
+    next();
+  } catch (err) {
+    return next(new Error("Authentication error: Invalid or expired token"));
+  }
 });
 
 app.set("io", io);
@@ -88,8 +141,9 @@ io.on("connection", (socket) => {
   console.log("Connected to socket.io:", socket.id);
 
   socket.on("setup", async (userData) => {
-    if (!userData || !userData._id) return;
-    const userId = userData._id.toString();
+    // Only permit setup for the authenticated user ID
+    const userId = socket.userId || (userData && userData._id ? userData._id.toString() : null);
+    if (!userId) return;
     socket.userId = userId;
     socketToUser.set(socket.id, userId);
     socketAwayMap.set(socket.id, false);
@@ -215,11 +269,16 @@ io.on("connection", (socket) => {
     }
   });
 
-  socket.on("join chat", (room) => {
-    if (!room) return;
+  socket.on("join chat", async (room) => {
+    if (!room || !socket.userId) return;
     const roomStr = String(room);
-    socket.join(roomStr);
-    console.log("User Joined Room: " + roomStr);
+    try {
+      const chatDoc = await Chat.findById(roomStr);
+      if (chatDoc && chatDoc.users.some((u) => String(u._id || u) === socket.userId)) {
+        socket.join(roomStr);
+        console.log("User Joined Room: " + roomStr);
+      }
+    } catch (e) {}
   });
 
   socket.on("leave chat", (room) => {
@@ -229,11 +288,15 @@ io.on("connection", (socket) => {
     console.log("User Left Room: " + roomStr);
   });
 
-  socket.on("join user chats", (chatIds) => {
-    if (Array.isArray(chatIds)) {
-      chatIds.forEach((id) => {
-        if (id) socket.join(String(id));
-      });
+  socket.on("join user chats", async (chatIds) => {
+    if (Array.isArray(chatIds) && socket.userId) {
+      try {
+        const userChats = await Chat.find({
+          _id: { $in: chatIds },
+          users: { $elemMatch: { $eq: socket.userId } },
+        }).select("_id");
+        userChats.forEach((c) => socket.join(String(c._id)));
+      } catch (e) {}
     }
   });
 
@@ -377,6 +440,44 @@ io.on("connection", (socket) => {
     }
   });
 
+  socket.on("logout", async () => {
+    const userId = socket.userId || socketToUser.get(socket.id);
+    socketAwayMap.delete(socket.id);
+    socketToUser.delete(socket.id);
+
+    if (userId && onlineUsers.has(userId)) {
+      const userPresence = onlineUsers.get(userId);
+      userPresence.sockets.delete(socket.id);
+
+      const connectedSockets = io.sockets?.sockets;
+      if (connectedSockets) {
+        userPresence.sockets.forEach((sId) => {
+          if (!connectedSockets.has(sId)) {
+            userPresence.sockets.delete(sId);
+            socketAwayMap.delete(sId);
+            socketToUser.delete(sId);
+          }
+        });
+      }
+
+      if (userPresence.sockets.size === 0) {
+        onlineUsers.delete(userId);
+        const lastSeen = new Date();
+        try {
+          await User.findByIdAndUpdate(userId, { status: "offline", lastSeen });
+        } catch (err) {
+          console.error("Error setting user offline on logout:", err);
+        }
+
+        io.emit("user status change", {
+          userId,
+          status: "offline",
+          lastSeen,
+        });
+      }
+    }
+  });
+
   socket.on("disconnect", async () => {
     const userId = socket.userId || socketToUser.get(socket.id);
     socketAwayMap.delete(socket.id);
@@ -385,6 +486,18 @@ io.on("connection", (socket) => {
     if (userId && onlineUsers.has(userId)) {
       const userPresence = onlineUsers.get(userId);
       userPresence.sockets.delete(socket.id);
+
+      // Purge any stale sockets no longer in io.sockets.sockets
+      const connectedSockets = io.sockets?.sockets;
+      if (connectedSockets) {
+        userPresence.sockets.forEach((sId) => {
+          if (!connectedSockets.has(sId)) {
+            userPresence.sockets.delete(sId);
+            socketAwayMap.delete(sId);
+            socketToUser.delete(sId);
+          }
+        });
+      }
 
       if (userPresence.sockets.size === 0) {
         onlineUsers.delete(userId);
