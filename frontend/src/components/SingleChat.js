@@ -28,33 +28,6 @@ import { getUserPresence, getStatusColor, formatLastSeen } from "../config/userS
 
 var selectedChatCompare;
 
-/* ─── Avatar Initial Helper ──────────────────────────── */
-const AvatarInitial = ({ name, size = 40 }) => {
-  const colors = ["#005c4b", "#128c7e", "#075e54", "#1f7a65", "#00a884", "#2e7d32"];
-  const charCode = name ? name.charCodeAt(0) : 0;
-  const bg = colors[charCode % colors.length];
-  return (
-    <div
-      style={{
-        width: size,
-        height: size,
-        borderRadius: "50%",
-        background: bg,
-        display: "flex",
-        alignItems: "center",
-        justifyContent: "center",
-        color: "#ffffff",
-        fontWeight: "600",
-        fontSize: Math.round(size * 0.42),
-        fontFamily: "'Segoe UI', 'Helvetica Neue', 'Inter', sans-serif",
-        flexShrink: 0,
-        userSelect: "none",
-      }}
-    >
-      {name?.charAt(0).toUpperCase() || "?"}
-    </div>
-  );
-};
 
 /* ─── Group Avatar Helper ────────────────────────────── */
 const GroupAvatar = ({ size = 40 }) => (
@@ -87,7 +60,6 @@ const SingleChat = ({ fetchAgain, setFetchAgain }) => {
   const [typing, setTyping] = useState(false);
   const [istyping, setIsTyping] = useState(false);
   const [typingUserName, setTypingUserName] = useState("");
-  const [inputFocused, setInputFocused] = useState(false);
 
   // Search within chat state
   const [isSearchingInChat, setIsSearchingInChat] = useState(false);
@@ -988,8 +960,6 @@ const SingleChat = ({ fetchAgain, setFetchAgain }) => {
                 placeholder="Type a message"
                 value={newMessage}
                 onChange={typingHandler}
-                onFocus={() => setInputFocused(true)}
-                onBlur={() => setInputFocused(false)}
               />
             </div>
 

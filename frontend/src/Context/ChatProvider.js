@@ -56,6 +56,9 @@ const ChatProvider = ({ children }) => {
 
     const endpoint = getServerBaseUrl();
     const newSocket = io(endpoint, {
+      auth: {
+        token: user.token,
+      },
       reconnection: true,
       reconnectionAttempts: 10,
       reconnectionDelay: 1000,
@@ -74,38 +77,70 @@ const ChatProvider = ({ children }) => {
       }
     });
 
-    newSocket.on("connected", (initialUsers) => {
-      if (initialUsers) {
-        setOnlineUsers((prev) => ({ ...prev, ...initialUsers }));
-      }
+    newSocket.on("connected", (initialUsers = {}) => {
+      setOnlineUsers((prev) => {
+        const next = {};
+        Object.keys(prev).forEach((idStr) => {
+          if (!initialUsers[idStr]) {
+            next[idStr] = {
+              ...prev[idStr],
+              status: "offline",
+              lastSeen: prev[idStr]?.lastSeen || new Date(),
+            };
+          }
+        });
+        Object.entries(initialUsers).forEach(([idStr, data]) => {
+          next[idStr] = {
+            ...prev[idStr],
+            ...data,
+          };
+        });
+        return next;
+      });
     });
 
-    newSocket.on("online users list", (usersList) => {
-      if (usersList) {
-        setOnlineUsers((prev) => ({ ...prev, ...usersList }));
-      }
+    newSocket.on("online users list", (usersList = {}) => {
+      setOnlineUsers((prev) => {
+        const next = {};
+        Object.keys(prev).forEach((idStr) => {
+          if (!usersList[idStr]) {
+            next[idStr] = {
+              ...prev[idStr],
+              status: "offline",
+              lastSeen: prev[idStr]?.lastSeen || new Date(),
+            };
+          }
+        });
+        Object.entries(usersList).forEach(([idStr, data]) => {
+          next[idStr] = {
+            ...prev[idStr],
+            ...data,
+          };
+        });
+        return next;
+      });
     });
+
+    // ── Self-Healing Sync: Sinkronisasi otomatis daftar user aktif setiap 15 detik ──
+    const syncInterval = setInterval(() => {
+      if (newSocket.connected) {
+        newSocket.emit("get online users");
+      }
+    }, 15000);
 
     newSocket.on("user status change", ({ userId, status, lastSeen, name, username, pic }) => {
       if (!userId) return;
       const idStr = String(userId);
-      setOnlineUsers((prev) => {
-        if (status === "offline") {
-          const updated = { ...prev };
-          delete updated[idStr];
-          return updated;
-        }
-        return {
-          ...prev,
-          [idStr]: {
-            status,
-            lastSeen: lastSeen || new Date(),
-            name: name || prev[idStr]?.name,
-            username: username || prev[idStr]?.username,
-            pic: pic || prev[idStr]?.pic,
-          },
-        };
-      });
+      setOnlineUsers((prev) => ({
+        ...prev,
+        [idStr]: {
+          status: status || "offline",
+          lastSeen: lastSeen || new Date(),
+          name: name || prev[idStr]?.name,
+          username: username || prev[idStr]?.username,
+          pic: pic || prev[idStr]?.pic,
+        },
+      }));
     });
 
     // ── Sinkronisasi saat jendela kembali difokuskan (dibatasi minimal jeda 5 detik) ──
@@ -175,6 +210,7 @@ const ChatProvider = ({ children }) => {
 
     return () => {
       if (idleTimer) clearTimeout(idleTimer);
+      if (syncInterval) clearInterval(syncInterval);
       activityEvents.forEach((ev) => window.removeEventListener(ev, handleThrottledActivity));
       window.removeEventListener("focus", handleWindowFocus);
       document.removeEventListener("visibilitychange", handleVisibilityChange);

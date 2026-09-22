@@ -52,6 +52,15 @@ export const formatLastSeen = (dateInput) => {
 };
 
 /**
+ * Formats message timestamp into HH:MM (24-hour)
+ */
+export const formatMessageTime = (dateStr) => {
+  if (!dateStr) return "";
+  const date = new Date(dateStr);
+  return date.toLocaleTimeString([], { hour: "2-digit", minute: "2-digit", hour12: false });
+};
+
+/**
  * Retrieves user presence status and lastSeen from onlineUsers state or user object
  */
 export const getUserPresence = (userObj, onlineUsers = {}) => {
@@ -63,7 +72,7 @@ export const getUserPresence = (userObj, onlineUsers = {}) => {
   const live = onlineUsers && onlineUsers[idStr];
   if (live) {
     return {
-      status: live.status || "online",
+      status: live.status || "offline",
       lastSeen: live.lastSeen || userObj.lastSeen || null,
     };
   }

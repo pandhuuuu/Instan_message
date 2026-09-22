@@ -1,13 +1,10 @@
 // Helper to manage dynamic Server IP & Port configuration for IM Client
 
-const isLocalhost = typeof window !== "undefined" && Boolean(
-  window.location.hostname === "localhost" ||
-  window.location.hostname === "127.0.0.1" ||
-  window.location.hostname === "0.0.0.0"
-);
+const currentHost = (typeof window !== "undefined" && window.location.hostname) ? window.location.hostname : "localhost";
+const currentPort = (typeof window !== "undefined" && window.location.port) ? window.location.port : "";
 
-const DEFAULT_HOST = (typeof window !== "undefined" && window.location.hostname) ? window.location.hostname : "localhost";
-const DEFAULT_PORT = isLocalhost ? ((typeof window !== "undefined" && window.location.port === "3000") ? "5000" : (window.location.port || "5000")) : "";
+const DEFAULT_HOST = currentHost;
+const DEFAULT_PORT = currentPort === "3000" ? "5000" : (currentPort || "5000");
 
 export const getServerConfig = () => {
   try {
@@ -16,7 +13,7 @@ export const getServerConfig = () => {
       const parsed = JSON.parse(saved);
       return {
         host: parsed.host || DEFAULT_HOST,
-        port: parsed.port !== undefined ? parsed.port : DEFAULT_PORT,
+        port: (parsed.port !== undefined && parsed.port !== "") ? parsed.port : DEFAULT_PORT,
       };
     }
   } catch (e) {

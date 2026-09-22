@@ -3,7 +3,6 @@ import axios from "axios";
 import { useEffect, useState, useRef } from "react";
 import { getSender, getSenderFull } from "../config/ChatLogics";
 import { getUserPresence, getStatusColor } from "../config/userStatus";
-import ChatLoading from "./ChatLoading";
 import GroupChatModal from "./miscellaneous/GroupChatModal";
 import ProfileModal from "./miscellaneous/ProfileModal";
 import UserListItem from "./userAvatar/UserListItem";
@@ -37,7 +36,6 @@ const MyChats = ({ fetchAgain }) => {
     setUser,
     chats,
     setChats,
-    notification,
     setNotification,
     onlineUsers,
     myStatus,
@@ -402,9 +400,16 @@ const MyChats = ({ fetchAgain }) => {
     }
   };
 
-  const logoutHandler = () => {
+  const logoutHandler = async () => {
     if (socket) {
-      socket.disconnect();
+      try {
+        socket.emit("logout");
+        // Flush logout packet across Wi-Fi network before disconnect & unmount
+        await new Promise((resolve) => setTimeout(resolve, 150));
+      } catch (e) {}
+      try {
+        socket.disconnect();
+      } catch (e) {}
     }
     sessionStorage.removeItem("userInfo");
     localStorage.removeItem("userInfo");
@@ -435,33 +440,6 @@ const MyChats = ({ fetchAgain }) => {
     </div>
   );
 
-  /* ─── Avatar Initial Helper ─────────────────── */
-  const AvatarInitial = ({ name, size = 49 }) => {
-    const colors = ["#005c4b", "#128c7e", "#075e54", "#1f7a65", "#00a884", "#2e7d32", "#00796b"];
-    const charCode = name ? name.charCodeAt(0) : 0;
-    const bg = colors[charCode % colors.length];
-    return (
-      <div
-        style={{
-          width: size,
-          height: size,
-          borderRadius: "50%",
-          background: bg,
-          display: "flex",
-          alignItems: "center",
-          justifyContent: "center",
-          color: "#ffffff",
-          fontWeight: "600",
-          fontSize: Math.round(size * 0.42),
-          fontFamily: "'Segoe UI', 'Helvetica Neue', 'Inter', sans-serif",
-          flexShrink: 0,
-          userSelect: "none",
-        }}
-      >
-        {name?.charAt(0).toUpperCase() || "?"}
-      </div>
-    );
-  };
 
   /* ─── Chat time format (Exact WhatsApp date logic) ─────────────────── */
   const formatTime = (dateStr) => {

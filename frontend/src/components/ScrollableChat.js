@@ -8,6 +8,7 @@ import {
 } from "../config/ChatLogics";
 import { ChatState } from "../Context/ChatProvider";
 import UserAvatar from "./userAvatar/UserAvatar";
+import { formatMessageTime } from "../config/userStatus";
 
 /* ─── Date Pill Helpers ─────────────────────────────────── */
 const isSameDay = (date1, date2) => {
@@ -65,11 +66,7 @@ const getSenderColor = (name) => {
 const ScrollableChat = ({ messages, onDeleteMessage, searchQuery = "" }) => {
   const { user, selectedChat, socket } = ChatState();
 
-  const formatTime = (dateStr) => {
-    if (!dateStr) return "";
-    const d = new Date(dateStr);
-    return d.toLocaleTimeString([], { hour: "2-digit", minute: "2-digit", hour12: false });
-  };
+  const formatTime = formatMessageTime;
 
   const getMessageStatus = (message) => {
     const isGroup = selectedChat?.isGroupChat;

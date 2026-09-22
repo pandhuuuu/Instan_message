@@ -43,7 +43,7 @@ const ServerConfigModal = ({ children }) => {
   const toast = useToast();
 
   const handleSave = () => {
-    const saved = setServerConfig(host, port);
+    setServerConfig(host, port);
     axios.defaults.baseURL = getServerBaseUrl();
     toast({
       title: "Server Configuration Saved",
