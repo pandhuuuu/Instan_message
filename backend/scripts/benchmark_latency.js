@@ -17,47 +17,10 @@ try {
   }
 }
 
-const BASE_HOST = "localhost";
-const BASE_PORT = 5000;
+const { httpRequest } = require("../tests/utils/testClient");
 
-function httpRequest({ method, path: reqPath, data, token }) {
-  return new Promise((resolve, reject) => {
-    const postData = data !== undefined ? JSON.stringify(data) : "";
-    const headers = {
-      "Content-Type": "application/json",
-      "Content-Length": Buffer.byteLength(postData),
-    };
-    if (token) {
-      headers["Authorization"] = `Bearer ${token}`;
-    }
-
-    const req = http.request(
-      {
-        host: BASE_HOST,
-        port: BASE_PORT,
-        path: reqPath,
-        method,
-        headers,
-      },
-      (res) => {
-        let body = "";
-        res.on("data", (chunk) => (body += chunk));
-        res.on("end", () => {
-          try {
-            const parsed = body ? JSON.parse(body) : {};
-            resolve({ status: res.statusCode, data: parsed });
-          } catch (e) {
-            resolve({ status: res.statusCode, text: body });
-          }
-        });
-      }
-    );
-
-    req.on("error", (err) => reject(err));
-    if (postData) req.write(postData);
-    req.end();
-  });
-}
+const BASE_HOST = process.env.TEST_HOST || "127.0.0.1";
+const BASE_PORT = process.env.PORT || process.env.TEST_PORT || 5000;
 
 function calculateStats(latencies) {
   if (!latencies.length) return { min: 0, max: 0, avg: 0, p95: 0, median: 0 };
@@ -116,10 +79,12 @@ async function runBenchmark() {
   const socketA = ioClient(`http://${BASE_HOST}:${BASE_PORT}`, {
     transports: ["websocket"],
     forceNew: true,
+    auth: { token: alice.token },
   });
   const socketB = ioClient(`http://${BASE_HOST}:${BASE_PORT}`, {
     transports: ["websocket"],
     forceNew: true,
+    auth: { token: bob.token },
   });
 
   await new Promise((resolve) => {
@@ -222,6 +187,21 @@ async function runBenchmark() {
   // Cleanup Sockets
   socketA.disconnect();
   socketB.disconnect();
+
+  try {
+    const mongoUri = process.env.MONGO_URI || "mongodb://127.0.0.1:27017/chat-app";
+    const mongoose = require("mongoose");
+    if (mongoose.connection.readyState === 0) {
+      await mongoose.connect(mongoUri, { useNewUrlParser: true, useUnifiedTopology: true, serverSelectionTimeoutMS: 2000 });
+    }
+    const User = require("../models/userModel");
+    const Chat = require("../models/chatModel");
+    const Message = require("../models/messageModel");
+    await Message.deleteMany({ chat: chat._id });
+    await Chat.deleteMany({ _id: chat._id });
+    await User.deleteMany({ _id: { $in: [alice._id, bob._id] } });
+    await mongoose.disconnect();
+  } catch (e) {}
 
   // 6. REKAPITULASI & ANALISIS KELULUSAN SLA
   console.log("\n======================================================================");

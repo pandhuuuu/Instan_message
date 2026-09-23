@@ -1,3 +1,4 @@
+const mongoose = require("mongoose");
 const asyncHandler = require("express-async-handler");
 const Chat = require("../models/chatModel");
 const User = require("../models/userModel");
@@ -42,9 +43,12 @@ const sendGroupSystemMessage = async (req, chatId, content, type) => {
 const accessChat = asyncHandler(async (req, res) => {
   const { userId } = req.body;
 
-  if (!userId) {
-    console.log("UserId param not sent with request");
-    return res.sendStatus(400);
+  if (!userId || !mongoose.Types.ObjectId.isValid(userId)) {
+    return res.status(400).json({ message: "Valid userId param required" });
+  }
+
+  if (String(userId) === String(req.user._id)) {
+    return res.status(400).json({ message: "Cannot create 1-on-1 chat with yourself" });
   }
 
   var isChat = await Chat.find({
@@ -227,9 +231,14 @@ const createGroupChat = asyncHandler(async (req, res) => {
     return res.status(400).send({ message: "Please fill in all fields" });
   }
 
-  var users = JSON.parse(req.body.users);
+  let users;
+  try {
+    users = typeof req.body.users === "string" ? JSON.parse(req.body.users) : req.body.users;
+  } catch (err) {
+    return res.status(400).send({ message: "Invalid users payload format" });
+  }
 
-  if (users.length < 2) {
+  if (!Array.isArray(users) || users.length < 2) {
     return res
       .status(400)
       .send("More than 2 users are required to form a group chat");
@@ -274,10 +283,25 @@ const createGroupChat = asyncHandler(async (req, res) => {
 const renameGroup = asyncHandler(async (req, res) => {
   const { chatId, chatName } = req.body;
 
+  if (!chatId || !mongoose.Types.ObjectId.isValid(chatId)) {
+    res.status(400);
+    throw new Error("Invalid chatId");
+  }
+
   const chat = await Chat.findById(chatId);
   if (!chat) {
     res.status(404);
     throw new Error("Group not found");
+  }
+
+  if (!chat.isGroupChat) {
+    res.status(400);
+    throw new Error("This operation is only valid for group chats");
+  }
+
+  if (!chatName || typeof chatName !== "string" || !chatName.trim() || chatName.trim().length > 100) {
+    res.status(400);
+    throw new Error("Group name must be between 1 and 100 characters");
   }
 
   if (!isUserAdmin(chat, req.user._id)) {
@@ -314,10 +338,20 @@ const renameGroup = asyncHandler(async (req, res) => {
 const removeFromGroup = asyncHandler(async (req, res) => {
   const { chatId, userId } = req.body;
 
+  if (!chatId || !mongoose.Types.ObjectId.isValid(chatId)) {
+    res.status(400);
+    throw new Error("Invalid chatId");
+  }
+
   const chat = await Chat.findById(chatId);
   if (!chat) {
     res.status(404);
     throw new Error("Group not found");
+  }
+
+  if (!chat.isGroupChat) {
+    res.status(400);
+    throw new Error("This operation is only valid for group chats");
   }
 
   const isLeaving = String(req.user._id) === String(userId);
@@ -405,10 +439,20 @@ const removeFromGroup = asyncHandler(async (req, res) => {
 const addToGroup = asyncHandler(async (req, res) => {
   const { chatId, userId } = req.body;
 
+  if (!chatId || !mongoose.Types.ObjectId.isValid(chatId)) {
+    res.status(400);
+    throw new Error("Invalid chatId");
+  }
+
   const chat = await Chat.findById(chatId);
   if (!chat) {
     res.status(404);
     throw new Error("Group not found");
+  }
+
+  if (!chat.isGroupChat) {
+    res.status(400);
+    throw new Error("This operation is only valid for group chats");
   }
 
   if (!isUserAdmin(chat, req.user._id)) {
@@ -457,10 +501,20 @@ const addToGroup = asyncHandler(async (req, res) => {
 const promoteToAdmin = asyncHandler(async (req, res) => {
   const { chatId, userId } = req.body;
 
+  if (!chatId || !mongoose.Types.ObjectId.isValid(chatId)) {
+    res.status(400);
+    throw new Error("Invalid chatId");
+  }
+
   const chat = await Chat.findById(chatId);
   if (!chat) {
     res.status(404);
     throw new Error("Group not found");
+  }
+
+  if (!chat.isGroupChat) {
+    res.status(400);
+    throw new Error("This operation is only valid for group chats");
   }
 
   if (!isUserAdmin(chat, req.user._id)) {
@@ -508,10 +562,20 @@ const promoteToAdmin = asyncHandler(async (req, res) => {
 const demoteAdmin = asyncHandler(async (req, res) => {
   const { chatId, userId } = req.body;
 
+  if (!chatId || !mongoose.Types.ObjectId.isValid(chatId)) {
+    res.status(400);
+    throw new Error("Invalid chatId");
+  }
+
   const chat = await Chat.findById(chatId);
   if (!chat) {
     res.status(404);
     throw new Error("Group not found");
+  }
+
+  if (!chat.isGroupChat) {
+    res.status(400);
+    throw new Error("This operation is only valid for group chats");
   }
 
   // Only primary group owner can demote admins
@@ -561,6 +625,11 @@ const demoteAdmin = asyncHandler(async (req, res) => {
 // @access  Protected
 const deleteChat = asyncHandler(async (req, res) => {
   const { chatId } = req.params;
+
+  if (!chatId || !mongoose.Types.ObjectId.isValid(chatId)) {
+    res.status(400);
+    throw new Error("Invalid chatId");
+  }
 
   const chat = await Chat.findById(chatId);
   if (!chat) {

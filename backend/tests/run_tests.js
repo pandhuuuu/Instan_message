@@ -22,47 +22,10 @@ try {
   }
 }
 
-const BASE_HOST = "localhost";
-const BASE_PORT = 5000;
+const BASE_HOST = process.env.TEST_HOST || "127.0.0.1";
+const BASE_PORT = process.env.PORT || process.env.TEST_PORT || 5000;
 
-function httpRequest({ method, path: reqPath, data, token }) {
-  return new Promise((resolve, reject) => {
-    const postData = data !== undefined ? JSON.stringify(data) : "";
-    const headers = {
-      "Content-Type": "application/json",
-      "Content-Length": Buffer.byteLength(postData),
-    };
-    if (token) {
-      headers["Authorization"] = `Bearer ${token}`;
-    }
-
-    const req = http.request(
-      {
-        host: BASE_HOST,
-        port: BASE_PORT,
-        path: reqPath,
-        method,
-        headers,
-      },
-      (res) => {
-        let body = "";
-        res.on("data", (chunk) => (body += chunk));
-        res.on("end", () => {
-          try {
-            const parsed = body ? JSON.parse(body) : {};
-            resolve({ status: res.statusCode, data: parsed, headers: res.headers });
-          } catch (e) {
-            resolve({ status: res.statusCode, text: body, headers: res.headers });
-          }
-        });
-      }
-    );
-
-    req.on("error", (err) => reject(err));
-    if (postData) req.write(postData);
-    req.end();
-  });
-}
+const { httpRequest, waitForSocketEvent } = require("./utils/testClient");
 
 async function runTests() {
   console.log("\n===================================================================");
@@ -71,6 +34,7 @@ async function runTests() {
 
   let passed = 0;
   let failed = 0;
+  let userAId, userBId, userCId, userDId, stdUserId;
 
   function assert(condition, testName, detail = "") {
     if (condition) {
@@ -159,6 +123,22 @@ async function runTests() {
       resReg.status === 201 && resReg.data.token && resReg.data.username === standardUser,
       "TC-04: Standard User Registration with Bcrypt Password Hashing (201 Created)"
     );
+    stdUserId = resReg.data?._id;
+
+    // TC-04B: Security Check - Password Minimum Length Enforcement (400 Bad Request)
+    const resShortPass = await httpRequest({
+      method: "POST",
+      path: "/api/user",
+      data: {
+        username: `short_pass_${suffix}`,
+        name: "Short Pass User",
+        password: "123",
+      },
+    });
+    assert(
+      resShortPass.status === 400,
+      "TC-04B: Security Check: Password Minimum Length Enforcement (400 Bad Request)"
+    );
 
     // TC-05: Prevent Duplicate Username Registration (400)
     const resDupReg = await httpRequest({
@@ -226,11 +206,11 @@ async function runTests() {
     );
 
     const tokenA = resAlice.data.token;
-    const userAId = resAlice.data._id;
+    userAId = resAlice.data._id;
     const tokenB = resBob.data.token;
-    const userBId = resBob.data._id;
+    userBId = resBob.data._id;
     const tokenC = resCharlie.data.token;
-    const userCId = resCharlie.data._id;
+    userCId = resCharlie.data._id;
 
     // TC-09: Quick Connect Rejects Empty Username
     const resEmptyQuick = await httpRequest({
@@ -349,6 +329,18 @@ async function runTests() {
       "TC-14: Message Transmission & Persistence via REST"
     );
     const msg1Id = resMsg1.data._id;
+
+    // TC-14B: Security Check - Message Payload Bomb (> 4000 chars) Rejected (400 Bad Request)
+    const resOversizeMsg = await httpRequest({
+      method: "POST",
+      path: "/api/message",
+      token: tokenA,
+      data: { chatId, content: "A".repeat(4001) },
+    });
+    assert(
+      resOversizeMsg.status === 400,
+      "TC-14B: Security Check: Oversized Message Payload Rejected (400 Bad Request)"
+    );
 
     // TC-15: Recipient Fetches Conversation History
     const resHist = await httpRequest({
@@ -695,6 +687,21 @@ async function runTests() {
       "TC-33: RBAC Enforced: Regular Member Cannot Rename Group (403 Forbidden)"
     );
 
+    // TC-33B: Security Check - Group Operations on 1-on-1 Chat Rejected (400 Bad Request)
+    const resGroupOpOnDirect = await httpRequest({
+      method: "PUT",
+      path: "/api/chat/rename",
+      token: tokenA,
+      data: {
+        chatId: chatId,
+        chatName: "HackedDirectChat",
+      },
+    });
+    assert(
+      resGroupOpOnDirect.status === 400,
+      "TC-33B: Security Check: Group Operations on 1-on-1 Chat Rejected (400 Bad Request)"
+    );
+
     // TC-34: Group Owner Promotes Bob to Co-Admin
     const resPromote = await httpRequest({
       method: "PUT",
@@ -717,7 +724,7 @@ async function runTests() {
       path: "/api/user/quick-connect",
       data: { username: daveUser, name: "Dave Auto" },
     });
-    const userDId = resDave.data._id;
+    userDId = resDave.data._id;
     const tokenDave = resDave.data.token;
 
     // TC-34B: BOLA/IDOR Protection: Non-Member Dave Cannot Read Group Message History (403)
@@ -870,131 +877,121 @@ async function runTests() {
     console.log("\n--- Section 7: Real-Time WebSocket Protocol Verification ---");
 
     if (ioClient) {
-      await new Promise((resolveSocket) => {
-        const socketA = ioClient(`http://${BASE_HOST}:${BASE_PORT}`, {
-          transports: ["websocket"],
-          forceNew: true,
-          auth: { token: tokenA },
-        });
-        const socketB = ioClient(`http://${BASE_HOST}:${BASE_PORT}`, {
-          transports: ["websocket"],
-          forceNew: true,
-          auth: { token: tokenB },
-        });
-
-        // Unauthenticated socket connection verification
-        const socketUnauth = ioClient(`http://${BASE_HOST}:${BASE_PORT}`, {
-          transports: ["websocket"],
-          forceNew: true,
-        });
-        let unauthRejected = false;
-        socketUnauth.on("connect_error", (err) => {
-          if (err && err.message.includes("Authentication error")) {
-            unauthRejected = true;
-          }
-          socketUnauth.disconnect();
-        });
-
-        // Tampered token socket connection verification
-        const socketTampered = ioClient(`http://${BASE_HOST}:${BASE_PORT}`, {
-          transports: ["websocket"],
-          forceNew: true,
-          auth: { token: "forged.tampered.token_fail" },
-        });
-        let tamperedRejected = false;
-        socketTampered.on("connect_error", (err) => {
-          if (err && err.message.includes("Authentication error")) {
-            tamperedRejected = true;
-          }
-          socketTampered.disconnect();
-        });
-
-        // Socket C (Charlie) - Valid user attempting unauthorized eavesdropping
-        const socketC = ioClient(`http://${BASE_HOST}:${BASE_PORT}`, {
-          transports: ["websocket"],
-          forceNew: true,
-          auth: { token: tokenC },
-        });
-        let charlieEavesdropped = false;
-
-        let socketAConnected = false;
-        let socketBConnected = false;
-        let typingReceived = false;
-        let messageReceived = false;
-
-        const cleanup = () => {
-          socketA.disconnect();
-          socketB.disconnect();
-          socketC.disconnect();
-          assert(unauthRejected, "TC-41B: Security Check: WebSocket Rejects Connection Without Valid JWT Auth");
-          assert(tamperedRejected, "TC-41C: Security Check: WebSocket Rejects Connection With Tampered JWT Token");
-          assert(!charlieEavesdropped, "TC-44B: Eavesdropping Prevention: Unauthorized Socket Cannot Intercept Private Room Messages");
-          resolveSocket();
-        };
-
-        const timeoutId = setTimeout(() => {
-          assert(socketAConnected && socketBConnected, "TC-42: WebSocket Session Handshake & Room Registration", "Timeout");
-          assert(typingReceived, "TC-43: Real-Time Typing Indicator Transmission via WebSocket", "Timeout");
-          assert(messageReceived, "TC-44: Real-Time Instant Message Delivery via WebSocket", "Timeout");
-          cleanup();
-        }, 3500);
-
-        socketA.on("connect", () => {
-          socketA.emit("setup", { _id: userAId, name: "Alice Auto" });
-          socketA.emit("join chat", chatId);
-          socketAConnected = true;
-        });
-
-        socketB.on("connect", () => {
-          socketB.emit("setup", { _id: userBId, name: "Bob Auto" });
-          socketB.emit("join chat", chatId);
-          socketBConnected = true;
-
-          // Charlie attempts unauthorized join into Alice & Bob's private room
-          socketC.on("connect", () => {
-            socketC.emit("setup", { _id: userCId, name: "Charlie Auto" });
-            socketC.emit("join chat", chatId);
-            socketC.on("message recieved", () => {
-              charlieEavesdropped = true;
-            });
-          });
-
-          // Bob listens for typing and message from Alice
-          socketB.on("typing", (room) => {
-            if (String(room) === String(chatId) || room?.chatId === chatId) {
-              typingReceived = true;
-            }
-          });
-
-          socketB.on("message recieved", (msg) => {
-            if (msg && msg.content === "Live WebSocket Message") {
-              messageReceived = true;
-              clearTimeout(timeoutId);
-              assert(socketAConnected && socketBConnected, "TC-42: WebSocket Session Handshake & Room Registration");
-              assert(typingReceived, "TC-43: Real-Time Typing Indicator Transmission via WebSocket");
-              assert(messageReceived, "TC-44: Real-Time Instant Message Delivery via WebSocket");
-              cleanup();
-            }
-          });
-
-          // Trigger typing after brief delay
-          setTimeout(() => {
-            socketA.emit("typing", chatId);
-            // Trigger message delivery
-            setTimeout(() => {
-              socketA.emit("new message", {
-                _id: "60a18c71aefc667b00a7e271",
-                content: "Live WebSocket Message",
-                chat: {
-                  _id: chatId,
-                  users: [{ _id: userAId }, { _id: userBId }],
-                },
-                sender: { _id: userAId, name: "Alice Auto" },
-              });
-            }, 300);
-          }, 300);
-        });
+      // 1. Connection Security Tests (Unauthenticated & Tampered Handshake)
+      const socketUnauth = ioClient(`http://${BASE_HOST}:${BASE_PORT}`, {
+        transports: ["websocket"],
+        forceNew: true,
       });
+      let unauthRejected = false;
+      try {
+        const err = await waitForSocketEvent(socketUnauth, "connect_error", 2000);
+        if (err && err.message && err.message.includes("Authentication error")) {
+          unauthRejected = true;
+        }
+      } catch (e) {
+        // Handled via assertion below
+      } finally {
+        socketUnauth.disconnect();
+      }
+
+      const socketTampered = ioClient(`http://${BASE_HOST}:${BASE_PORT}`, {
+        transports: ["websocket"],
+        forceNew: true,
+        auth: { token: "forged.tampered.token_fail" },
+      });
+      let tamperedRejected = false;
+      try {
+        const err = await waitForSocketEvent(socketTampered, "connect_error", 2000);
+        if (err && err.message && err.message.includes("Authentication error")) {
+          tamperedRejected = true;
+        }
+      } catch (e) {
+        // Handled via assertion below
+      } finally {
+        socketTampered.disconnect();
+      }
+
+      // 2. Authenticated Clients Handshake & Room Setup
+      const socketA = ioClient(`http://${BASE_HOST}:${BASE_PORT}`, {
+        transports: ["websocket"],
+        forceNew: true,
+        auth: { token: tokenA },
+      });
+      const socketB = ioClient(`http://${BASE_HOST}:${BASE_PORT}`, {
+        transports: ["websocket"],
+        forceNew: true,
+        auth: { token: tokenB },
+      });
+      const socketC = ioClient(`http://${BASE_HOST}:${BASE_PORT}`, {
+        transports: ["websocket"],
+        forceNew: true,
+        auth: { token: tokenC },
+      });
+
+      await Promise.all([
+        waitForSocketEvent(socketA, "connect", 3000),
+        waitForSocketEvent(socketB, "connect", 3000),
+        waitForSocketEvent(socketC, "connect", 3000),
+      ]);
+
+      // Await setup presence acknowledgment
+      const setupAPromise = waitForSocketEvent(socketA, "connected", 3000);
+      const setupBPromise = waitForSocketEvent(socketB, "connected", 3000);
+      const setupCPromise = waitForSocketEvent(socketC, "connected", 3000);
+
+      socketA.emit("setup", { _id: userAId, name: "Alice Auto" });
+      socketB.emit("setup", { _id: userBId, name: "Bob Auto" });
+      socketC.emit("setup", { _id: userCId, name: "Charlie Auto" });
+
+      await Promise.all([setupAPromise, setupBPromise, setupCPromise]);
+
+      socketA.emit("join chat", chatId);
+      socketB.emit("join chat", chatId);
+      socketC.emit("join chat", chatId);
+
+      // Brief yield to allow server-side async Chat.findById room join query to complete
+      await new Promise((r) => setTimeout(r, 200));
+
+      let charlieEavesdropped = false;
+      socketC.on("message recieved", () => {
+        charlieEavesdropped = true;
+      });
+
+      // TC-42: WebSocket Session Handshake & Room Registration
+      assert(socketA.connected && socketB.connected, "TC-42: WebSocket Session Handshake & Room Registration");
+
+      // TC-43: Real-Time Typing Indicator Transmission via WebSocket
+      const typingPromise = waitForSocketEvent(socketB, "typing", 3000, (room) => {
+        return String(room) === String(chatId) || room?.chatId === chatId;
+      });
+      socketA.emit("typing", chatId);
+      const typingData = await typingPromise;
+      assert(Boolean(typingData), "TC-43: Real-Time Typing Indicator Transmission via WebSocket");
+
+      // TC-44: Real-Time Instant Message Delivery via WebSocket
+      const messagePromise = waitForSocketEvent(socketB, "message recieved", 3000, (msg) => {
+        return msg && msg.content === "Live WebSocket Message";
+      });
+      socketA.emit("new message", {
+        _id: "60a18c71aefc667b00a7e271",
+        content: "Live WebSocket Message",
+        chat: {
+          _id: chatId,
+          users: [{ _id: userAId }, { _id: userBId }],
+        },
+        sender: { _id: userAId, name: "Alice Auto" },
+      });
+      const receivedMsg = await messagePromise;
+      assert(Boolean(receivedMsg && receivedMsg.content === "Live WebSocket Message"), "TC-44: Real-Time Instant Message Delivery via WebSocket");
+
+      // Assert Security Handshake Results
+      assert(unauthRejected, "TC-41B: Security Check: WebSocket Rejects Connection Without Valid JWT Auth");
+      assert(tamperedRejected, "TC-41C: Security Check: WebSocket Rejects Connection With Tampered JWT Token");
+      assert(!charlieEavesdropped, "TC-44B: Eavesdropping Prevention: Unauthorized Socket Cannot Intercept Private Room Messages");
+
+      socketA.disconnect();
+      socketB.disconnect();
+      socketC.disconnect();
     } else {
       console.log("  [SKIP] Socket.io client not found, skipping live socket tests");
     }
@@ -1002,6 +999,33 @@ async function runTests() {
   } catch (err) {
     console.error("Test execution fatal error:", err);
     failed++;
+  } finally {
+    // Database Teardown & Hygiene: Purge generated ephemeral test records
+    try {
+      const mongoUri = process.env.MONGO_URI || "mongodb://127.0.0.1:27017/chat-app";
+      const mongoose = require("mongoose");
+      if (mongoose.connection.readyState === 0) {
+        await mongoose.connect(mongoUri, {
+          useNewUrlParser: true,
+          useUnifiedTopology: true,
+          serverSelectionTimeoutMS: 2000,
+        });
+      }
+      const User = require("../models/userModel");
+      const Chat = require("../models/chatModel");
+      const Message = require("../models/messageModel");
+
+      const testUserIds = [userAId, userBId, userCId, userDId, stdUserId].filter(Boolean);
+      if (testUserIds.length > 0) {
+        await Message.deleteMany({ sender: { $in: testUserIds } });
+        await Chat.deleteMany({ users: { $in: testUserIds } });
+        await User.deleteMany({ _id: { $in: testUserIds } });
+        console.log("  [TEARDOWN] Database hygiene completed: ephemeral test records purged.");
+      }
+      await mongoose.disconnect();
+    } catch (e) {
+      // Direct DB cleanup is optional if running black-box against remote host
+    }
   }
 
   console.log("\n===================================================================");

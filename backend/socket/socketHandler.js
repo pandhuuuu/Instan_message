@@ -235,12 +235,28 @@ function setupSocket(server, app, allowedOrigins = []) {
     });
 
     socket.on("new message", async (newMessageRecieved) => {
+      if (!newMessageRecieved || !newMessageRecieved.chat) return;
       var chat = newMessageRecieved.chat;
       if (!chat || !chat.users) return console.log("chat.users not defined");
 
+      const senderIdStr = String(newMessageRecieved.sender?._id || newMessageRecieved.sender);
+      const socketUserId = socket.userId;
+
+      // Anti-Spoofing: Verify sender ID matches the authenticated socket identity
+      if (socketUserId && senderIdStr !== socketUserId) {
+        console.warn(`[Security Alert] Socket ${socket.id} (${socketUserId}) attempted to spoof sender ${senderIdStr}`);
+        return;
+      }
+
+      // Verify socket user is actually a participant of this chat
+      const isMember = chat.users.some((u) => String(u._id || u) === socketUserId);
+      if (socketUserId && !isMember) {
+        console.warn(`[Security Alert] Socket ${socket.id} (${socketUserId}) attempted to broadcast to unauthorized chat`);
+        return;
+      }
+
       let isDeliveredToAny = false;
       const deliveredUserIds = [];
-      const senderIdStr = String(newMessageRecieved.sender?._id || newMessageRecieved.sender);
 
       chat.users.forEach((user) => {
         const recipientIdStr = String(user._id || user);
@@ -277,19 +293,20 @@ function setupSocket(server, app, allowedOrigins = []) {
     });
 
     socket.on("mark messages read", async ({ chatId, userId }) => {
-      if (!chatId || !userId) return;
+      const activeUserId = socket.userId || userId;
+      if (!chatId || !activeUserId) return;
       const chatIdStr = String(chatId);
       try {
         await Message.updateMany(
           {
             chat: chatIdStr,
-            sender: { $ne: userId },
-            readBy: { $ne: userId },
+            sender: { $ne: activeUserId },
+            readBy: { $ne: activeUserId },
           },
           {
             $addToSet: {
-              readBy: userId,
-              deliveredTo: userId,
+              readBy: activeUserId,
+              deliveredTo: activeUserId,
             },
           }
         );
@@ -297,7 +314,7 @@ function setupSocket(server, app, allowedOrigins = []) {
         // Broadcast to room and chat participants
         io.in(chatIdStr).emit("messages read update", {
           chatId: chatIdStr,
-          readerId: userId,
+          readerId: activeUserId,
         });
       } catch (err) {
         console.error("Error in mark messages read socket event:", err);
@@ -305,23 +322,24 @@ function setupSocket(server, app, allowedOrigins = []) {
     });
 
     socket.on("mark messages delivered", async ({ messageIds, userId, chatId }) => {
-      if (!messageIds || !messageIds.length || !userId) return;
+      const activeUserId = socket.userId || userId;
+      if (!messageIds || !messageIds.length || !activeUserId) return;
       try {
         await Message.updateMany(
           {
             _id: { $in: messageIds },
-            sender: { $ne: userId },
+            sender: { $ne: activeUserId },
           },
           {
-            $addToSet: { deliveredTo: userId },
+            $addToSet: { deliveredTo: activeUserId },
           }
         );
 
         const payload = {
           messageIds,
           messageId: messageIds[0],
-          userId,
-          deliveredTo: [userId],
+          userId: activeUserId,
+          deliveredTo: [activeUserId],
           chatId,
         };
 
@@ -345,8 +363,17 @@ function setupSocket(server, app, allowedOrigins = []) {
       }
     });
 
-    socket.on("delete message", ({ messageId, chatId }) => {
-      io.in(String(chatId)).emit("message deleted", { messageId, chatId: String(chatId) });
+    socket.on("delete message", async ({ messageId, chatId }) => {
+      if (!messageId || !chatId) return;
+      const chatIdStr = String(chatId);
+      try {
+        const chat = await Chat.findById(chatIdStr);
+        if (chat && chat.users.some((u) => String(u._id || u) === socket.userId)) {
+          io.in(chatIdStr).emit("message deleted", { messageId, chatId: chatIdStr });
+        }
+      } catch (err) {
+        console.error("Error in delete message event:", err);
+      }
     });
 
     socket.on("delete chat", (payload) => {

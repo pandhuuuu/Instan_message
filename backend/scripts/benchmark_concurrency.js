@@ -3,6 +3,7 @@
 
 const path = require("path");
 const { performance } = require("perf_hooks");
+const { httpRequest } = require("../tests/utils/testClient");
 
 let ioClient = null;
 try {
@@ -37,6 +38,42 @@ async function runConcurrencyTest() {
   console.log(`1. Baseline Client Memory: Heap Used: ${baselineMem.heapUsed} MB | RSS: ${baselineMem.rss} MB`);
 
   console.log(`\n2. Melakukan koneksi simultan sebanyak ${CONCURRENCY_TARGET} client WebSocket...`);
+
+  // Obtain benchmark authentication session
+  const authRes = await httpRequest({
+    method: "POST",
+    path: "/api/user/quick-connect",
+    data: {
+      username: `bench_concur_${Date.now()}`,
+      name: "Concurrency Benchmark Bot",
+    },
+  });
+  const benchToken = authRes.data?.token;
+  const benchUserId = authRes.data?._id;
+
+  const authPeer = await httpRequest({
+    method: "POST",
+    path: "/api/user/quick-connect",
+    data: {
+      username: `bench_peer_${Date.now()}`,
+      name: "Concurrency Peer Bot",
+    },
+  });
+  const peerUserId = authPeer.data?._id;
+
+  const chatRes = await httpRequest({
+    method: "POST",
+    path: "/api/chat",
+    token: benchToken,
+    data: { userId: peerUserId },
+  });
+  const benchChatId = chatRes.data?._id;
+
+  if (!benchToken || !benchChatId) {
+    console.error("Gagal memperoleh session/chat untuk benchmark sockets:", authRes.data, chatRes.data);
+    process.exit(1);
+  }
+
   const sockets = [];
   const connectStart = performance.now();
 
@@ -52,18 +89,13 @@ async function runConcurrencyTest() {
         forceNew: true,
         reconnection: false,
         timeout: 10000,
+        auth: { token: benchToken },
       });
 
       socket.on("connect", () => {
         connectedCount++;
-        // Emit setup mimicking real user presence
-        socket.emit("setup", {
-          _id: `user_dummy_${i}_${Date.now()}`,
-          name: `User Concurrency #${i}`,
-          username: `user_${i}`,
-        });
-        // Semua join satu common test room
-        socket.emit("join chat", "concurrency_benchmark_room");
+        // Join valid authorized benchmark room directly (socket.userId already authenticated via handshake)
+        socket.emit("join chat", benchChatId);
         resolve();
       });
 
@@ -77,9 +109,9 @@ async function runConcurrencyTest() {
 
     connectPromises.push(p);
 
-    // Sedikit delay batch per 50 sockets agar tidak kena rate-limit OS socket buffer
+    // Delay batch per 50 sockets agar koneksi dan database pool tidak tersumbat
     if (i % 50 === 0 && i > 0) {
-      await new Promise((r) => setTimeout(r, 20));
+      await new Promise((r) => setTimeout(r, 100));
     }
   }
 
@@ -101,21 +133,26 @@ async function runConcurrencyTest() {
   // 4. UJI BROADCAST BURST: Kirim 1 pesan ke 300 client sekaligus
   console.log(`\n4. Menguji Fan-out / Broadcast Burst ke ${connectedCount} client...`);
   let receivedCount = 0;
+
+  // Allow room join asynchronous checks to settle across Mongoose connection pool
+  await new Promise((r) => setTimeout(r, 4000));
+
   const broadcastStart = performance.now();
 
-  const receivePromises = sockets.map((s) => {
+  const receivePromises = sockets.map((s, idx) => {
+    if (idx === 0) return Promise.resolve(); // Sender does not receive its own broadcast
     return new Promise((resolve) => {
       s.once("typing", () => {
         receivedCount++;
         resolve();
       });
       // Safety timeout
-      setTimeout(resolve, 3000);
+      setTimeout(resolve, 5000);
     });
   });
 
   // Socket #0 mengirimkan event typing ke seluruh room
-  sockets[0].emit("typing", "concurrency_benchmark_room");
+  sockets[0].emit("typing", benchChatId);
 
   await Promise.all(receivePromises);
   const broadcastDuration = performance.now() - broadcastStart;
@@ -128,6 +165,20 @@ async function runConcurrencyTest() {
   console.log(`\n5. Melakukan graceful disconnect seluruh ${connectedCount} sockets...`);
   sockets.forEach((s) => s.disconnect());
   await new Promise((r) => setTimeout(r, 500));
+
+  // Purge benchmark ephemeral records
+  try {
+    const mongoUri = process.env.MONGO_URI || "mongodb://127.0.0.1:27017/chat-app";
+    const mongoose = require("mongoose");
+    if (mongoose.connection.readyState === 0) {
+      await mongoose.connect(mongoUri, { useNewUrlParser: true, useUnifiedTopology: true, serverSelectionTimeoutMS: 2000 });
+    }
+    const User = require("../models/userModel");
+    const Chat = require("../models/chatModel");
+    await Chat.deleteMany({ _id: benchChatId });
+    await User.deleteMany({ _id: { $in: [benchUserId, peerUserId] } });
+    await mongoose.disconnect();
+  } catch (e) {}
 
   const afterCleanupMem = getMemoryUsageMB();
   console.log(`   ✓ Memori setelah disconnect: Heap: ${afterCleanupMem.heapUsed} MB | RSS: ${afterCleanupMem.rss} MB`);

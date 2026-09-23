@@ -19,8 +19,17 @@ const authLimiter = rateLimit({
   skip: () => process.env.NODE_ENV === "test",
 });
 
+const registerLimiter = rateLimit({
+  windowMs: 15 * 60 * 1000,
+  max: 20,
+  message: { message: "Too many accounts created from this IP, please try again after 15 minutes." },
+  standardHeaders: true,
+  legacyHeaders: false,
+  skip: () => process.env.NODE_ENV === "test",
+});
+
 router.route("/").get(protect, allUsers);
-router.route("/").post(registerUser);
+router.route("/").post(registerLimiter, registerUser);
 router.post("/login", authLimiter, authUser);
 router.post("/quick-connect", authLimiter, quickConnectUser);
 

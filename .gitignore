@@ -1,13 +1,77 @@
-/node_modules
+# ==========================================
+# DEPENDENCIES
+# ==========================================
 node_modules/
 /frontend/node_modules/
+
+# ==========================================
+# ENVIRONMENT & SECRETS
+# ==========================================
 .env
+.env*.local
+.env.development
+.env.test
+.env.production
+*.env
+# Selalu track .env.example sebagai template resmi teman/kolaborator
+!.env.example
+
+# ==========================================
+# PRODUCTION BUILDS & CACHE
+# ==========================================
 build/
+dist/
 /frontend/build/
+.eslintcache
+.cache/
+
+# ==========================================
+# LOGS & DEBUGGING
+# ==========================================
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+
+# ==========================================
+# TEST COVERAGE & PROFILING
+# ==========================================
+coverage/
+.nyc_output/
+
+# ==========================================
+# IDE & EDITOR CONFIGURATIONS
+# ==========================================
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# ==========================================
+# OS ARTIFACTS
+# ==========================================
+.DS_Store
+Thumbs.db
+ehthumbs.db
+desktop.ini
+
+# ==========================================
+# PYTHON SCRIPTS CACHE
+# ==========================================
 __pycache__/
 *.pyc
 ~$*
 
-# Personal documentation
+# ==========================================
+# DATABASE EXPORTS & DUMPS
+# ==========================================
+dump/
+*.dump
+mongo-data/
+
+# ==========================================
+# PERSONAL DOCUMENTATION & NOTES
+# ==========================================
 /docs/
 docs/

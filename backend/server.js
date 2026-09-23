@@ -16,21 +16,25 @@ app.use(helmet({
   contentSecurityPolicy: false,
   crossOriginEmbedderPolicy: false,
 }));
-app.use(express.json()); // to accept json data
+app.use(express.json({ limit: "1mb" })); // accept json data with 1mb limit
 
 const allowedOrigins = process.env.ALLOWED_ORIGINS
   ? process.env.ALLOWED_ORIGINS.split(",").map(o => o.trim())
   : ["http://localhost:3000", "http://localhost:5000", "http://127.0.0.1:3000", "http://127.0.0.1:5000"];
 
-// Enable CORS with origin validation
+// Enable CORS with strict origin validation
 app.use((req, res, next) => {
   const origin = req.headers.origin;
-  if (!origin || allowedOrigins.includes(origin) || process.env.NODE_ENV !== "production") {
+  const isAllowed = !origin || allowedOrigins.includes(origin) || (
+    process.env.NODE_ENV !== "production" && /^http:\/\/(localhost|127\.0\.0\.1)(:\d+)?$/.test(origin)
+  );
+
+  if (isAllowed) {
     res.header("Access-Control-Allow-Origin", origin || "*");
+    res.header("Access-Control-Allow-Credentials", "true");
   }
   res.header("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS");
   res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept, Authorization");
-  res.header("Access-Control-Allow-Credentials", "true");
   if (req.method === "OPTIONS") {
     return res.sendStatus(200);
   }

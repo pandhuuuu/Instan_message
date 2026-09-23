@@ -21,7 +21,7 @@ const allUsers = asyncHandler(async (req, res) => {
     }
     : {};
 
-  const users = await User.find(keyword).find({ _id: { $ne: req.user._id } }).select("-password");
+  const users = await User.find(keyword).find({ _id: { $ne: req.user._id } }).select("-password").limit(50);
   res.send(users);
 });
 
@@ -34,6 +34,11 @@ const registerUser = asyncHandler(async (req, res) => {
   if (!username || !password) {
     res.status(400);
     throw new Error("Please enter username and password");
+  }
+
+  if (typeof password !== "string" || password.length < 6) {
+    res.status(400);
+    throw new Error("Password must be at least 6 characters long");
   }
 
   const cleanUsername = username.toLowerCase().trim().replace(/\s+/g, "");
