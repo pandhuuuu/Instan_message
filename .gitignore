@@ -57,10 +57,12 @@ ehthumbs.db
 desktop.ini
 
 # ==========================================
-# PYTHON SCRIPTS CACHE
+# PYTHON SCRIPTS & GENERATORS
 # ==========================================
 __pycache__/
 *.pyc
+*.py
+backend/scripts/generate_*.py
 ~$*
 
 # ==========================================
