@@ -297,6 +297,12 @@ function setupSocket(server, app, allowedOrigins = []) {
       if (!chatId || !activeUserId) return;
       const chatIdStr = String(chatId);
       try {
+        // BOLA / IDOR Protection: Verify membership before modifying read state
+        const chat = await Chat.findById(chatIdStr);
+        if (!chat || !chat.users.some((u) => String(u._id || u) === String(activeUserId))) {
+          return;
+        }
+
         await Message.updateMany(
           {
             chat: chatIdStr,
@@ -325,9 +331,14 @@ function setupSocket(server, app, allowedOrigins = []) {
       const activeUserId = socket.userId || userId;
       if (!messageIds || !messageIds.length || !activeUserId) return;
       try {
+        // BOLA / IDOR Protection: Restrict updates only to messages in chats where user is a participant
+        const userChats = await Chat.find({ users: activeUserId }).select("_id");
+        const userChatIds = userChats.map((c) => c._id);
+
         await Message.updateMany(
           {
             _id: { $in: messageIds },
+            chat: { $in: userChatIds },
             sender: { $ne: activeUserId },
           },
           {
@@ -357,8 +368,8 @@ function setupSocket(server, app, allowedOrigins = []) {
 
     socket.on("clear chat", (payload) => {
       const chatId = typeof payload === "object" ? payload.chatId : payload;
-      const targetUserId = (typeof payload === "object" && payload.userId) || socket.userId;
-      if (targetUserId) {
+      const targetUserId = socket.userId || (typeof payload === "object" && payload.userId);
+      if (targetUserId && chatId) {
         socket.to(String(targetUserId)).emit("chat cleared", String(chatId));
       }
     });
@@ -378,8 +389,8 @@ function setupSocket(server, app, allowedOrigins = []) {
 
     socket.on("delete chat", (payload) => {
       const chatId = typeof payload === "object" ? payload.chatId : payload;
-      const targetUserId = (typeof payload === "object" && payload.userId) || socket.userId;
-      if (targetUserId) {
+      const targetUserId = socket.userId || (typeof payload === "object" && payload.userId);
+      if (targetUserId && chatId) {
         socket.to(String(targetUserId)).emit("chat deleted", String(chatId));
       }
     });

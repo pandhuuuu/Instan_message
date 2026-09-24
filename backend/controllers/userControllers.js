@@ -1,4 +1,5 @@
 const crypto = require("crypto");
+const bcrypt = require("bcryptjs");
 const asyncHandler = require("express-async-handler");
 const User = require("../models/userModel");
 const generateToken = require("../config/generateToken");
@@ -31,12 +32,12 @@ const allUsers = asyncHandler(async (req, res) => {
 const registerUser = asyncHandler(async (req, res) => {
   const { username, name, password, pic } = req.body;
 
-  if (!username || !password) {
+  if (!username || !password || typeof username !== "string" || typeof password !== "string") {
     res.status(400);
-    throw new Error("Please enter username and password");
+    throw new Error("Please enter valid username and password");
   }
 
-  if (typeof password !== "string" || password.length < 6) {
+  if (password.length < 6) {
     res.status(400);
     throw new Error("Password must be at least 6 characters long");
   }
@@ -50,7 +51,7 @@ const registerUser = asyncHandler(async (req, res) => {
     throw new Error("Username is already taken, please choose another");
   }
 
-  const displayName = (name && name.trim()) || cleanUsername;
+  const displayName = (name && typeof name === "string" && name.trim()) || cleanUsername;
 
   const cleanPic = (pic && typeof pic === "string" && !pic.includes("anonymous-avatar-icon")) ? pic.trim() : "";
 
@@ -83,9 +84,10 @@ const registerUser = asyncHandler(async (req, res) => {
 //@access          Public
 const authUser = asyncHandler(async (req, res) => {
   const { username, email, password } = req.body;
-  const identifier = (username || email || "").trim();
+  const rawId = (typeof username === "string" ? username : "") || (typeof email === "string" ? email : "");
+  const identifier = rawId.trim();
 
-  if (!identifier || !password) {
+  if (!identifier || typeof password !== "string" || !password) {
     res.status(400);
     throw new Error("Please enter username and password");
   }
@@ -99,7 +101,11 @@ const authUser = asyncHandler(async (req, res) => {
     ],
   });
 
-  if (user && (await user.matchPassword(password))) {
+  // Constant-time comparison to mitigate timing attacks / user enumeration
+  const DUMMY_HASH = "$2a$10$abcdefghijklmnopqrstuvwxyz1234567890abcdefghijklmnopqr";
+  const isMatch = user ? await user.matchPassword(password) : await bcrypt.compare(password, DUMMY_HASH);
+
+  if (user && isMatch) {
     // Check if user is already logged in on another active device/session
     const onlineUsers = req.app.get("onlineUsers");
     if (onlineUsers) {
@@ -137,7 +143,7 @@ const authUser = asyncHandler(async (req, res) => {
 const quickConnectUser = asyncHandler(async (req, res) => {
   const { username, name } = req.body;
 
-  if (!username) {
+  if (!username || typeof username !== "string" || !username.trim()) {
     res.status(400);
     throw new Error("Please enter a username");
   }

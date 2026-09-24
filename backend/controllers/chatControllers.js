@@ -231,6 +231,10 @@ const createGroupChat = asyncHandler(async (req, res) => {
     return res.status(400).send({ message: "Please fill in all fields" });
   }
 
+  if (typeof req.body.name !== "string" || !req.body.name.trim() || req.body.name.trim().length > 100) {
+    return res.status(400).send({ message: "Group name must be between 1 and 100 characters" });
+  }
+
   let users;
   try {
     users = typeof req.body.users === "string" ? JSON.parse(req.body.users) : req.body.users;
@@ -248,7 +252,7 @@ const createGroupChat = asyncHandler(async (req, res) => {
 
   try {
     const groupChat = await Chat.create({
-      chatName: req.body.name,
+      chatName: req.body.name.trim(),
       users: users,
       isGroupChat: true,
       groupAdmin: req.user,
@@ -343,6 +347,11 @@ const removeFromGroup = asyncHandler(async (req, res) => {
     throw new Error("Invalid chatId");
   }
 
+  if (!userId || !mongoose.Types.ObjectId.isValid(userId)) {
+    res.status(400);
+    throw new Error("Invalid userId");
+  }
+
   const chat = await Chat.findById(chatId);
   if (!chat) {
     res.status(404);
@@ -352,6 +361,13 @@ const removeFromGroup = asyncHandler(async (req, res) => {
   if (!chat.isGroupChat) {
     res.status(400);
     throw new Error("This operation is only valid for group chats");
+  }
+
+  // Validate that user is actually a member of this group
+  const isMember = chat.users.some((u) => String(u._id || u) === String(userId));
+  if (!isMember) {
+    res.status(400);
+    throw new Error("User is not a member of this group");
   }
 
   const isLeaving = String(req.user._id) === String(userId);
@@ -444,6 +460,11 @@ const addToGroup = asyncHandler(async (req, res) => {
     throw new Error("Invalid chatId");
   }
 
+  if (!userId || !mongoose.Types.ObjectId.isValid(userId)) {
+    res.status(400);
+    throw new Error("Invalid userId");
+  }
+
   const chat = await Chat.findById(chatId);
   if (!chat) {
     res.status(404);
@@ -506,6 +527,11 @@ const promoteToAdmin = asyncHandler(async (req, res) => {
     throw new Error("Invalid chatId");
   }
 
+  if (!userId || !mongoose.Types.ObjectId.isValid(userId)) {
+    res.status(400);
+    throw new Error("Invalid userId");
+  }
+
   const chat = await Chat.findById(chatId);
   if (!chat) {
     res.status(404);
@@ -565,6 +591,11 @@ const demoteAdmin = asyncHandler(async (req, res) => {
   if (!chatId || !mongoose.Types.ObjectId.isValid(chatId)) {
     res.status(400);
     throw new Error("Invalid chatId");
+  }
+
+  if (!userId || !mongoose.Types.ObjectId.isValid(userId)) {
+    res.status(400);
+    throw new Error("Invalid userId");
   }
 
   const chat = await Chat.findById(chatId);
