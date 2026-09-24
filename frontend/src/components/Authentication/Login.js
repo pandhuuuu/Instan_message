@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import axios from "axios";
 import { useToast } from "@chakra-ui/react";
 import { useHistory } from "react-router-dom";
@@ -53,12 +53,18 @@ const DarkInput = ({ id, type, placeholder, value, onChange, rightElement }) => 
   );
 };
 
-const Login = () => {
+const Login = ({ initialUsername = "" }) => {
   const [show, setShow] = useState(false);
   const toast = useToast();
-  const [username, setUsername] = useState("");
+  const [username, setUsername] = useState(initialUsername || "");
   const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
+
+  useEffect(() => {
+    if (initialUsername) {
+      setUsername(initialUsername);
+    }
+  }, [initialUsername]);
 
   const history = useHistory();
   const { setUser } = ChatState();

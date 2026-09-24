@@ -2,7 +2,6 @@ import { useState } from "react";
 import { useToast } from "@chakra-ui/toast";
 import axios from "axios";
 import { useHistory } from "react-router";
-import { ChatState } from "../../Context/ChatProvider";
 
 const inputStyle = {
   width: "100%",
@@ -55,11 +54,10 @@ const DarkInput = ({ id, type, placeholder, value, onChange, rightElement, accep
   );
 };
 
-const Signup = () => {
+const Signup = ({ onRegisterSuccess }) => {
   const [show, setShow] = useState(false);
   const toast = useToast();
   const history = useHistory();
-  const { setUser } = ChatState();
 
   const [username, setUsername] = useState("");
   const [name, setName] = useState("");
@@ -94,23 +92,25 @@ const Signup = () => {
     }
     try {
       const config = { headers: { "Content-type": "application/json" } };
-      const { data } = await axios.post(
+      await axios.post(
         "/api/user",
         { username, name: name.trim() || username, password, pic },
         config
       );
       toast({
         title: "Registration successful",
+        description: "Account created! Please sign in with your password.",
         status: "success",
-        duration: 3000,
+        duration: 4000,
         isClosable: true,
         position: "top",
       });
-      setUser(data);
-      sessionStorage.setItem("userInfo", JSON.stringify(data));
-      localStorage.removeItem("userInfo");
       setPicLoading(false);
-      history.push("/chats");
+      if (onRegisterSuccess) {
+        onRegisterSuccess(username);
+      } else {
+        history.push("/");
+      }
     } catch (error) {
       toast({
         title: "Registration failed",

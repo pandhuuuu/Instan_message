@@ -8,6 +8,7 @@ import ServerConfigModal from "../components/miscellaneous/ServerConfigModal";
 function Homepage() {
   const history = useHistory();
   const [activeTab, setActiveTab] = useState("login");
+  const [registeredUsername, setRegisteredUsername] = useState("");
 
   useEffect(() => {
     localStorage.removeItem("userInfo");
@@ -134,9 +135,14 @@ function Homepage() {
             {activeTab === "quick" ? (
               <QuickConnect />
             ) : activeTab === "login" ? (
-              <Login />
+              <Login initialUsername={registeredUsername} />
             ) : (
-              <Signup />
+              <Signup
+                onRegisterSuccess={(uname) => {
+                  setRegisteredUsername(uname);
+                  setActiveTab("login");
+                }}
+              />
             )}
           </div>
         </div>
