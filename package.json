@@ -7,6 +7,7 @@
     "start": "node backend/server.js",
     "server": "nodemon backend/server.js",
     "test": "node backend/tests/run_tests.js",
+    "clear-db": "node backend/scripts/clear_db.js",
     "build": "npm install --legacy-peer-deps && npm install --legacy-peer-deps --prefix frontend && npm run build --prefix frontend"
   },
   "keywords": [
