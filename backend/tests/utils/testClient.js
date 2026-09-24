@@ -6,7 +6,7 @@ const http = require("http");
 /**
  * Standardized HTTP request helper for REST API integration tests.
  */
-function httpRequest({ method, path: reqPath, data, token, host, port }) {
+function httpRequest({ method, path: reqPath, data, token, host, port, customHeaders }) {
   const targetHost = host || process.env.TEST_HOST || "127.0.0.1";
   const targetPort = port || process.env.PORT || process.env.TEST_PORT || 5000;
 
@@ -15,6 +15,7 @@ function httpRequest({ method, path: reqPath, data, token, host, port }) {
     const headers = {
       "Content-Type": "application/json",
       "Content-Length": Buffer.byteLength(postData),
+      ...(customHeaders || {}),
     };
     if (token) {
       headers["Authorization"] = `Bearer ${token}`;

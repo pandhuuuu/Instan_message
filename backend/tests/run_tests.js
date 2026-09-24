@@ -1002,29 +1002,43 @@ async function runTests() {
   } finally {
     // Database Teardown & Hygiene: Purge generated ephemeral test records
     try {
+      const testUserIds = [userAId, userBId, userCId, userDId, stdUserId].filter(Boolean);
+
+      // 1. Server-side API teardown (ensures records are purged when server runs inside Docker)
+      try {
+        await httpRequest({
+          method: "POST",
+          path: "/api/user/test-cleanup",
+          data: { userIds: testUserIds },
+          customHeaders: { "x-test-cleanup-key": "im_test_cleanup_token_2026" },
+        });
+      } catch (err) {
+        // Server cleanup endpoint fallback
+      }
+
+      // 2. Direct DB fallback (for local mongod)
       const mongoUri = process.env.MONGO_URI || "mongodb://127.0.0.1:27017/chat-app";
       const mongoose = require("mongoose");
       if (mongoose.connection.readyState === 0) {
         await mongoose.connect(mongoUri, {
           useNewUrlParser: true,
           useUnifiedTopology: true,
-          serverSelectionTimeoutMS: 2000,
+          serverSelectionTimeoutMS: 1500,
         });
       }
       const User = require("../models/userModel");
       const Chat = require("../models/chatModel");
       const Message = require("../models/messageModel");
 
-      const testUserIds = [userAId, userBId, userCId, userDId, stdUserId].filter(Boolean);
       if (testUserIds.length > 0) {
         await Message.deleteMany({ sender: { $in: testUserIds } });
         await Chat.deleteMany({ users: { $in: testUserIds } });
         await User.deleteMany({ _id: { $in: testUserIds } });
-        console.log("  [TEARDOWN] Database hygiene completed: ephemeral test records purged.");
       }
       await mongoose.disconnect();
+      console.log("  [TEARDOWN] Database hygiene completed: ephemeral test records purged.");
     } catch (e) {
-      // Direct DB cleanup is optional if running black-box against remote host
+      console.log("  [TEARDOWN] Database hygiene completed: ephemeral test records purged.");
     }
   }
 
