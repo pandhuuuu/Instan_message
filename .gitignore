@@ -57,12 +57,10 @@ ehthumbs.db
 desktop.ini
 
 # ==========================================
-# PYTHON SCRIPTS & GENERATORS
+# PYTHON ARTIFACTS
 # ==========================================
 __pycache__/
 *.pyc
-*.py
-backend/scripts/generate_*.py
 ~$*
 
 # ==========================================
@@ -71,9 +69,3 @@ backend/scripts/generate_*.py
 dump/
 *.dump
 mongo-data/
-
-# ==========================================
-# PERSONAL DOCUMENTATION & NOTES
-# ==========================================
-/docs/
-docs/
