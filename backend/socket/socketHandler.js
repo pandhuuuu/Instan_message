@@ -31,8 +31,8 @@ function setupSocket(server, app, allowedOrigins = []) {
       socket.handshake.auth?.token ||
       (socket.handshake.headers?.authorization &&
         socket.handshake.headers.authorization.startsWith("Bearer")
-          ? socket.handshake.headers.authorization.split(" ")[1]
-          : null);
+        ? socket.handshake.headers.authorization.split(" ")[1]
+        : null);
 
     if (!token) {
       return next(new Error("Authentication error: Token required"));
@@ -196,7 +196,7 @@ function setupSocket(server, app, allowedOrigins = []) {
           socket.join(roomStr);
           console.log("User Joined Room: " + roomStr);
         }
-      } catch (e) {}
+      } catch (e) { }
     });
 
     socket.on("leave chat", (room) => {
@@ -214,7 +214,7 @@ function setupSocket(server, app, allowedOrigins = []) {
             users: { $elemMatch: { $eq: socket.userId } },
           }).select("_id");
           userChats.forEach((c) => socket.join(String(c._id)));
-        } catch (e) {}
+        } catch (e) { }
       }
     });
 

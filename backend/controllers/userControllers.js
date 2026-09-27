@@ -117,7 +117,7 @@ const authUser = asyncHandler(async (req, res) => {
         existingPresence.sockets.size > 0
       ) {
         res.status(409);
-        throw new Error("Akun ini sedang aktif di perangkat lain. Silakan logout dari perangkat tersebut terlebih dahulu.");
+        throw new Error("This account is currently active on another device. Please log out from that device first.");
       }
     }
 
@@ -166,7 +166,7 @@ const quickConnectUser = asyncHandler(async (req, res) => {
 
     if (isCurrentlyConnected) {
       res.status(409);
-      throw new Error("Akun ini sedang aktif di perangkat lain. Silakan logout dari perangkat tersebut terlebih dahulu.");
+      throw new Error("This account is currently active on another device. Please log out from that device first.");
     }
   }
 
@@ -176,7 +176,7 @@ const quickConnectUser = asyncHandler(async (req, res) => {
   // Prevent account takeover: Do not allow quick-connect if user is a registered password account
   if (user && !user.isQuickConnect) {
     res.status(403);
-    throw new Error("Akun ini terdaftar dengan password. Silakan login melalui form Sign In.");
+    throw new Error("This account is registered with a password. Please sign in using the login form.");
   }
 
   if (user && onlineUsers) {
@@ -188,7 +188,7 @@ const quickConnectUser = asyncHandler(async (req, res) => {
       existingPresence.sockets.size > 0
     ) {
       res.status(409);
-      throw new Error("Akun ini sedang aktif di perangkat lain. Silakan logout dari perangkat tersebut terlebih dahulu.");
+      throw new Error("This account is currently active on another device. Please log out from that device first.");
     }
   }
 

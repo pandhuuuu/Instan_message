@@ -13,7 +13,7 @@ node_modules/
 .env.test
 .env.production
 *.env
-# Selalu track .env.example sebagai template resmi teman/kolaborator
+# Always track .env.example as official collaborator template
 !.env.example
 
 # ==========================================

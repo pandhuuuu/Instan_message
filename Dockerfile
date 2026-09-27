@@ -1,39 +1,39 @@
 # ==========================================
-# Tahap 1: Build React Frontend
+# Stage 1: Build React Frontend
 # ==========================================
 FROM node:18-alpine AS frontend-builder
 WORKDIR /app/frontend
 
-# Salin dependencies frontend
+# Copy frontend dependencies
 COPY frontend/package*.json ./
 RUN npm install --legacy-peer-deps
 
-# Salin source code frontend dan build
+# Copy frontend source code and build
 COPY frontend/ ./
 ENV NODE_OPTIONS="--openssl-legacy-provider"
 RUN npm run build
 
 # ==========================================
-# Tahap 2: Runner Production
+# Stage 2: Production Runner
 # ==========================================
 FROM node:18-alpine AS runner
 WORKDIR /app
 
-# Mode production
+# Production mode
 ENV NODE_ENV=production
 
-# Salin package.json root / backend
+# Copy root / backend package.json
 COPY package*.json ./
 RUN npm install --production --legacy-peer-deps
 
-# Salin source code backend
+# Copy backend source code
 COPY backend/ ./backend
 
-# Salin static build frontend dari Tahap 1
+# Copy static frontend build from Stage 1
 COPY --from=frontend-builder /app/frontend/build ./frontend/build
 
-# Port backend default
+# Default backend port
 EXPOSE 5000
 
-# Jalankan server
+# Run server
 CMD ["node", "backend/server.js"]

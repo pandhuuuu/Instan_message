@@ -206,12 +206,12 @@ const fetchChats = asyncHandler(async (req, res) => {
 //@description     Create New Group Chat
 //@route           POST /api/chat/group
 //@access          Protected
-// Helper untuk memeriksa apakah user adalah admin grup (Pemilik atau Co-Admin)
+// Helper to verify if user is group admin (Owner or Co-Admin)
 const isUserAdmin = (chat, userId) => {
   const uId = String(userId);
   if (chat.groupAdmin && String(chat.groupAdmin._id || chat.groupAdmin) === uId) return true;
   if (chat.groupAdmins && chat.groupAdmins.some((a) => String(a._id || a) === uId)) return true;
-  // Fallback jika grup legacy tidak punya admin yang valid di daftar users
+  // Fallback if legacy group has no valid admin in users list
   if (
     chat.users &&
     chat.users.length > 0 &&

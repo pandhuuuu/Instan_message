@@ -37,14 +37,14 @@ function calculateStats(latencies) {
 
 async function runBenchmark() {
   console.log("\n======================================================================");
-  console.log("   BENCHMARK LATENSI END-TO-END (SLA REQUIREMENT: < 200 MS)           ");
+  console.log("   END-TO-END LATENCY BENCHMARK (SLA REQUIREMENT: < 200 MS)           ");
   console.log("======================================================================\n");
 
   const suffix = Math.floor(Math.random() * 1000000);
   const aliceName = `alice_bench_${suffix}`;
   const bobName = `bob_bench_${suffix}`;
 
-  console.log("1. Menyiapkan User & Chat Uji...");
+  console.log("1. Setting up Test Users & Chat...");
   const resAlice = await httpRequest({
     method: "POST",
     path: "/api/user/quick-connect",
@@ -57,14 +57,14 @@ async function runBenchmark() {
   });
 
   if (resAlice.status !== 200 || resBob.status !== 200) {
-    console.error("Gagal membuat user uji:", resAlice.data, resBob.data);
+    console.error("Failed to create test users:", resAlice.data, resBob.data);
     process.exit(1);
   }
 
   const alice = resAlice.data;
   const bob = resBob.data;
 
-  // Buat Chat 1:1 antara Alice dan Bob
+  // Create 1:1 chat between Alice and Bob
   const resChat = await httpRequest({
     method: "POST",
     path: "/api/chat",
@@ -72,10 +72,10 @@ async function runBenchmark() {
     data: { userId: bob._id },
   });
   const chat = resChat.data;
-  console.log(`   ✓ Chat 1:1 ID: ${chat._id} berhasil dibuat.`);
+  console.log(`   ✓ 1:1 Chat ID: ${chat._id} created successfully.`);
 
-  // 2. Hubungkan 2 Socket Client (Alice & Bob)
-  console.log("\n2. Menginisialisasi Koneksi WebSocket Duplex (Socket.IO)...");
+  // 2. Connect 2 Client Sockets (Alice & Bob)
+  console.log("\n2. Initializing Duplex WebSocket Connections (Socket.IO)...");
   const socketA = ioClient(`http://${BASE_HOST}:${BASE_PORT}`, {
     transports: ["websocket"],
     forceNew: true,
@@ -102,12 +102,12 @@ async function runBenchmark() {
       if (aReady) resolve();
     });
   });
-  // Berikan jeda 500ms agar event join room selesai diproses oleh server event loop
+  // Allow 500ms delay for join room event to settle in server event loop
   await new Promise((r) => setTimeout(r, 500));
-  console.log("   ✓ Socket Alice dan Bob berhasil terhubung dan join room.");
+  console.log("   ✓ Sockets for Alice and Bob successfully connected and joined room.");
 
-  // 3. PENGUJIAN 1: Ephemeral In-Memory Signal (Typing Indicator)
-  console.log("\n3. Menguji Latensi Ephemeral Signal (Typing Indicator)...");
+  // 3. TEST 1: Ephemeral In-Memory Signal (Typing Indicator)
+  console.log("\n3. Testing Ephemeral Signal Latency (Typing Indicator)...");
   const typingLatencies = [];
   for (let i = 1; i <= 5; i++) {
     const t0 = performance.now();
@@ -128,17 +128,17 @@ async function runBenchmark() {
     await new Promise((r) => setTimeout(r, 100));
   }
 
-  // 4. PENGUJIAN 2: Full End-to-End Pipeline (HTTP POST ➔ DB Save ➔ Socket Broadcast ➔ Recipient)
-  console.log("\n4. Menguji Full End-to-End Pipeline (POST /api/message ➔ DB Save ➔ Socket Broadcast)...");
+  // 4. TEST 2: Full End-to-End Pipeline (HTTP POST ➔ DB Save ➔ Socket Broadcast ➔ Recipient)
+  console.log("\n4. Testing Full End-to-End Pipeline (POST /api/message ➔ DB Save ➔ Socket Broadcast)...");
   const fullPipelineLatencies = [];
   const TOTAL_SAMPLES = 10;
 
   for (let i = 1; i <= TOTAL_SAMPLES; i++) {
-    const content = `Pesan uji latensi #${i} pada ${Date.now()}`;
+    const content = `Latency test message #${i} at ${Date.now()}`;
     const t0 = performance.now();
 
     await new Promise(async (resolve) => {
-      // Bob menunggu pesan tiba melalui socket
+      // Bob waits for message to arrive via socket
       socketB.once("message recieved", (receivedMsg) => {
         const totalDuration = performance.now() - t0;
         fullPipelineLatencies.push(totalDuration);
@@ -146,7 +146,7 @@ async function runBenchmark() {
         resolve();
       });
 
-      // Alice mengirim via REST API
+      // Alice sends via REST API
       const resMsg = await httpRequest({
         method: "POST",
         path: "/api/message",
@@ -154,16 +154,16 @@ async function runBenchmark() {
         data: { chatId: chat._id, content },
       });
 
-      // Segera setelah server merespons, Alice memicu broadcast socket
+      // As soon as the server responds, Alice triggers socket broadcast
       socketA.emit("new message", resMsg.data);
     });
 
-    // Jeda kecil antar pesan (100 ms)
+    // Small delay between messages (100 ms)
     await new Promise((r) => setTimeout(r, 100));
   }
 
-  // 5. PENGUJIAN 3: Delivery Receipt Round-Trip (Server ACK centang dua)
-  console.log("\n5. Menguji Latensi Delivery Receipt ACK (Centang Dua Abu-abu)...");
+  // 5. TEST 3: Delivery Receipt Round-Trip (Server double checkmark ACK)
+  console.log("\n5. Testing Delivery Receipt ACK Latency (Grey Double Checkmark)...");
   const deliveryAckLatencies = [];
   for (let i = 1; i <= 5; i++) {
     const dummyMsgId = chat.latestMessage?._id || chat._id;
@@ -203,9 +203,9 @@ async function runBenchmark() {
     await mongoose.disconnect();
   } catch (e) {}
 
-  // 6. REKAPITULASI & ANALISIS KELULUSAN SLA
+  // 6. SLA COMPLIANCE SUMMARY & ANALYSIS
   console.log("\n======================================================================");
-  console.log("                  HASIL REKAPITULASI PENGUJIAN LATENSI                ");
+  console.log("                  LATENCY BENCHMARK RECAPITULATION RESULTS            ");
   console.log("======================================================================");
 
   const statsTyping = calculateStats(typingLatencies);
@@ -213,22 +213,22 @@ async function runBenchmark() {
   const statsAck = calculateStats(deliveryAckLatencies);
 
   console.log("\n[A] Ephemeral In-Memory (Typing Signal):");
-  console.log(`    Min: ${statsTyping.min.toFixed(2)} ms | Max: ${statsTyping.max.toFixed(2)} ms | Rata-rata: ${statsTyping.avg.toFixed(2)} ms | P95: ${statsTyping.p95.toFixed(2)} ms`);
+  console.log(`    Min: ${statsTyping.min.toFixed(2)} ms | Max: ${statsTyping.max.toFixed(2)} ms | Average: ${statsTyping.avg.toFixed(2)} ms | P95: ${statsTyping.p95.toFixed(2)} ms`);
 
   console.log("\n[B] Full Application Pipeline (HTTP POST + MongoDB Write + Socket Broadcast):");
-  console.log(`    Min: ${statsFull.min.toFixed(2)} ms | Max: ${statsFull.max.toFixed(2)} ms | Rata-rata: ${statsFull.avg.toFixed(2)} ms | P95: ${statsFull.p95.toFixed(2)} ms`);
+  console.log(`    Min: ${statsFull.min.toFixed(2)} ms | Max: ${statsFull.max.toFixed(2)} ms | Average: ${statsFull.avg.toFixed(2)} ms | P95: ${statsFull.p95.toFixed(2)} ms`);
 
   console.log("\n[C] Delivery Receipt ACK Protocol:");
-  console.log(`    Min: ${statsAck.min.toFixed(2)} ms | Max: ${statsAck.max.toFixed(2)} ms | Rata-rata: ${statsAck.avg.toFixed(2)} ms | P95: ${statsAck.p95.toFixed(2)} ms`);
+  console.log(`    Min: ${statsAck.min.toFixed(2)} ms | Max: ${statsAck.max.toFixed(2)} ms | Average: ${statsAck.avg.toFixed(2)} ms | P95: ${statsAck.p95.toFixed(2)} ms`);
 
   const SLA_THRESHOLD = 200.0;
   const isPassing = statsFull.p95 < SLA_THRESHOLD && statsFull.max < SLA_THRESHOLD;
 
   console.log("\n----------------------------------------------------------------------");
-  console.log(`SLA Kriteria Low Latency : < ${SLA_THRESHOLD} ms`);
-  console.log(`Hasil P95 Aktual        : ${statsFull.p95.toFixed(2)} ms`);
-  console.log(`Hasil Max Aktual        : ${statsFull.max.toFixed(2)} ms`);
-  console.log(`Status Kelulusan        : ${isPassing ? "LULUS (MEMENUHI SLA)" : "GAGAL (DI ATAS SLA)"}`);
+  console.log(`SLA Low Latency Criteria : < ${SLA_THRESHOLD} ms`);
+  console.log(`Actual P95 Result        : ${statsFull.p95.toFixed(2)} ms`);
+  console.log(`Actual Max Result        : ${statsFull.max.toFixed(2)} ms`);
+  console.log(`SLA Compliance Status    : ${isPassing ? "PASS (MEETS SLA)" : "FAIL (EXCEEDS SLA)"}`);
   console.log("----------------------------------------------------------------------\n");
 
   process.exit(isPassing ? 0 : 1);

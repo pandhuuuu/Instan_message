@@ -43,7 +43,7 @@ const ChatProvider = ({ children }) => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [history]);
 
-  // Inisialisasi Socket.io global saat user sudah login
+  // Initialize global Socket.io client when user is logged in
   useEffect(() => {
     if (!user) {
       if (socketRef.current) {
@@ -121,7 +121,7 @@ const ChatProvider = ({ children }) => {
       });
     });
 
-    // ── Self-Healing Sync: Sinkronisasi otomatis daftar user aktif setiap 15 detik ──
+    // ── Self-Healing Sync: Automatically synchronize online users list every 15 seconds ──
     const syncInterval = setInterval(() => {
       if (newSocket.connected) {
         newSocket.emit("get online users");
@@ -143,7 +143,7 @@ const ChatProvider = ({ children }) => {
       }));
     });
 
-    // ── Sinkronisasi saat jendela kembali difokuskan (dibatasi minimal jeda 5 detik) ──
+    // ── Window focus synchronization (throttled to min 5-second interval) ──
     let lastFocusSync = 0;
     const handleWindowFocus = () => {
       const now = Date.now();
@@ -153,7 +153,7 @@ const ChatProvider = ({ children }) => {
       }
     };
 
-    // ── Deteksi Tab Aktif / Inaktif (Visibility Change) ──
+    // ── Active / Inactive Tab Detection (Visibility Change) ──
     const handleVisibilityChange = () => {
       if (document.hidden) {
         isAwayRef.current = true;
@@ -168,7 +168,7 @@ const ChatProvider = ({ children }) => {
       }
     };
 
-    // ── Deteksi Idle (2 menit inaktif) dengan Throttling ──
+    // ── Idle Detection (2 minutes inactive) with Throttling ──
     let idleTimer = null;
     let lastActivityTime = 0;
     const IDLE_TIME = 2 * 60 * 1000;
@@ -187,15 +187,15 @@ const ChatProvider = ({ children }) => {
       }, IDLE_TIME);
     };
 
-    // Throttle deteksi aktivitas agar tidak membakar CPU di setiap pixel cursor bergerak
+    // Throttle activity detection to avoid excessive CPU load on cursor movement
     const handleThrottledActivity = () => {
       const now = Date.now();
-      if (now - lastActivityTime < 3000) return; // Maksimal eksekusi 1x setiap 3 detik
+      if (now - lastActivityTime < 3000) return; // Max 1 execution every 3 seconds
       lastActivityTime = now;
       resetIdle();
     };
 
-    // Gunakan event interaksi yang ringan (hindari mousemove & scroll langsung)
+    // Use lightweight interaction events (avoid direct mousemove & scroll)
     const activityEvents = ["click", "keydown", "touchstart", "mousedown"];
     activityEvents.forEach((ev) => window.addEventListener(ev, handleThrottledActivity, { passive: true }));
     window.addEventListener("focus", handleWindowFocus);

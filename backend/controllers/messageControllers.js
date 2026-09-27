@@ -258,7 +258,7 @@ const deleteSingleMessage = asyncHandler(async (req, res) => {
   const chatId = chat?._id;
   await Message.findByIdAndDelete(messageId);
 
-  // Jika pesan yang dihapus adalah latestMessage, perbarui ke pesan sebelumnya
+  // If deleted message was latestMessage, update to previous message
   if (chat && String(chat.latestMessage) === String(messageId)) {
     const prevLatest = await Message.findOne({ chat: chatId }).sort({ createdAt: -1 });
     await Chat.findByIdAndUpdate(chatId, { latestMessage: prevLatest ? prevLatest._id : null });

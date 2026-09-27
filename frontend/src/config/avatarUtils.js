@@ -39,7 +39,7 @@ export const hasCustomAvatar = (pic) => {
 
 /**
  * Returns the uppercase initial of the username (prioritized) or name
- * As per specification: "seperti abjad awal dari username"
+ * As per specification: initial letter of the username
  */
 export const getAvatarInitial = (userOrName, fallback = "?") => {
   if (!userOrName) return fallback;

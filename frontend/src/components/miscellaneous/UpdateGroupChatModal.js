@@ -65,7 +65,7 @@ const UpdateGroupChatModal = ({
 
   if (!selectedChat) return null;
 
-  // Helper identifikasi peran yang konsisten dan tahan variasi struktur MongoDB
+  // Role identification helper resilient to MongoDB structure variations
   const getOwnerId = () => {
     if (!selectedChat) return null;
     const adminId = selectedChat.groupAdmin?._id || selectedChat.groupAdmin;
@@ -256,7 +256,7 @@ const UpdateGroupChatModal = ({
       return;
     }
 
-    // Admin biasa tidak boleh mengeluarkan owner atau sesama admin
+    // Standard admin cannot remove owner or fellow co-admins
     if (!isSelf && !isMeOwner && isUserAdmin(user1)) {
       toast({
         title: "Access Denied",

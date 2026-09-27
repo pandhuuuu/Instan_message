@@ -577,7 +577,7 @@ async function runTests() {
     });
 
     // Bob sends a new message -> Revives chat for Alice
-    const newMsgFromBob = `Pesan baru dari Bob setelah Alice delete chat ${suffix}`;
+    const newMsgFromBob = `New message from Bob after Alice deletes chat ${suffix}`;
     const resBobNew = await httpRequest({
       method: "POST",
       path: "/api/message",
