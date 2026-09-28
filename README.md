@@ -179,8 +179,3 @@ To ensure production integrity and protect private credentials when collaboratin
   * Ensure credentials are entered correctly: Username: `admin`, Password: `AdminSecurityPass2026!`.
 * **WebSocket Authentication Error on Connect:**
   * The server enforces handshake authentication. Ensure clients provide a valid JWT token via `auth: { token }`.
-
----
-
-## 👤 Author
-* **Pandhu** — [@pandhuuuu](https://github.com/pandhuuuu)
